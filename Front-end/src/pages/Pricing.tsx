@@ -1,7 +1,7 @@
 import './styles/Pricing.css'
-import PricingColumns from "../components/PricingColumns"
+import PricingColumns from "../components/pricing/PricingColumns"
 import Footer from "../components/Footer"
-import PriceCalculator from "../components/PriceCalculator"
+import PriceCalculator from "../components/pricing/PriceCalculator"
 import { Link } from "react-router-dom"
 
 function Pricing() {

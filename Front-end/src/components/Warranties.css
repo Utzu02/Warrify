@@ -1,84 +1,94 @@
 .warr-container {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 5vh;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 3rem;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
 }
 
+.warr-header,
 .warr-entry {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    width: 80vw;
-    height: 3vh;
-    justify-content: stretch;
-    border-top: 2px solid rgba(50, 50, 50, 0.691);
-    border-left: none;
-    border-right: none;
-}
-.warr-line:hover {
-    cursor: pointer ;
-}
-.warr-container:last-child {
-    border-bottom: 2px solid rgba(50, 50, 50, 0.691);
-    width: 80vw;  
-}
-
-.warr-entry:hover {
-    background-color: rgba(144, 141, 141, 0.521);
-}
-
-.warr-element-prdName {
-    justify-content: center;
-}
-.modal-war {
-    position: absolute;
-    bottom: 20%;
-    right: 10%;
-    border-radius: 5px;
-    width: 5vw;
-}
-.modal-war-2 {
-    position: absolute;
-    width: 5vw;
-    border-radius: 5px;
-    right: 10%;
-    bottom: 45%;
-}
-.modal-details {
-    position: relative;
-    top: 25%;
-}
-.warr-element-dataCump {
-    justify-content: center;
-}
-
-.warr-element-dataExp {
-    justify-content: center;
-}
-
-.warr-element-com {
-    justify-content: center;
-}
-.warr-line li {
-    width: 20vw;
+    width: 100%;
+    padding: 0.9rem 1.5rem;
 }
 
 .warr-header {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    width: 80vw;
-    height: 3vh;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 7px;
-    gap: 1rem;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.warr-header li {
-    width: 20vw;
+.warr-entry {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.2s ease;
+}
+
+.warr-entry:last-child {
+    border-bottom: none;
+}
+
+.warr-entry:hover {
+    background: #f8fafc;
 }
 
 .warr-line {
     display: flex;
-    gap: 1rem;
     justify-content: space-between;
+    gap: 1.25rem;
+}
+
+.warr-line li,
+.warr-header li {
+    width: 25%;
+    list-style: none;
+    color: #0f172a;
+}
+
+.warr-line li small {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .warr-container {
+        border-radius: 14px;
+        box-shadow: 0 15px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    .warr-header {
+        display: none;
+    }
+
+    .warr-entry {
+        padding: 1rem 1.25rem;
+    }
+
+    .warr-line {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .warr-line li {
+        width: 100%;
+        font-weight: 600;
+    }
+
+    .warr-line li::before {
+        display: block;
+        font-size: 0.75rem;
+        letter-spacing: 0.1rem;
+        text-transform: uppercase;
+        color: #94a3b8;
+        margin-bottom: 0.15rem;
+    }
+
+    .warr-line li:nth-child(1)::before { content: 'Product'; }
+    .warr-line li:nth-child(2)::before { content: 'Purchased'; }
+    .warr-line li:nth-child(3)::before { content: 'Expires'; }
+    .warr-line li:nth-child(4)::before { content: 'Provider'; }
 }

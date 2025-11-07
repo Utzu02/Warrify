@@ -3,16 +3,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 3.5vh;
+    padding: 2rem 1rem 4rem;
   }
   
   .auth-form {
     background: white;
     padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    width: 25vw;
+    border-radius: 20px;
+    box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
+    width: min(90vw, 480px);
   }
   
   .auth-form h2 {
@@ -33,7 +32,7 @@
   }
   
   .form-group input {
-    width: 90%;
+    width: 100%;
     padding: 0.4rem;
     border: 2px solid #e9ecef;
     border-radius: 6px;
@@ -58,7 +57,7 @@
   }
   
   .terms-group {
-    width: 15vw;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -93,16 +92,16 @@
   }
   
   .submit-btn {
-    width: 90%;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 0vh;
-    padding: .7rem;
+    padding: .9rem;
     background-color: #2a5dc5;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 999px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -116,4 +115,15 @@
     margin-top: -0.5vh;
     margin-bottom: 1.3vh;
     text-align: center;
+}
+
+@media (max-width: 640px) {
+  .auth-form {
+    padding: 1.5rem;
+  }
+
+  .terms-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }

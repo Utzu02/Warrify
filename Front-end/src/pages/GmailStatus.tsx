@@ -69,8 +69,10 @@ const GmailStatus = () => {
           return;
         }
 
+        const now = new Date();
         setDocuments(payload.documents || []);
-        setLastUpdated(new Date());
+        setLastUpdated(now);
+        localStorage.setItem('last_gmail_check', now.toISOString());
       } catch (err) {
         if (!isMounted) {
           return;

@@ -1,19 +1,14 @@
   import GridContainer from "../components/GridContainer";
   import LoginLightbox from "../components/LoginLightbox";
+  import DashboardHero from "../components/dashboard/DashboardHero";
+  import DashboardTools from "../components/dashboard/DashboardTools";
+  import DashboardTable from "../components/dashboard/DashboardTable";
   import { useState, useMemo } from "react";
   import "./styles/Dashboard.css";
-  import linieorizontala from "./../assets/linie-orizontala.svg";
-  import Warranties from "../components/Warranties";
+  import type { Warranty } from "../types/dashboard";
   
   interface DashProps {
     isLoggedIn?: boolean;
-  }
-  
-  interface Warranty {
-    prdName: string;
-    dataExp: string;
-    dataCump: string;
-    comp: string;
   }
   
   const Dashboard = ({ isLoggedIn }: DashProps) => {
@@ -205,91 +200,32 @@
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => 
       setSearchQuery(e.target.value);
   
+    const sortOptions = [
+      "Expiration Date (Asc)",
+      "Expiration Date (Desc)",
+      "Upcoming Expiration (Asc)",
+      "Upcoming Expiration (Desc)",
+      "Name (A-Z)",
+      "Name (Z-A)"
+    ];
+
     return (
-      <>
+      <div className="dashboard-page">
         {!isLoggedIn && <LoginLightbox />}
+        <DashboardHero activeCount={filteredAndSortedWarranties.length} />
         <GridContainer />
-        
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search products or providers..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="search-input"
-          />
-          <svg
-            className="search-icon"
-            aria-labelledby="title desc"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 19.9 19.7"
-          >
-            <title id="title">Search Icon</title>
-            <desc id="desc">A magnifying glass icon.</desc>
-            <g className="search-path" fill="none" stroke="black">
-              <path strokeLinecap="square" d="M18.5 18.3l-5.4-5.4" />
-              <circle cx="8" cy="8" r="7" />
-            </g>
-          </svg>
-        </div>
-  
-        <div className="filters-container">
-          <div className="sort">
-            <button className="sort-button" onClick={toggleSortDropdown}>
-              <p>Sort</p>
-              <svg
-                className="dropdown-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                width="39"
-                height="18"
-                viewBox="0 0 39 18"
-                fill="none"
-              >
-                <line
-                  y1="-1.5"
-                  x2="24.6981"
-                  y2="-1.5"
-                  transform="matrix(-0.761791 -0.647822 0.761791 -0.647823 21.7222 16)"
-                  stroke="black"
-                  strokeWidth="3"
-                />
-                <line
-                  y1="-1.5"
-                  x2="24.6981"
-                  y2="-1.5"
-                  transform="matrix(0.761791 -0.647823 -0.761791 -0.647822 17.0186 16)"
-                  stroke="black"
-                  strokeWidth="3"
-                />
-              </svg>
-            </button>
-  
-            {isSortOpen && (
-              <div className="dropdown sort">
-                {[
-                  "Expiration Date (Asc)",
-                  "Expiration Date (Desc)",
-                  "Upcoming Expiration (Asc)",
-                  "Upcoming Expiration (Desc)",
-                  "Name (A-Z)",
-                  "Name (Z-A)"
-                ].map((option) => (
-                  <div key={option}>
-                    <p onClick={() => handleSortSelection(option)}>{option}</p>
-                    {option !== "Name (Z-A)" && (
-                      <img className="linieoriz" src={linieorizontala} alt="divider" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-  
-        <Warranties warranties={filteredAndSortedWarranties} />
-      </>
+        <DashboardTools
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortOptions={sortOptions}
+          selectedSort={sortOption}
+          isSortOpen={isSortOpen}
+          onToggleSort={toggleSortDropdown}
+          onSelectSort={handleSortSelection}
+        />
+        <DashboardTable warranties={filteredAndSortedWarranties} />
+      </div>
     );
   };
-  
+
   export default Dashboard;

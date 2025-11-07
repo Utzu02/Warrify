@@ -11,11 +11,12 @@ interface Warranty {
 
 interface WarrantiesProps {
   warranties: Warranty[];
+  limit?: number;
 }
 
-function Warranties({ warranties }: WarrantiesProps) {
-
+function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) {
   const [selectedWarranty, setSelectedWarranty] = useState<Warranty | null>(null);
+  const itemsToRender = warranties.slice(0, limit);
 
   return (
     <div className="warr-container">
@@ -25,7 +26,7 @@ function Warranties({ warranties }: WarrantiesProps) {
         <li>Date of expirance</li>
         <li>Product provider</li>
       </ul>
-      {warranties.map((warranty, index) => (
+      {itemsToRender.map((warranty, index) => (
         <div
           key={index}
           className="warr-entry"

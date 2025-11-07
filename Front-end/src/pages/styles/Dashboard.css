@@ -1,44 +1,42 @@
 .search-container {
     position: relative;
-    width: 80vw; /* Poți ajusta lățimea maximă a căutării */
-    margin-top: 5vh;
-    margin-left: auto;
+    width: min(90vw, 960px);
+    margin: 5vh auto 3vh;
     font-family: unifysans, helvetica, arial, lato, sans-serif !important;
-    margin-right: auto;
-    margin-bottom: 3vh;
   }
   
   /* Stiluri pentru input-ul de căutare */
   .search-input {
     width: 100%;
-    padding: 1vh 3vw 1vh 1vw; /* Lăsăm spațiu pe dreapta pentru SVG */
-    border: 1px solid black;
-    border-radius: 10px;
-    font-size: 27px;
+    padding: 1rem 3.5rem 1rem 1.25rem;
+    border: 1px solid #cbd5f5;
+    border-radius: 12px;
+    font-size: 1.3rem;
     margin-top: 0;
     box-sizing: border-box;
-    position: relative; /* Necesitat pentru a poziționa SVG-ul */
+    position: relative;
   }
   
   /* Stiluri pentru SVG-ul de căutare */
   .search-icon {
     position: absolute;
-    width: 1.5vw;
-    right: 1vw; /* Poziționează SVG-ul în partea dreaptă */
+    width: 28px;
+    right: 16px;
     top: 50%;
-    transform: translateY(-50%); /* Centerază SVG-ul pe verticală */
-    fill: #000000;
+    transform: translateY(-50%);
+    fill: #94a3b8;
   }
 
   /* Stiluri pentru secțiunea de filtre */
 .filters-container {
-    display: flex;
-    width: 100%;
-    position: relative;
-    justify-content: center;
-    gap: 6vw;
+  display: flex;
+  width: 100%;
+  position: relative;
+  justify-content: center;
+    gap: 2rem;
     margin-top: 5vh;
     margin-bottom: 6vh;
+    flex-wrap: wrap;
   }
   .filter,.sort {
     position: relative;
@@ -49,32 +47,33 @@
   }
   /* Stiluri pentru butoanele Filter și Sort */
   /* Stiluri pentru butoanele Filter și Sort */
-  .filter-button, .sort-button {
-    display: flex;
+.filter-button, .sort-button {
+    display: inline-flex;
     align-items: center;
-    padding: 0;
-    position: relative;
-    border: 1px solid #ccc; /* Bordura mai subțire și mai deschisă */
-    border-radius: 15px; /* Colțuri rotunjite */
-    background-color: #f9f9f9; /* Fundal deschis */
-    color: #333; /* Culoare text */
-    font-size: 25px;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(120deg, #818cf8, #6366f1);
+    color: #fff;
+    font-size: 1.05rem;
     cursor: pointer;
     text-align: center;
     z-index: 11;
-    transition: all 0.3s ease; /* Efect de tranziție pentru hover */
-    width: 12vw; /* Lățimea fixă a butonului */
-    height: 5vh;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ușor efect de umbră pentru adâncire */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-width: 210px;
+    height: 56px;
+    box-shadow: 0 18px 35px rgba(99, 102, 241, 0.35);
   }
   
   .filter-button:focus, .sort-button:focus {
     outline: none;
   }
-  .filter-button p, .sort-button p {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+.filter-button p, .sort-button p {
+    position: static;
+    transform: none;
+    font-weight: 600;
   }
   /* Efect de hover pentru butoane */
   .filter-button:hover, .sort-button:hover {
@@ -92,34 +91,33 @@
   /* Dropdown-uri pentru Filter și Sort */
   .dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 0.5rem);
     left: 0;
-    background-color: #D9D9D9;
-    border: 1px solid #ccc; /* Bordura dropdown-ului */
-    border-radius: 10px;
-    width: 12vw;
-    padding-top: 4vh;
-    margin-top: -4vh;
+    background-color: #ffffff;
+    border: 1px solid #cbd5f5;
+    border-radius: 12px;
+    width: 220px;
+    padding: 0.75rem;
     display: flex;
     flex-direction: column;
-    gap: .3vh;
+    gap: 0.5rem;
     z-index: 10;
+    box-shadow: 0 15px 30px rgba(15, 23, 42, 0.12);
   }
   .dropdown.sort {
     right: 0;
-    gap: .9vh;
-    padding-bottom: 1vh;
     left: auto;
   }
   .dropdown-icon {
-    position: absolute;
-    right: .4vw;
+    width: 14px;
+    height: 14px;
+    margin-left: 0.35rem;
   }
   
-  .dropdown p {
+.dropdown p {
     cursor: pointer;
   }
-  
+
 .warrantiesContainer {
   display: flex;
 }
@@ -128,4 +126,169 @@
   height: 100px;
   width: 200px;
   background-color: red;
+}
+
+.table-card {
+  padding: 2.5rem;
+}
+
+.table-card .table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 2.25rem 0;
+}
+
+.table-card .warr-container {
+  box-shadow: none;
+  border-radius: 20px;
+  margin: 1.25rem auto 0;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.table-card .warr-header,
+.table-card .warr-entry {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.table-card .table-footer {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 0 0;
+}
+
+.button.ghost {
+  border: 1px solid #cbd5f5;
+  color: #1d4ed8;
+  background: transparent;
+}
+
+.button.ghost:hover {
+  background: #eef2ff;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  font-size: 0.8rem;
+  color: #6366f1;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.pill {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .dashboard-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .filters-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .filter-button,
+  .sort-button {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .dropdown {
+    position: static;
+    width: 100%;
+    max-width: 320px;
+  }
+}
+.dashboard-page {
+  width: min(1100px, 92vw);
+  margin: 0 auto 4rem;
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.dashboard-page .card {
+  background: #fff;
+  border-radius: 28px;
+  padding: 2.25rem;
+  box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.dashboard-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  align-items: center;
+}
+
+.dashboard-hero h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+
+.dashboard-hero p {
+  color: #475569;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.dashboard-btn {
+  padding: 0.85rem 1.8rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: 0.2s ease;
+}
+
+.dashboard-btn.primary {
+  background: #6366f1;
+  color: #fff;
+  box-shadow: 0 15px 30px rgba(99, 102, 241, 0.35);
+}
+
+.dashboard-btn.primary:hover {
+  background: #5146e5;
+}
+
+.dashboard-btn.ghost {
+  border-color: #cbd5f5;
+  color: #1d4ed8;
+  background: transparent;
+}
+
+.dashboard-btn.ghost:hover {
+  background: #eef2ff;
+}
+
+.dashboard-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }

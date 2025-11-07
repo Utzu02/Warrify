@@ -1,10 +1,10 @@
 .background {
     background-image: linear-gradient(180deg, #000096 25%, #0097ff 110%) !important;
-    background-size: 100% auto;
-
+    background-size: cover;
     display: flex;
     align-items: center;
-    height: 65vh;
+    min-height: 65vh;
+    padding: 3rem 2rem;
 }
 
 .main-content h2 {
@@ -28,9 +28,11 @@
 .main-content {
     position: relative;
     display: flex;
-    width: 85vw;
+    width: min(90vw, 1200px);
+    margin: 0 auto;
     justify-content: center;
     align-items: center;
+    gap: 3rem;
 }
 .second h2{
     font-size: 36px;
@@ -40,32 +42,32 @@
     color: rgb(69, 69, 69) !important
 }
 .text {
-    width: 40vw;
+    width: 45%;
 }
 .image {
-    width: 30vw;
+    width: 35%;
 }
 .image img {
     width: 100%;
 }
 .dezvolta {
     background-color: #000096;
-    width: 100vw;
-    height: 32vh;
+    width: 100%;
+    min-height: 32vh;
     color: white;
     display: flex;
     position: relative;
     align-items: center;
     font-family: Arial, sans-serif !important;
     font-weight: bold;
-    padding-bottom: 10vh;
+    padding: 4rem 2rem 6rem;
     justify-content: center;
 }
 .dezvolta-1 {
-    width: 30vw;
+    width: 35%;
     margin-top: -1vh;
     font-size: 45px;
-    margin-left: 17vw;
+    margin-left: 5vw;
 }
 .p5 {
     height: 5vh;
@@ -74,7 +76,7 @@
     margin-left: 0vh;
     margin-right: 12vw;
     padding-top: 7vh;
-    width: 22vw;
+    width: 30%;
 }
 .image-2 img {
     width: 100%;
@@ -83,7 +85,7 @@
     position: relative;
     margin-top: 3vh;
     color: rgba(255, 255, 255, 0.807);
-    width: 40vw;
+    width: 50%;
     margin-right: 10vw;
     font-size: 17px;
 }
@@ -91,9 +93,77 @@
     position: absolute;
     bottom: -10vh;
     border-radius: 5px;
-    width: 7.5vw;
+    width: 180px;
     left: 0;
 }
 .second-2 {
     margin-right: 0vw;
+}
+
+@media (max-width: 1024px) {
+    .main-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .text,
+    .image,
+    .image-2,
+    .dezvolta-2 {
+        width: 100%;
+    }
+
+    .text {
+        width: 100%;
+        max-width: 640px;
+    }
+
+    .image {
+        order: -1;
+        width: 60%;
+        max-width: 360px;
+    }
+
+    .dezvolta {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .dezvolta-1 {
+        width: 100%;
+        margin: 0 0 1rem;
+        text-align: center;
+    }
+
+    .home-try {
+        position: static;
+        margin-top: 1.5rem;
+        width: 60%;
+        max-width: 260px;
+    }
+}
+
+@media (max-width: 640px) {
+    .background {
+        padding: 2.5rem 1.25rem;
+    }
+
+    .main-content h2 {
+        font-size: 2rem;
+        text-align: center !important;
+    }
+
+    .main-content p {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .image,
+    .image-2 {
+        width: 80%;
+    }
+
+    .dezvolta-2 {
+        margin-right: 0;
+    }
 }
