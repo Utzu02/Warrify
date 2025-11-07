@@ -1,44 +1,44 @@
 .header {
-    height: 10.5vh;
-    width: 100vw !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background-color: white;
+    height: 80px;
+    width: 100%;
+    margin: 0;
+    padding: 0 3vw;
+    background: rgba(255, 255, 255, 0.92);
     font-family: unifysans, helvetica, arial, lato, sans-serif !important;
-    font-size: 17px;
+    font-size: 16px;
     display: flex;
-    position: relative;
-    letter-spacing: .45px;
-    justify-content: space-around;
+    letter-spacing: 0.4px;
+    justify-content: space-between;
     align-items: center;
-    font-weight: normal;
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    backdrop-filter: blur(14px);
 }
 .leftSide img {
-    margin-top: 1.1vh;
-    height: 15vh;
-    margin-right: 2vw;
+    height: 56px;
+    margin: 0;
 }
-.logoheader {
-    margin-left: 5vw;
-    margin-right: 0;
-}
-.leftSide
-{
-    display: flex;
-}
-.leftSide .logoheader {
-    margin-right: 3vw;
-}
-.rightSide .textSectiuni {
-    gap: 1.5vw;
-}
-ul {
+.leftSide {
     display: flex;
     align-items: center;
-    gap: 2vw;
+    gap: 1.5rem;
 }
-ul li {
+.leftSide .logoheader {
+    margin-right: 0;
+}
+.rightSide .textSectiuni {
+    gap: 1.25rem;
+}
+.header ul {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.header ul li {
     list-style: none;
 }
 .center {
@@ -46,67 +46,71 @@ ul li {
     justify-content: center;
     align-items: center;
 }
-a {
-    color: rgb(0, 0, 0);
+.header a {
+    color: #0f172a;
     text-decoration: none;
-    transition: .3s;
+    transition: color 0.25s ease;
 }
 .listSectiuni:hover {
     cursor: pointer;
 }
 .listSectiuni:hover {
-    color: #0047ff;
+    color: #1d4ed8;
 }
 .button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #ff5400; /* Portocaliu */
-    background-color: transparent;
-    border: 2px solid #ff5400;
-    border-radius: 25px; /* Rotunjire */
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0f172a;
+    background: transparent;
+    border: 1.5px solid #6366f1;
+    border-radius: 999px;
     cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
 }
 .button:hover {
-    background-color: #ff5400;
-    color: white;
+    background-color: #eef2ff;
+    color: #3730a3;
 }
 .buttoninvert {
-    color: white !important;
-    background-color: #ff5400 !important;
+    color: #fff !important;
+    background-color: #6366f1 !important;
 }
 .buttoninvert:hover {
-    background-color: transparent !important;
-    color: #ff5400 !important;
+    background-color: #4f46e5 !important;
+    color: #fff !important;
 }
 .logo-w {
-    height: 12vh;
+    height: 52px;
 }
 li.listSectiuni {
     display: flex;
     position: relative;
     align-items: center;
-    transition: .3s;
-    height: 10.5vh;
+    transition: color 0.25s ease;
+    height: 80px;
+    font-weight: 600;
 }
 li.listSectiuni::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    height: .35vh;
-    transition: .3s;
+    bottom: 10px;
+    height: 3px;
+    transition: background-color 0.25s ease;
     width: 100%;
     background-color: transparent;
+    border-radius: 999px;
 }
 li.listSectiuni:hover::after {
-    background-color: #0047ff;
+    background-color: #c7d2fe;
 }
 .w-letter { fill: #2d6ae2; }
         .cross-line { stroke: #ff6b35; stroke-width: 8; }
         .text { font-family: Arial, sans-serif; font-size: 48px; font-weight: bold; fill: #2d6ae2; }
 li.active::after {
-    background-color: #0047ff;
+    background-color: #6366f1;
 }

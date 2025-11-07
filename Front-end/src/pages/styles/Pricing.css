@@ -50,6 +50,7 @@
     width: 7.5vw;
 }
 .ul-free {
+    display: flex;
     flex-direction: column;
     gap: 1vh;
     margin-left: 0;

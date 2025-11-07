@@ -67,10 +67,18 @@
     padding-bottom: 10px;
     width: 80vw;
     height: 3vh;
-    justify-content: stretch;
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 7px;
+    gap: 1rem;
 }
 
 .warr-header li {
     width: 20vw;
+}
+
+.warr-line {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
 }
