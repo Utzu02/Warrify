@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import Warranties from '../Warranties';
 import type { Warranty } from '../../types/dashboard';
+import './DashboardTable.css';
 
 type DashboardTableProps = {
   warranties: Warranty[];
@@ -29,7 +30,7 @@ const DashboardTable = ({ warranties }: DashboardTableProps) => {
       <Warranties warranties={warranties} limit={visibleCount} />
       {canShowMore && (
         <div className="table-footer">
-          <button className="button ghost" onClick={handleShowMore}>
+          <button className="view-more-btn" onClick={handleShowMore}>
             View more
           </button>
         </div>

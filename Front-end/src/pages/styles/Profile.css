@@ -96,9 +96,13 @@
 }
 
 .profile-sections {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    display: flex;
     gap: 1.5rem;
+    align-items: stretch;
+}
+
+.profile-sections .card {
+    flex: 1 1 50%;
 }
 
 .section-header {
@@ -202,5 +206,9 @@
     .profile-hero {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .profile-sections {
+        flex-direction: column;
     }
 }

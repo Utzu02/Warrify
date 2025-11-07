@@ -1,0 +1,64 @@
+.dashboard-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  align-items: center;
+}
+
+.dashboard-hero h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+
+.dashboard-hero p {
+  color: #475569;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.dashboard-btn {
+  padding: 0.85rem 1.8rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: 0.2s ease;
+}
+
+.dashboard-btn.primary {
+  background: #6366f1;
+  color: #fff;
+  box-shadow: 0 15px 30px rgba(99, 102, 241, 0.35);
+}
+
+.dashboard-btn.primary:hover {
+  background: #5146e5;
+}
+
+.dashboard-btn.ghost {
+  border-color: #cbd5f5;
+  color: #1d4ed8;
+  background: transparent;
+}
+
+.dashboard-btn.ghost:hover {
+  background: #eef2ff;
+}
+
+@media (max-width: 768px) {
+  .dashboard-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

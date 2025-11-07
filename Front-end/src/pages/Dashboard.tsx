@@ -197,9 +197,6 @@
     };
   
     const toggleSortDropdown = () => setIsSortOpen(!isSortOpen);
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => 
-      setSearchQuery(e.target.value);
-  
     const sortOptions = [
       "Expiration Date (Asc)",
       "Expiration Date (Desc)",

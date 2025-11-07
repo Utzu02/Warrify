@@ -1,4 +1,5 @@
 import linieorizontala from '../../assets/linie-orizontala.svg';
+import './DashboardTools.css';
 
 type DashboardToolsProps = {
   searchQuery: string;

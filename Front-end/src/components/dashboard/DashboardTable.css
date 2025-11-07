@@ -1,0 +1,46 @@
+.table-card {
+  padding: 2.5rem;
+}
+
+.table-card .table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 2.25rem 0;
+}
+
+.table-card .warr-container {
+  box-shadow: none;
+  border-radius: 20px;
+  margin: 1.25rem auto 0;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.table-card .warr-header,
+.table-card .warr-entry {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.table-card .table-footer {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 0 0;
+}
+
+.view-more-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid #cbd5f5;
+  color: #1d4ed8;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.view-more-btn:hover {
+  background: #eef2ff;
+}
