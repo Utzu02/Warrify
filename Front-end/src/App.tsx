@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import Pricing from './pages/Pricing';
+import GmailStatus from './pages/GmailStatus';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
@@ -47,6 +48,7 @@ function App() {
           <Route path="/about" element={<About />}/>
           <Route path="/contact" element={<Contact />}/>
           <Route path="/pricing" element={<Pricing />}/>
+          <Route path="/gmail-status" element={<GmailStatus />}/>
           <Route path="/not-found" element={<NotFound />}/>
         </Routes>
       </Router>

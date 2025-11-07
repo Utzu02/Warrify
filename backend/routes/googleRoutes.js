@@ -45,8 +45,8 @@ async function extractPDFText(buffer) {
             throw new Error('Fișierul nu este un PDF valid');
         }
         
-        const pdf = await import('pdf-parse');
-        const data = await pdf(buffer);
+        const { default: pdfParse } = await import('pdf-parse');
+        const data = await pdfParse(buffer);
         let text = data.text;
 
         // Curățare text păstrând diacritice
@@ -77,17 +77,26 @@ async function isWarrantyDocument(pdfBuffer) {
 
     try {
         const pdfText = await extractPDFText(pdfBuffer);
+        if (!pdfText.trim()) {
+            console.warn('Document ignorat: nu s-a putut extrage text (posibil PDF protejat).');
+            warrantyCache.set(contentHash, false);
+            return false;
+        }
+        const heuristicScore = evaluateWarrantyScore(pdfText);
+        const heuristicPass = heuristicScore >= 3;
         
-        // Verificare cu DeepSeek
-        const prompt = `Acest text conține toate elementele unui certificat de garanție valid?RASPUNDE STRICT CU DA SAU NU
-            Căutați:
-            1. Denumire produs și model specific
-            2. Termen clar de valabilitate
-            3. Condiții de acoperire a defectelor
-            4. Date de contact pentru service
-            
-            Text: ${pdfText.substring(0, 2500)}
-            Răspundeți strict cu DA sau NU.`;
+        // Verificare cu DeepSeek (fallback la scorul euristic)
+        const prompt = `Esti expert in certificate de garantie. Analizeaza textul de mai jos si raspunde EXACT cu DA daca gasesti CLAR
+        cel putin trei dintre elementele enumerate. Daca gasesti doua sau mai putine, raspunde EXACT cu NU. NU adauga alte cuvinte.
+        Elementele cautate:
+        1. Denumire produs + model
+        2. Durata sau data de expirare a garantiei
+        3. Conditii/limitari privind defectele acoperite
+        4. Date de contact service/producator (telefon/email/adresa)
+        5. Elemente administrative (numar de serie, numar factura, data achizitie)
+
+        Text (trunchiat la 2500 caractere):
+        ${pdfText.substring(0, 2500)}`;
 
         const response = await axios.post(
             "https://api.deepseek.com/v1/chat/completions",
@@ -107,8 +116,9 @@ async function isWarrantyDocument(pdfBuffer) {
         );
 
         const aiResponse = response.data.choices[0].message.content.trim().toUpperCase();
-        const result = (aiResponse === "DA");
-        console.log(result)
+        const aiPass = aiResponse.startsWith("DA");
+        const result = aiPass || heuristicPass;
+        console.log(`Warranty decision -> AI: ${aiResponse}, heuristic: ${heuristicScore}, final: ${result}`);
         warrantyCache.set(contentHash, result);
         
         return result;
@@ -134,7 +144,10 @@ router.get("/auth/google/callback", async (req, res) => {
         const { code } = req.query;
         const { tokens } = await oauth2Client.getToken(code);
         req.session.accessToken = tokens.access_token;
-        res.redirect('/api/emails');
+        const redirectUrl = process.env.FRONTEND_URL
+            ? `${process.env.FRONTEND_URL}/gmail-status`
+            : '/gmail-status';
+        res.redirect(redirectUrl);
     } catch (error) {
         res.redirect(`${process.env.FRONTEND_URL}/error?code=auth_failed`);
     }
@@ -143,7 +156,9 @@ router.get("/auth/google/callback", async (req, res) => {
 router.get("/api/emails", async (req, res) => {
     try {
         const accessToken = req.session.accessToken;
-        if (!accessToken) return res.redirect('/auth/google');
+        if (!accessToken) {
+            return res.status(401).json({ error: 'Missing Google access token. Please connect your Gmail account again.' });
+        }
 
         const messages = await fetchAllMessages(accessToken);
         const results = [];
@@ -164,10 +179,38 @@ router.get("/api/emails", async (req, res) => {
 
         res.json({
             total: results.length,
-            documents: results.filter(doc => doc.hasWarranty)
+            documents: results
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+
+router.get("/api/emails/:messageId/attachments/:attachmentId", async (req, res) => {
+    try {
+        const accessToken = req.session.accessToken;
+        if (!accessToken) {
+            return res.status(401).json({ error: 'Missing Google access token. Please connect your Gmail account again.' });
+        }
+
+        const { messageId, attachmentId } = req.params;
+        const filename = sanitizeFilename(req.query.filename || 'document.pdf');
+
+        const attachmentRes = await axios.get(
+            `https://gmail.googleapis.com/gmail/v1/users/me/messages/${messageId}/attachments/${attachmentId}`,
+            {
+                headers: { Authorization: `Bearer ${accessToken}` },
+                timeout: REQUEST_TIMEOUT
+            }
+        );
+
+        const pdfBuffer = Buffer.from(attachmentRes.data.data, 'base64');
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        return res.send(pdfBuffer);
+    } catch (error) {
+        console.error('Eroare download atașament:', error.message);
+        return res.status(500).json({ error: 'Nu s-a putut descărca atașamentul.' });
     }
 });
 
@@ -233,7 +276,8 @@ async function processSingleEmail(id, token) {
                 if (await isWarrantyDocument(pdfBuffer)) {
                     warrantyAttachments.push({
                         filename: attachment.filename,
-                        size: attachment.size
+                        size: attachment.size,
+                        attachmentId: attachment.attachmentId
                     });
                 }
             } catch (error) {
@@ -272,6 +316,31 @@ function extractPDFAttachments(parts, attachments = []) {
 
 function getHeader(headers, name) {
     return headers.find(h => h.name === name)?.value || 'Necunoscut';
+}
+
+function evaluateWarrantyScore(text = '') {
+    if (!text) return 0;
+    const normalized = text.toLowerCase();
+    const checks = [
+        { pattern: /certificat\s+de\s+garan/i, score: 2 },
+        { pattern: /(model|marca|tip)\s+[a-z0-9]/i, score: 1 },
+        { pattern: /(serie|serial|sn)[\s:]/i, score: 1 },
+        { pattern: /factura|bon\s+fiscal|data\s+(achizitiei|cumpararii)/i, score: 1 },
+        { pattern: /garant(i|ie)\s+(valabil|expira|luni|ani)/i, score: 1 },
+        { pattern: /(defect|remediere|interventie)/i, score: 1 },
+        { pattern: /(service|contact|suport).*(tel|telefon|email)/i, score: 1 }
+    ];
+
+    return checks.reduce((sum, check) => (
+        check.pattern.test(normalized) ? sum + check.score : sum
+    ), 0);
+}
+
+function sanitizeFilename(name = 'document.pdf') {
+    return String(name)
+        .trim()
+        .replace(/[/\\?%*:|"<>]/g, '_')
+        .substring(0, 100) || 'document.pdf';
 }
 
 export default router;
