@@ -1,7 +1,7 @@
 import './App.css'
 import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header'
+import Header from './components/Header/Header'
 import Home from './pages/Home'
 import About from './pages/About'
 import Contact from './pages/Contact'
@@ -12,6 +12,7 @@ import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import Pricing from './pages/Pricing';
 import GmailStatus from './pages/GmailStatus';
+import GmailConfig from './pages/GmailConfig';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
@@ -48,6 +49,7 @@ function App() {
           <Route path="/about" element={<About />}/>
           <Route path="/contact" element={<Contact />}/>
           <Route path="/pricing" element={<Pricing />}/>
+          <Route path="/gmail-config" element={<GmailConfig />}/>
           <Route path="/gmail-status" element={<GmailStatus />}/>
           <Route path="/not-found" element={<NotFound />}/>
         </Routes>

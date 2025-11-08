@@ -1,13 +1,13 @@
-  import GridContainer from "../components/GridContainer";
-  import LoginLightbox from "../components/LoginLightbox";
-  import DashboardHero from "../components/dashboard/DashboardHero";
-  import DashboardTools from "../components/dashboard/DashboardTools";
-  import DashboardTable from "../components/dashboard/DashboardTable";
-  import { useEffect, useMemo, useState } from "react";
-  import Cookies from "js-cookie";
-  import "./styles/Dashboard.css";
-  import type { Warranty } from "../types/dashboard";
-  import { BASE_URL } from "../config";
+import GridContainer from "../components/GridContainer/GridContainer";
+import LoginLightbox from "../components/LoginLightbox/LoginLightbox";
+import DashboardHero from "../components/dashboard/DashboardHero";
+import DashboardTools from "../components/dashboard/DashboardTools";
+import DashboardTable from "../components/dashboard/DashboardTable";
+import { useEffect, useMemo, useState } from "react";
+import Cookies from "js-cookie";
+import "./styles/Dashboard.css";
+import type { Warranty } from "../types/dashboard";
+import { BASE_URL } from "../config";
   
   interface DashProps {
     isLoggedIn?: boolean;
@@ -137,6 +137,24 @@
           return result;
       }
     }, [warranties, searchQuery, sortOption]);
+
+    const managedWarranties = warranties.length;
+    const expiringSoonCount = useMemo(() => {
+      const now = Date.now();
+      const thresholdMs = 7 * 24 * 60 * 60 * 1000;
+      return warranties.reduce((count, warranty) => {
+        const expDate = parseDate(warranty.expirationDate);
+        if (!expDate) {
+          return count;
+        }
+        const diff = expDate.getTime() - now;
+        if (diff <= thresholdMs) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+    }, [warranties]);
+    const remainingCount = Math.max(managedWarranties - expiringSoonCount, 0);
   
     const handleSortSelection = (option: string) => {
       setSortOption(option);
@@ -157,7 +175,12 @@
       <div className="dashboard-page">
         {!isLoggedIn && <LoginLightbox />}
         <DashboardHero activeCount={filteredAndSortedWarranties.length} />
-        <GridContainer />
+        <GridContainer
+          managedCount={managedWarranties}
+          expiringSoonCount={expiringSoonCount}
+          remainingCount={remainingCount}
+          isLoadingCounts={loadingWarranties}
+        />
         <DashboardTools
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}

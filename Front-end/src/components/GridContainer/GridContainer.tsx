@@ -1,14 +1,15 @@
 import './GridContainer.css';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Cookies from 'js-cookie';
-import GmailButton from './GmailLogin';
-import FileImport from './ImportFile';
-import { BASE_URL } from '../config';
+import GmailButton from '../GmailLogin/GmailLogin';
+import FileImport from '../ImportFile/ImportFile';
+import { BASE_URL } from '../../config';
 
-const specs = {
-  pachet: 'Premium',
-  nrWarranties: 15,
-  nrExpire: 10
+type GridContainerProps = {
+  managedCount?: number;
+  expiringSoonCount?: number;
+  remainingCount?: number;
+  isLoadingCounts?: boolean;
 };
 
 type RelativeTime = {
@@ -47,10 +48,19 @@ const formatRelativeTime = (timestamp?: string | null): RelativeTime => {
   return { value: days.toString(), label: 'Days since last check' };
 };
 
-function GridContainer() {
+function GridContainer({
+  managedCount = 0,
+  expiringSoonCount = 0,
+  remainingCount = 0,
+  isLoadingCounts = false
+}: GridContainerProps) {
   const [showImportModal, setShowImportModal] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const [lastCheckInfo, setLastCheckInfo] = useState<RelativeTime>(DEFAULT_RELATIVE_TIME);
+  const managedDisplay = isLoadingCounts ? '—' : managedCount.toString();
+  const expiringDisplay = isLoadingCounts ? '—' : expiringSoonCount.toString();
+  const remainingDisplay = isLoadingCounts ? '—' : Math.max(remainingCount, 0).toString();
+  const hasDanger = !isLoadingCounts && expiringSoonCount > 0;
 
   const fetchLastScan = useCallback(async () => {
     const userId = Cookies.get('UID');
@@ -109,13 +119,13 @@ function GridContainer() {
       </div>
       <div className="grid-item grid-item-2">
         <div className="item-2-row-1 flex">
-          <div className="big-number">{specs.nrWarranties}</div>
+          <div className="big-number">{remainingDisplay}</div>
           <div className="item-1-text">Remaining warranties</div>
         </div>
       </div>
       <div className="grid-item grid-item-2">
         <div className="item-2-row-1 flex">
-          <div className="big-number">{specs.nrWarranties}</div>
+          <div className="big-number">{managedDisplay}</div>
           <div className="item-1-text">Managed warranties</div>
           <button onClick={() => setShowImportModal(true)} className="button buttoninvert grid">
             Import
@@ -123,10 +133,10 @@ function GridContainer() {
         </div>
       </div>
       <div className="grid-item grid-item-3">
-        <div className={`item-2-row-2 flex ${specs.nrExpire && 'pericol'}`}>
-          <div className={`big-number`}>{specs.nrExpire}</div>
+        <div className={`item-2-row-2 flex ${hasDanger ? 'pericol' : ''}`}>
+          <div className={`big-number`}>{expiringDisplay}</div>
           <div className="item-1-text">Warranties with less than 7 days before expiring</div>
-          {specs.nrExpire && (
+          {hasDanger && (
             <svg fill="#FF0000" className="danger-symbol" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30.334 30.334">
               <g>
                 <rect width="100%" height="100%" fill="white" />

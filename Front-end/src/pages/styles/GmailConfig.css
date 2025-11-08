@@ -1,0 +1,80 @@
+.gmail-config-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-gradient, #f7f8fc);
+  padding: 2rem;
+}
+
+.gmail-config-card {
+  width: 100%;
+  max-width: 540px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 30px 80px rgba(15, 20, 30, 0.08);
+  padding: 2.5rem;
+}
+
+.gmail-config-card h1 {
+  margin-bottom: 0.5rem;
+}
+
+.gmail-config-card p {
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.gmail-config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.gmail-config-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #222;
+  gap: 0.35rem;
+}
+
+.gmail-config-form input {
+  border: 1px solid #dfe3eb;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
+
+.date-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.date-row label {
+  flex: 1;
+}
+
+.form-error {
+  color: #c62828;
+  background: rgba(198, 40, 40, 0.08);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .gmail-config-card {
+    padding: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+}

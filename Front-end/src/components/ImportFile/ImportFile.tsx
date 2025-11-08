@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import './ImportFile.css';
-import { BASE_URL } from '../config';
+import { BASE_URL } from '../../config';
 
 const ImportManualButton: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);

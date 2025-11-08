@@ -2,7 +2,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import './Header.css'
 import Cookies from 'js-cookie'
-import pozalogo from '../assets/logo.png'
+import pozalogo from '../../assets/logo.png'
 import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {

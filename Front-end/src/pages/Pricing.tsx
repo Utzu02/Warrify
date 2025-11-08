@@ -1,6 +1,6 @@
 import './styles/Pricing.css'
 import PricingColumns from "../components/pricing/PricingColumns"
-import Footer from "../components/Footer"
+import Footer from "../components/Footer/Footer"
 import PriceCalculator from "../components/pricing/PriceCalculator"
 import { Link } from "react-router-dom"
 

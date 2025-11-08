@@ -1,11 +1,12 @@
-import { Link } from 'react-router-dom';
 import './DashboardHero.css';
+import { Link } from 'react-router-dom';
 
 type DashboardHeroProps = {
   activeCount: number;
 };
 
-const DashboardHero = ({ activeCount }: DashboardHeroProps) => (
+const DashboardHero = ({ activeCount }: DashboardHeroProps) => {
+  return (
   <section className="dashboard-hero card">
     <div>
       <p className="eyebrow">Control center</p>
@@ -16,7 +17,7 @@ const DashboardHero = ({ activeCount }: DashboardHeroProps) => (
       </p>
     </div>
     <div className="hero-actions">
-      <Link to="/gmail-status" className="dashboard-btn primary">
+      <Link to="/gmail-config" className="dashboard-btn primary">
         Sync Gmail
       </Link>
       <a href="#warranties" className="dashboard-btn ghost">
@@ -24,6 +25,7 @@ const DashboardHero = ({ activeCount }: DashboardHeroProps) => (
       </a>
     </div>
   </section>
-);
+  );
+};
 
 export default DashboardHero;

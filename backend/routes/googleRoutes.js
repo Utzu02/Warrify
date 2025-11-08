@@ -10,6 +10,12 @@ import WarrantyDocument from '../models/WarrantyDocument.js';
 
 const router = express.Router();
 const isValidObjectId = (value = '') => mongoose.Types.ObjectId.isValid(value);
+const MAX_SCAN_RESULTS = 50;
+const DEFAULT_SCAN_OPTIONS = {
+    maxResults: 10,
+    startDate: null,
+    endDate: null
+};
 
 // 1. Configurare middleware
 router.use(session({
@@ -157,6 +163,27 @@ router.get("/auth/google/callback", async (req, res) => {
     }
 });
 
+router.post('/api/gmail/options', (req, res) => {
+    try {
+        const rawMax = Number(req.body?.maxResults) || DEFAULT_SCAN_OPTIONS.maxResults;
+        const maxResults = Math.min(Math.max(rawMax, 1), MAX_SCAN_RESULTS);
+        const startDate = parseDateString(req.body?.startDate);
+        const endDate = parseDateString(req.body?.endDate);
+        if (startDate && endDate && startDate > endDate) {
+            return res.status(400).json({ error: 'Start date must be earlier than end date.' });
+        }
+        req.session.gmailOptions = {
+            maxResults,
+            startDate: startDate ? startDate.toISOString() : null,
+            endDate: endDate ? endDate.toISOString() : null
+        };
+        return res.json({ success: true });
+    } catch (error) {
+        console.error('Failed to store Gmail options:', error);
+        return res.status(500).json({ error: 'Could not save Gmail scan options.' });
+    }
+});
+
 router.get("/api/emails", async (req, res) => {
     try {
         const accessToken = req.session.accessToken;
@@ -174,7 +201,8 @@ router.get("/api/emails", async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        const messages = await fetchAllMessages(accessToken);
+        const scanOptions = req.session.gmailOptions || DEFAULT_SCAN_OPTIONS;
+        const messages = await fetchAllMessages(accessToken, scanOptions);
         const results = [];
         
         // Procesare controlată
@@ -198,6 +226,7 @@ router.get("/api/emails", async (req, res) => {
             total: results.length,
             documents: results
         });
+        req.session.gmailOptions = { ...DEFAULT_SCAN_OPTIONS };
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -233,9 +262,22 @@ router.get("/api/emails/:messageId/attachments/:attachmentId", async (req, res) 
 
 const MAX_EMAILS = 10
 // 7. Funcții helper actualizate
-async function fetchAllMessages(token) {
+async function fetchAllMessages(token, scanOptions = DEFAULT_SCAN_OPTIONS) {
     let messages = [];
     let pageToken = null;
+    const desiredTotal = clamp(scanOptions?.maxResults || MAX_EMAILS, 1, MAX_SCAN_RESULTS);
+    const startDate = parseDateString(scanOptions?.startDate);
+    const endDate = parseDateString(scanOptions?.endDate);
+    const queryParts = ["has:attachment", "(mimeType:application/pdf OR filename:.pdf)"];
+    if (startDate) {
+        queryParts.push(`after:${formatGmailDate(startDate)}`);
+    }
+    if (endDate) {
+        const inclusiveEnd = new Date(endDate);
+        inclusiveEnd.setDate(inclusiveEnd.getDate() + 1);
+        queryParts.push(`before:${formatGmailDate(inclusiveEnd)}`);
+    }
+    const query = queryParts.join(' ');
     
     do {
         try {
@@ -244,9 +286,9 @@ async function fetchAllMessages(token) {
                 {
                     headers: { Authorization: `Bearer ${token}` },
                     params: {
-                        maxResults: 10,
+                        maxResults: Math.min(10, desiredTotal - messages.length),
                         pageToken,
-                        q: "has:attachment (mimeType:application/pdf OR filename:.pdf)"
+                        q: query
                     },
                     timeout: REQUEST_TIMEOUT
                 }
@@ -254,12 +296,12 @@ async function fetchAllMessages(token) {
 
             messages = messages.concat(response.data.messages || []);
             pageToken = response.data.nextPageToken;
-            if(messages.length > MAX_EMAILS) return;
+            if(messages.length >= desiredTotal) break;
         } catch (error) {
             console.error('Eroare preluare mesaje:', error.message);
             break;
         }
-    } while (pageToken && messages.length < MAX_EMAILS);
+    } while (pageToken && messages.length < desiredTotal);
 
     return messages.filter(msg => msg?.id);
 }
@@ -354,7 +396,7 @@ async function persistWarrantyDocument({ userId, messageId, attachment, pdfBuffe
     const messageDate = dateHeader ? new Date(dateHeader) : null;
 
     await WarrantyDocument.findOneAndUpdate(
-        { userId, attachmentId: attachment.attachmentId },
+        { userId, gmailMessageId: messageId, attachmentId: attachment.attachmentId },
         {
             userId,
             gmailMessageId: messageId,
@@ -373,6 +415,23 @@ async function persistWarrantyDocument({ userId, messageId, attachment, pdfBuffe
         },
         { upsert: true, new: true, setDefaultsOnInsert: true }
     );
+}
+
+function parseDateString(value) {
+    if (!value) return null;
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function formatGmailDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
+}
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(value, max));
 }
 
 function evaluateWarrantyScore(text = '') {

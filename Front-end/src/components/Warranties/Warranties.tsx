@@ -1,9 +1,9 @@
 import './Warranties.css';
 import { useMemo, useState } from 'react';
 import Cookies from 'js-cookie';
-import ModalWarranty from './ModalWarranty';
-import type { Warranty } from '../types/dashboard';
-import { BASE_URL } from '../config';
+import ModalWarranty from '../ModalWarranty/ModalWarranty';
+import type { Warranty } from '../../types/dashboard';
+import { BASE_URL } from '../../config';
 
 interface WarrantiesProps {
   warranties: Warranty[];

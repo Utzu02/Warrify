@@ -20,6 +20,6 @@ const warrantyDocumentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-warrantyDocumentSchema.index({ userId: 1, attachmentId: 1 }, { unique: true });
+warrantyDocumentSchema.index({ userId: 1, gmailMessageId: 1, attachmentId: 1 }, { unique: true });
 
 export default mongoose.model('WarrantyDocument', warrantyDocumentSchema);

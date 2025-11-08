@@ -1,8 +1,8 @@
 import './styles/Home.css'
 import info from '../assets/info.png'
 import dash from '../assets/dashboard.png'
-import Footer from "../components/Footer"
-import HomeBenefits from "../components/HomeBenefits"
+import Footer from "../components/Footer/Footer"
+import HomeBenefits from "../components/HomeBenefits/HomeBenefits"
 import conf2 from '../assets/conf2.png'
 import { Link } from "react-router-dom"
 

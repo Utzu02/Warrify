@@ -39,9 +39,21 @@ router.get('/users/:userId/warranties', async (req, res) => {
     }
 
     const warranties = await WarrantyDocument.find({ userId }).sort({ createdAt: -1 });
+    const uniqueWarranties = [];
+    const seenKeys = new Set();
+
+    warranties.forEach((warranty) => {
+      const key = `${warranty.gmailMessageId}:${warranty.attachmentId}`;
+      if (seenKeys.has(key)) {
+        return;
+      }
+      seenKeys.add(key);
+      uniqueWarranties.push(warranty);
+    });
+
     return res.json({
-      total: warranties.length,
-      items: warranties.map((warranty) => ({
+      total: uniqueWarranties.length,
+      items: uniqueWarranties.map((warranty) => ({
         id: warranty._id,
         productName: warranty.productName || warranty.subject || 'Unknown',
         purchaseDate: warranty.purchaseDate,
