@@ -17,6 +17,8 @@
 - [x] **Gmail config UX** – Route both Gmail import buttons to a new page/modal where the user selects count + date range before starting OAuth.
 - [x] **Backend scan options** – Persist the selected scan settings server-side and apply them to the Gmail fetch logic.
 - [x] **Regression pass** – Build + sanity-check after the new flow; summarize in Review.
+- [x] **Backend modular layout** – Move schemas, CRUD logic, and utilities into dedicated folders so routes stay thin.
+- [x] **Route refactor** – Update each route to consume the new CRUD helpers and shared utils.
 
 ## Review
 
@@ -25,4 +27,5 @@
 - Grid cards for “Managed warranties” and “<7 days” now read directly from the warranties API so they stay in sync with the dashboard table.
 - Sync Gmail CTA now jumps straight into the backend OAuth/import flow, `warrantyDocumentRoutes` deduplicates by Gmail message + attachment, and the dashboard counter treats already-expired docs as urgent.
 - Added a Gmail import configuration page (and updated both Gmail buttons to route there) so users can decide how many documents and which date range to scan; the backend persists those options per session and applies them to Gmail queries. The “Remaining” KPI now uses `total - expiring`.
+- Backend reorganized into `schemas`, `crud`, and `utils` modules so each route is now a thin wrapper around shared business logic (including the Gmail ingestion pipeline and warranty document handlers).
 - Frontend build (`npm run build`) passes; remaining to-do is to run a manual Gmail scan in a real environment because the sandbox lacks Google tokens.
