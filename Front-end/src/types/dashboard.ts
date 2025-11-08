@@ -7,3 +7,8 @@ export interface Warranty {
   filename: string;
   size: number;
 }
+
+export interface FilterOption {
+  label: string;
+  value: string | number;
+}

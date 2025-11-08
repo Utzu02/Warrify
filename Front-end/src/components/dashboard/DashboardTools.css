@@ -1,6 +1,7 @@
 .dashboard-tools {
   display: flex;
   flex-direction: column;
+  gap: 1.75rem;
 }
 
 .search-container {
@@ -34,44 +35,105 @@
   display: flex;
   width: 100%;
   position: relative;
-  justify-content: center;
-  gap: 2rem;
+  justify-content: flex-start;
+  gap: 1rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-.filter,
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.filter-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid #dfe3eb;
+  border-radius: 999px;
+  background: #fff;
+  color: #0f172a;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-chip:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+.chip-icon {
+  width: 12px;
+  height: 7px;
+}
+
+.filter-chip--dropdown .chip-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  background: #fff;
+  border: 1px solid #dfe3eb;
+  border-radius: 12px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: fit-content;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+  z-index: 5;
+}
+
+.chip-option {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  font-size: 0.92rem;
+  padding: 0.2rem 1rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.chip-option:hover {
+  background: #f1f5f9;
+}
+
+.chip-option input {
+  margin: 0;
+  margin-left: .5rem;
+  margin-right: .5rem;
+  accent-color: #1d4ed8;
+}
+
 .sort {
   position: relative;
 }
 
-.filter-button,
+.sort--inline {
+  margin-left: auto;
+}
+
 .sort-button {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 0.35rem;
-  padding: 1rem 2rem;
-  border: none;
+  padding: 0.35rem 0.9rem;
   border-radius: 999px;
-  background: linear-gradient(120deg, #818cf8, #6366f1);
-  color: #fff;
-  font-size: 1rem;
+  border: 1px solid #dfe3eb;
+  background: #fff;
+  color: #0f172a;
+  font-size: 0.95rem;
   cursor: pointer;
-  text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.3);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.filter-button:focus,
-.sort-button:focus {
-  outline: none;
-}
-
-.filter-button p,
-.sort-button p {
-  position: static;
-  transform: none;
-  font-weight: 600;
+.sort-button:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
 }
 
 .dropdown {
@@ -93,6 +155,24 @@
 .dropdown.sort {
   right: 0;
   left: auto;
+  padding: 0.5rem;
+  min-width: 200px;
+}
+
+.sort-option {
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 0.95rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  color: #0f172a;
+}
+
+.sort-option:hover {
+  background: #eef2ff;
 }
 
 .dropdown-icon {
@@ -112,10 +192,8 @@
     gap: 1rem;
   }
 
-  .filter-button,
-  .sort-button {
-    width: 100%;
-    max-width: 320px;
+  .sort--inline {
+    margin-left: 0;
   }
 
   .dropdown {
@@ -123,4 +201,21 @@
     width: 100%;
     max-width: 320px;
   }
+}
+.chip-label {
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0;
+  font-size: inherit;
+  width: 100%;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.chip-label--active {
+  color: #1d4ed8;
+  font-weight: 600;
 }

@@ -83,6 +83,7 @@ import { BASE_URL } from "../config";
     const [sortOption, setSortOption] = useState<string>("");
     const [searchQuery, setSearchQuery] = useState("");
     const [isSortOpen, setIsSortOpen] = useState(false);
+    const [activeFilters, setActiveFilters] = useState<Record<string, Array<string | number>>>({});
   
     const parseDate = (value?: string | null) => {
       if (!value) return null;
@@ -100,6 +101,36 @@ import { BASE_URL } from "../config";
           warranty.productName.toLowerCase().includes(query) ||
           warranty.provider.toLowerCase().includes(query)
         );
+      }
+
+      const productFilters = activeFilters.productName ?? [];
+      if (productFilters.length > 0) {
+        result = result.filter((w) => productFilters.includes(w.productName));
+      }
+
+      const providerFilters = activeFilters.provider ?? [];
+      if (providerFilters.length > 0) {
+        result = result.filter((w) => providerFilters.includes(w.provider));
+      }
+
+      const purchaseFilters = (activeFilters.purchaseDate ?? []) as number[];
+      if (purchaseFilters.length > 0) {
+        const now = Date.now();
+        result = result.filter((w) => {
+          const date = w.purchaseDate ? new Date(w.purchaseDate).getTime() : null;
+          if (!date) return false;
+          return purchaseFilters.some((days) => now - date <= days * 24 * 60 * 60 * 1000);
+        });
+      }
+
+      const expirationFilters = (activeFilters.expirationDate ?? []) as number[];
+      if (expirationFilters.length > 0) {
+        const now = Date.now();
+        result = result.filter((w) => {
+          const date = w.expirationDate ? new Date(w.expirationDate).getTime() : null;
+          if (!date) return false;
+          return expirationFilters.some((days) => date - now <= days * 24 * 60 * 60 * 1000);
+        });
       }
   
       // Sortare
@@ -171,6 +202,50 @@ import { BASE_URL } from "../config";
       "Name (Z-A)"
     ];
 
+    const uniqueValues = <T extends string | null | undefined>(mapFn: (w: Warranty) => T) => {
+      return Array.from(new Set(warranties.map(mapFn).filter(Boolean))) as string[];
+    };
+
+    const filters = [
+      {
+        key: 'productName',
+        label: 'Product name',
+        options: uniqueValues((w) => w.productName).map((value) => ({ label: value, value }))
+      },
+      {
+        key: 'provider',
+        label: 'Provider',
+        options: uniqueValues((w) => w.provider).map((value) => ({ label: value, value }))
+      },
+      {
+        key: 'purchaseDate',
+        label: 'Purchase date',
+        options: [
+          { label: 'Last 7 days', value: 7 },
+          { label: 'Last 30 days', value: 30 },
+          { label: 'Last 90 days', value: 90 }
+        ]
+      },
+      {
+        key: 'expirationDate',
+        label: 'Expiration date',
+        options: [
+          { label: 'Next 7 days', value: 7 },
+          { label: 'Next 30 days', value: 30 },
+          { label: 'Next 90 days', value: 90 }
+        ]
+      }
+    ];
+
+    const handleFilterChange = (key: string, value: string | number) => {
+      setActiveFilters((prev) => {
+        const current = prev[key] ?? [];
+        const exists = current.includes(value);
+        const nextValues = exists ? current.filter((item) => item !== value) : [...current, value];
+        return { ...prev, [key]: nextValues };
+      });
+    };
+
     return (
       <div className="dashboard-page">
         {!isLoggedIn && <LoginLightbox />}
@@ -189,6 +264,9 @@ import { BASE_URL } from "../config";
           isSortOpen={isSortOpen}
           onToggleSort={toggleSortDropdown}
           onSelectSort={handleSortSelection}
+          activeFilters={activeFilters}
+          filters={filters}
+          onFilterChange={handleFilterChange}
         />
         <DashboardTable warranties={filteredAndSortedWarranties} />
         {loadingWarranties && <p className="loading-state">Loading your warranties...</p>}
