@@ -1,6 +1,9 @@
 export interface Warranty {
-  prdName: string;
-  dataExp: string;
-  dataCump: string;
-  comp: string;
+  id: string;
+  productName: string;
+  purchaseDate: string | null;
+  expirationDate: string | null;
+  provider: string;
+  filename: string;
+  size: number;
 }

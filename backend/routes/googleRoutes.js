@@ -4,8 +4,12 @@ import dotenv from 'dotenv';
 import { google } from 'googleapis';
 import { createHash } from 'crypto';
 import session from 'express-session';
+import mongoose from 'mongoose';
+import User from '../models/User.js';
+import WarrantyDocument from '../models/WarrantyDocument.js';
 
 const router = express.Router();
+const isValidObjectId = (value = '') => mongoose.Types.ObjectId.isValid(value);
 
 // 1. Configurare middleware
 router.use(session({
@@ -160,6 +164,16 @@ router.get("/api/emails", async (req, res) => {
             return res.status(401).json({ error: 'Missing Google access token. Please connect your Gmail account again.' });
         }
 
+        const userId = req.headers['x-user-id'] || req.query.userId;
+        if (!userId || !isValidObjectId(userId)) {
+            return res.status(400).json({ error: 'Missing or invalid user identifier' });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         const messages = await fetchAllMessages(accessToken);
         const results = [];
         
@@ -170,12 +184,15 @@ router.get("/api/emails", async (req, res) => {
             }
             
             try {
-                const result = await processSingleEmail(messages[i].id, accessToken);
+                const result = await processSingleEmail(messages[i].id, accessToken, userId);
                 if (result) results.push(result);
             } catch (error) {
                 console.error(`Eroare mesaj ${i}:`, error.message);
             }
         }
+
+        user.lastScanAt = new Date();
+        await user.save();
 
         res.json({
             total: results.length,
@@ -247,7 +264,7 @@ async function fetchAllMessages(token) {
     return messages.filter(msg => msg?.id);
 }
 
-async function processSingleEmail(id, token) {
+async function processSingleEmail(id, token, userId) {
     try {
         const msgRes = await axios.get(
             `https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}`,
@@ -258,6 +275,7 @@ async function processSingleEmail(id, token) {
             }
         );
 
+        const headers = msgRes.data.payload?.headers || [];
         const parts = msgRes.data.payload?.parts || [];
         const attachments = extractPDFAttachments(parts);
         const warrantyAttachments = [];
@@ -274,6 +292,13 @@ async function processSingleEmail(id, token) {
 
                 const pdfBuffer = Buffer.from(attachmentRes.data.data, 'base64');
                 if (await isWarrantyDocument(pdfBuffer)) {
+                    await persistWarrantyDocument({
+                        userId,
+                        messageId: id,
+                        attachment,
+                        pdfBuffer,
+                        headers
+                    });
                     warrantyAttachments.push({
                         filename: attachment.filename,
                         size: attachment.size,
@@ -287,9 +312,9 @@ async function processSingleEmail(id, token) {
 
         return warrantyAttachments.length > 0 ? {
             id,
-            subject: getHeader(msgRes.data.payload.headers, 'Subject'),
-            from: getHeader(msgRes.data.payload.headers, 'From'),
-            date: getHeader(msgRes.data.payload.headers, 'Date'),
+            subject: getHeader(headers, 'Subject'),
+            from: getHeader(headers, 'From'),
+            date: getHeader(headers, 'Date'),
             attachments: warrantyAttachments
         } : null;
 
@@ -316,6 +341,38 @@ function extractPDFAttachments(parts, attachments = []) {
 
 function getHeader(headers, name) {
     return headers.find(h => h.name === name)?.value || 'Necunoscut';
+}
+
+async function persistWarrantyDocument({ userId, messageId, attachment, pdfBuffer, headers }) {
+    if (!userId || !attachment?.attachmentId) {
+        return;
+    }
+
+    const subject = getHeader(headers, 'Subject');
+    const from = getHeader(headers, 'From');
+    const dateHeader = getHeader(headers, 'Date');
+    const messageDate = dateHeader ? new Date(dateHeader) : null;
+
+    await WarrantyDocument.findOneAndUpdate(
+        { userId, attachmentId: attachment.attachmentId },
+        {
+            userId,
+            gmailMessageId: messageId,
+            attachmentId: attachment.attachmentId,
+            filename: attachment.filename || `document-${Date.now()}.pdf`,
+            size: attachment.size || pdfBuffer.length,
+            subject,
+            from,
+            messageDate,
+            productName: subject || attachment.filename || 'Unknown',
+            purchaseDate: messageDate,
+            expirationDate: messageDate,
+            provider: from || 'Unknown',
+            pdfData: pdfBuffer,
+            contentType: 'application/pdf'
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 }
 
 function evaluateWarrantyScore(text = '') {

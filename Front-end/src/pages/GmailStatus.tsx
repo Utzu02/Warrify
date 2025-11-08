@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import { BASE_URL } from '../config';
 import './styles/GmailStatus.css';
 
@@ -54,9 +55,19 @@ const GmailStatus = () => {
         setLoading(true);
         setError(null);
 
+        const userId = Cookies.get('UID');
+        if (!userId) {
+          setError('Please log in to run the Gmail scan.');
+          setLoading(false);
+          return;
+        }
+
+        const headers: Record<string, string> = { 'x-user-id': userId };
+
         const response = await fetch(`${BASE_URL}/api/emails`, {
           credentials: 'include',
-          signal: controller.signal
+          signal: controller.signal,
+          headers
         });
 
         const payload = await response.json().catch(() => ({}));
@@ -72,7 +83,6 @@ const GmailStatus = () => {
         const now = new Date();
         setDocuments(payload.documents || []);
         setLastUpdated(now);
-        localStorage.setItem('last_gmail_check', now.toISOString());
       } catch (err) {
         if (!isMounted) {
           return;

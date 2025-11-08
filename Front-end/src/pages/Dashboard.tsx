@@ -3,159 +3,102 @@
   import DashboardHero from "../components/dashboard/DashboardHero";
   import DashboardTools from "../components/dashboard/DashboardTools";
   import DashboardTable from "../components/dashboard/DashboardTable";
-  import { useState, useMemo } from "react";
+  import { useEffect, useMemo, useState } from "react";
+  import Cookies from "js-cookie";
   import "./styles/Dashboard.css";
   import type { Warranty } from "../types/dashboard";
+  import { BASE_URL } from "../config";
   
   interface DashProps {
     isLoggedIn?: boolean;
   }
   
   const Dashboard = ({ isLoggedIn }: DashProps) => {
-    // Lista originală de garanții (nesortată și nefiltrată)
-    const originalWarranties = useMemo<Warranty[]>(() =>[
-      // Dispozitivele existente...
-      // ... 
-      {
-        prdName: "Dell XPS 15",
-        dataExp: "15.01.2026",
-        dataCump: "15.01.2023",
-        comp: "Media Galaxy",
-      },
-      {
-        prdName: "HP Spectre x360",
-        dataExp: "20.02.2025",
-        dataCump: "20.02.2023",
-        comp: "Flanco",
-      },
-      {
-        prdName: "Lenovo ThinkPad X1 Carbon",
-        dataExp: "10.03.2027",
-        dataCump: "10.03.2024",
-        comp: "PC Garage",
-      },
-      {
-        prdName: "Samsung Galaxy Tab S8",
-        dataExp: "05.05.2026",
-        dataCump: "05.05.2023",
-        comp: "Altex",
-      },
-      {
-        prdName: "Microsoft Surface Laptop 4",
-        dataExp: "12.06.2027",
-        dataCump: "12.06.2024",
-        comp: "Emag",
-      },
-      {
-        prdName: "Apple iPad Pro 12.9",
-        dataExp: "25.07.2026",
-        dataCump: "25.07.2023",
-        comp: "Istyle",
-      },
-      {
-        prdName: "Razer Blade 15",
-        dataExp: "30.08.2027",
-        dataCump: "30.08.2024",
-        comp: "Media Galaxy",
-      },
-      {
-        prdName: "LG Gram 17",
-        dataExp: "14.09.2026",
-        dataCump: "14.09.2023",
-        comp: "Flanco",
-      },
-      {
-        prdName: "ASUS TUF Gaming A15",
-        dataExp: "22.10.2027",
-        dataCump: "22.10.2024",
-        comp: "PC Garage",
-      },
-      {
-        prdName: "MSI Stealth GS66",
-        dataExp: "03.11.2026",
-        dataCump: "03.11.2023",
-        comp: "Altex",
-      },{
-        prdName: "Sony WH-1000XM5",
-        dataExp: "10.12.2026",
-        dataCump: "10.12.2023",
-        comp: "QuickMobile",
-      },
-      {
-        prdName: "Xiaomi Redmi Note 12 Pro",
-        dataExp: "07.04.2027",
-        dataCump: "07.04.2024",
-        comp: "eMAG",
-      },
-      {
-        prdName: "Logitech MX Master 3S",
-        dataExp: "19.08.2025",
-        dataCump: "19.08.2023",
-        comp: "PC Garage",
-      },
-      {
-        prdName: "Canon EOS R6 Mark II",
-        dataExp: "25.05.2028",
-        dataCump: "25.05.2025",
-        comp: "Flanco",
-      },
-      {
-        prdName: "Garmin Fenix 7X",
-        dataExp: "30.11.2026",
-        dataCump: "30.11.2023",
-        comp: "Altex",
-      },
-      {
-        prdName: "Huawei MateBook D16",
-        dataExp: "14.09.2027",
-        dataCump: "14.09.2024",
-        comp: "Media Galaxy",
-      },
-      {
-        prdName: "Philips Hue Starter Kit",
-        dataExp: "02.03.2026",
-        dataCump: "02.03.2023",
-        comp: "Istyle",
-      },
-      {
-        prdName: "SteelSeries Apex Pro TKL",
-        dataExp: "22.10.2025",
-        dataCump: "22.10.2023",
-        comp: "Cel.ro",
-      },
-      {
-        prdName: "JBL Charge 5",
-        dataExp: "17.07.2027",
-        dataCump: "17.07.2024",
-        comp: "Evomag",
-      },
-      {
-        prdName: "AMD Ryzen 9 7950X",
-        dataExp: "09.01.2028",
-        dataCump: "09.01.2025",
-        comp: "PC Garage",
-      },
-    ],[]);
-      // ... restul intrărilor ...
+    const [warranties, setWarranties] = useState<Warranty[]>([]);
+    const [loadingWarranties, setLoadingWarranties] = useState(true);
+    const [warrantyError, setWarrantyError] = useState<string | null>(null);
+  
+    useEffect(() => {
+      let isMounted = true;
+      const controller = new AbortController();
+  
+      const loadWarranties = async () => {
+        try {
+          const userId = Cookies.get('UID');
+          if (!userId) {
+            setWarrantyError('Please log in to view your warranties.');
+            setWarranties([]);
+            setLoadingWarranties(false);
+            return;
+          }
+  
+          const response = await fetch(`${BASE_URL}/api/users/${userId}/warranties`, {
+            credentials: 'include',
+            signal: controller.signal
+          });
+  
+          const payload = await response.json().catch(() => ({}));
+  
+          if (!response.ok) {
+            throw new Error(payload.error || 'Failed to load warranties');
+          }
+  
+          if (!isMounted) {
+            return;
+          }
+  
+          const mapped = (payload.items || []).map((item: any) => ({
+            id: item.id,
+            productName: item.productName,
+            purchaseDate: item.purchaseDate,
+            expirationDate: item.expirationDate,
+            provider: item.provider,
+            filename: item.filename,
+            size: item.size
+          }));
+  
+          setWarranties(mapped);
+          setWarrantyError(null);
+        } catch (error) {
+          if (!isMounted) {
+            return;
+          }
+          setWarrantyError(error instanceof Error ? error.message : 'Unexpected error');
+          setWarranties([]);
+        } finally {
+          if (isMounted) {
+            setLoadingWarranties(false);
+          }
+        }
+      };
+  
+      loadWarranties();
+  
+      return () => {
+        isMounted = false;
+        controller.abort();
+      };
+    }, []);
   
     const [sortOption, setSortOption] = useState<string>("");
     const [searchQuery, setSearchQuery] = useState("");
     const [isSortOpen, setIsSortOpen] = useState(false);
   
-    const parseDate = (dateStr: string) => {
-      const [day, month, year] = dateStr.split(".");
-      return new Date(`${year}-${month}-${day}`);
+    const parseDate = (value?: string | null) => {
+      if (!value) return null;
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
     };
   
     const filteredAndSortedWarranties = useMemo(() => {
-      let result = [...originalWarranties];
+      let result = [...warranties];
       
       // Filtrare
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         result = result.filter(warranty => 
-          warranty.prdName.toLowerCase().includes(query) ||
-          warranty.comp.toLowerCase().includes(query)
+          warranty.productName.toLowerCase().includes(query) ||
+          warranty.provider.toLowerCase().includes(query)
         );
       }
   
@@ -163,33 +106,37 @@
       const today = new Date();
       switch (sortOption) {
         case "Expiration Date (Asc)":
-          return result.sort((a, b) => 
-            parseDate(a.dataExp).getTime() - parseDate(b.dataExp).getTime()
-          );
+          return result.sort((a, b) => {
+            const aDate = parseDate(a.expirationDate)?.getTime() ?? Number.POSITIVE_INFINITY;
+            const bDate = parseDate(b.expirationDate)?.getTime() ?? Number.POSITIVE_INFINITY;
+            return aDate - bDate;
+          });
         case "Expiration Date (Desc)":
-          return result.sort((a, b) => 
-            parseDate(b.dataExp).getTime() - parseDate(a.dataExp).getTime()
-          );
+          return result.sort((a, b) => {
+            const aDate = parseDate(a.expirationDate)?.getTime() ?? Number.NEGATIVE_INFINITY;
+            const bDate = parseDate(b.expirationDate)?.getTime() ?? Number.NEGATIVE_INFINITY;
+            return bDate - aDate;
+          });
         case "Upcoming Expiration (Asc)":
           return result.sort((a, b) => {
-            const aDiff = parseDate(a.dataExp).getTime() - today.getTime();
-            const bDiff = parseDate(b.dataExp).getTime() - today.getTime();
+            const aDiff = (parseDate(a.expirationDate)?.getTime() ?? Number.POSITIVE_INFINITY) - today.getTime();
+            const bDiff = (parseDate(b.expirationDate)?.getTime() ?? Number.POSITIVE_INFINITY) - today.getTime();
             return aDiff - bDiff;
           });
         case "Upcoming Expiration (Desc)":
           return result.sort((a, b) => {
-            const aDiff = parseDate(a.dataExp).getTime() - today.getTime();
-            const bDiff = parseDate(b.dataExp).getTime() - today.getTime();
+            const aDiff = (parseDate(a.expirationDate)?.getTime() ?? Number.POSITIVE_INFINITY) - today.getTime();
+            const bDiff = (parseDate(b.expirationDate)?.getTime() ?? Number.POSITIVE_INFINITY) - today.getTime();
             return bDiff - aDiff;
           });
         case "Name (A-Z)":
-          return result.sort((a, b) => a.prdName.localeCompare(b.prdName));
+          return result.sort((a, b) => a.productName.localeCompare(b.productName));
         case "Name (Z-A)":
-          return result.sort((a, b) => b.prdName.localeCompare(a.prdName));
+          return result.sort((a, b) => b.productName.localeCompare(a.productName));
         default:
           return result;
       }
-    }, [originalWarranties, searchQuery, sortOption]);
+    }, [warranties, searchQuery, sortOption]);
   
     const handleSortSelection = (option: string) => {
       setSortOption(option);
@@ -221,6 +168,8 @@
           onSelectSort={handleSortSelection}
         />
         <DashboardTable warranties={filteredAndSortedWarranties} />
+        {loadingWarranties && <p className="loading-state">Loading your warranties...</p>}
+        {warrantyError && <p className="error-state">{warrantyError}</p>}
       </div>
     );
   };

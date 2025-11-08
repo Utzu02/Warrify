@@ -8,6 +8,7 @@ import authRoutes from './routes/authRoutes.js';
 import warrantiesRoutes2 from './routes/warrantyRoutes2.js';
 import dotenv from 'dotenv';
 import googleRoutes from './routes/googleRoutes.js'
+import warrantyDocumentRoutes from './routes/warrantyDocumentRoutes.js';
 import session from "express-session";
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use('/api', userRoutes);
 app.use('/api', authRoutes);
 app.use('/',googleRoutes);
 app.use('/api', warrantiesRoutes2);
+app.use('/api', warrantyDocumentRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {

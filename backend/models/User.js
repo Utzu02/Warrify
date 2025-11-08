@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   terms: { type: Boolean, required: true },
+  lastScanAt: { type: Date }
 })
 
 // Hash password before saving

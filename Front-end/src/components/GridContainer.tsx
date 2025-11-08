@@ -1,7 +1,9 @@
 import './GridContainer.css';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import Cookies from 'js-cookie';
 import GmailButton from './GmailLogin';
 import FileImport from './ImportFile';
+import { BASE_URL } from '../config';
 
 const specs = {
   pachet: 'Premium',
@@ -9,31 +11,29 @@ const specs = {
   nrExpire: 10
 };
 
-const LAST_CHECK_KEY = 'last_gmail_check';
-
 type RelativeTime = {
   value: string;
   label: string;
 };
 
-const computeRelativeTime = (): RelativeTime => {
-  const stored = localStorage.getItem(LAST_CHECK_KEY);
-  if (!stored) {
-    return { value: '—', label: 'No scans yet' };
+const DEFAULT_RELATIVE_TIME: RelativeTime = { value: '—', label: 'No scans yet' };
+
+const formatRelativeTime = (timestamp?: string | null): RelativeTime => {
+  if (!timestamp) {
+    return DEFAULT_RELATIVE_TIME;
   }
 
-  const timestamp = new Date(stored);
-  if (Number.isNaN(timestamp.getTime())) {
-    return { value: '—', label: 'No scans yet' };
+  const parsed = new Date(timestamp);
+  if (Number.isNaN(parsed.getTime())) {
+    return DEFAULT_RELATIVE_TIME;
   }
 
-  const diffMs = Date.now() - timestamp.getTime();
-  const minutes = Math.floor(diffMs / 60000);
-
-  if (minutes < 1) {
+  const diffMs = Date.now() - parsed.getTime();
+  if (diffMs < 60000) {
     return { value: '<1', label: 'Minutes since last check' };
   }
 
+  const minutes = Math.floor(diffMs / 60000);
   if (minutes < 60) {
     return { value: minutes.toString(), label: 'Minutes since last check' };
   }
@@ -50,29 +50,38 @@ const computeRelativeTime = (): RelativeTime => {
 function GridContainer() {
   const [showImportModal, setShowImportModal] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [lastCheckInfo, setLastCheckInfo] = useState<RelativeTime>({ value: '—', label: 'No scans yet' });
+  const [lastCheckInfo, setLastCheckInfo] = useState<RelativeTime>(DEFAULT_RELATIVE_TIME);
+
+  const fetchLastScan = useCallback(async () => {
+    const userId = Cookies.get('UID');
+    if (!userId) {
+      setLastCheckInfo({ ...DEFAULT_RELATIVE_TIME });
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BASE_URL}/api/users/${userId}/scan-info`, {
+        credentials: 'include'
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload.error || 'Failed to load scan info');
+      }
+
+      setLastCheckInfo(formatRelativeTime(payload.lastScanAt));
+    } catch (error) {
+      console.error('Failed to load scan info', error);
+      setLastCheckInfo({ ...DEFAULT_RELATIVE_TIME });
+    }
+  }, []);
 
   useEffect(() => {
-    const updateRelativeTime = () => {
-      setLastCheckInfo(computeRelativeTime());
-    };
-
-    updateRelativeTime();
-
-    const onStorageChange = (event: StorageEvent) => {
-      if (event.key === LAST_CHECK_KEY) {
-        updateRelativeTime();
-      }
-    };
-
-    const intervalId = window.setInterval(updateRelativeTime, 60 * 1000);
-    window.addEventListener('storage', onStorageChange);
-
+    fetchLastScan();
+    const intervalId = window.setInterval(fetchLastScan, 60 * 1000);
     return () => {
-      window.removeEventListener('storage', onStorageChange);
       window.clearInterval(intervalId);
     };
-  }, []);
+  }, [fetchLastScan]);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
