@@ -6,13 +6,14 @@ import {
   updateUser,
   deleteUser
 } from '../crud/userCrud.js';
+import { userMiddleware } from '../middleware/userMiddleware.js';
 
 const router = express.Router();
 
-router.post('/users', createUser);
-router.get('/users', listUsers);
-router.get('/users/:id', getUser);
-router.patch('/users/:id', updateUser);
-router.delete('/users/:id', deleteUser);
+router.post('/users', userMiddleware, createUser);
+router.get('/users', userMiddleware, listUsers);
+router.get('/users/:id', userMiddleware, getUser);
+router.patch('/users/:id', userMiddleware, updateUser);
+router.delete('/users/:id', userMiddleware, deleteUser);
 
 export default router;

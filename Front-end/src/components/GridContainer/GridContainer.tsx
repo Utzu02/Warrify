@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Cookies from 'js-cookie';
 import GmailButton from '../GmailLogin/GmailLogin';
 import FileImport from '../ImportFile/ImportFile';
-import { BASE_URL } from '../../config';
+import { fetchScanInfo } from '../../api/users';
 
 type GridContainerProps = {
   managedCount?: number;
@@ -70,14 +70,7 @@ function GridContainer({
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/api/users/${userId}/scan-info`, {
-        credentials: 'include'
-      });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        throw new Error(payload.error || 'Failed to load scan info');
-      }
-
+      const payload = await fetchScanInfo(userId);
       setLastCheckInfo(formatRelativeTime(payload.lastScanAt));
     } catch (error) {
       console.error('Failed to load scan info', error);

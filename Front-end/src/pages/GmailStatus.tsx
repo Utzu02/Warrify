@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { BASE_URL } from '../config';
+import { fetchGmailEmails } from '../api/gmail';
 import './styles/GmailStatus.css';
 
 interface Attachment {
@@ -48,7 +49,6 @@ const GmailStatus = () => {
 
   useEffect(() => {
     let isMounted = true;
-    const controller = new AbortController();
 
     async function loadEmails() {
       try {
@@ -62,19 +62,7 @@ const GmailStatus = () => {
           return;
         }
 
-        const headers: Record<string, string> = { 'x-user-id': userId };
-
-        const response = await fetch(`${BASE_URL}/api/emails`, {
-          credentials: 'include',
-          signal: controller.signal,
-          headers
-        });
-
-        const payload = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-          throw new Error(payload.error || 'Failed to fetch Gmail data.');
-        }
+        const payload = await fetchGmailEmails<{ total: number; documents: ProcessedEmail[] }>();
 
         if (!isMounted) {
           return;
@@ -99,7 +87,6 @@ const GmailStatus = () => {
 
     return () => {
       isMounted = false;
-      controller.abort();
     };
   }, []);
 

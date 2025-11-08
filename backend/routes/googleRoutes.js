@@ -9,6 +9,7 @@ import {
   downloadAttachment,
   DEFAULT_SCAN_OPTIONS
 } from '../crud/gmailCrud.js';
+import { userMiddleware } from '../middleware/userMiddleware.js';
 
 dotenv.config();
 
@@ -32,8 +33,8 @@ router.use((req, res, next) => {
 
 router.get('/auth/google', authRedirect);
 router.get('/auth/google/callback', authCallback);
-router.post('/api/gmail/options', saveGmailOptionsHandler);
-router.get('/api/emails', fetchEmails);
-router.get('/api/emails/:messageId/attachments/:attachmentId', downloadAttachment);
+router.post('/api/gmail/options', userMiddleware, saveGmailOptionsHandler);
+router.get('/api/emails', userMiddleware, fetchEmails);
+router.get('/api/emails/:messageId/attachments/:attachmentId', userMiddleware, downloadAttachment);
 
 export default router;

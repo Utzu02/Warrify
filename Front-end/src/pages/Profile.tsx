@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import './styles/Profile.css';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { BASE_URL } from '../config';
+import { fetchUserProfile, fetchUserWarranties } from '../api/users';
 
 type ApiUser = {
   _id: string;
@@ -60,29 +60,13 @@ const Profile = () => {
     const loadProfile = async () => {
       try {
         setError(null);
-        const [userRes, warrantiesRes] = await Promise.all([
-          fetch(`${BASE_URL}/api/users/${userId}`, {
-            credentials: 'include',
-            signal: controller.signal
-          }),
-          fetch(`${BASE_URL}/api/users/${userId}/warranties`, {
-            credentials: 'include',
-            signal: controller.signal
-          })
+        const [userPayload, warrantiesPayload] = await Promise.all([
+          fetchUserProfile(userId, { signal: controller.signal }),
+          fetchUserWarranties(userId, { signal: controller.signal })
         ]);
 
-        const userPayload = await userRes.json().catch(() => ({}));
-        if (!userRes.ok) {
-          throw new Error(userPayload.error || 'Failed to load profile data.');
-        }
-
-        const warrantiesPayload = await warrantiesRes.json().catch(() => ({}));
-        if (!warrantiesRes.ok) {
-          throw new Error(warrantiesPayload.error || 'Failed to load warranties.');
-        }
-
-        setUserData(userPayload);
-        const items: WarrantySummary[] = warrantiesPayload.items || [];
+        setUserData(userPayload as ApiUser);
+        const items: WarrantySummary[] = (warrantiesPayload.items as WarrantySummary[]) || [];
         const total = items.length;
         const now = Date.now();
         const expiringSoon = items.reduce((count, item) => {

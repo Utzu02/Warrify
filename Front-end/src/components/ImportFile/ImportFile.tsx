@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import './ImportFile.css';
-import { BASE_URL } from '../../config';
+import { uploadWarrantyPdf } from '../../api/warranties';
 
 const ImportManualButton: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -10,28 +10,12 @@ const ImportManualButton: React.FC = () => {
     if (selectedFile && selectedFile.type === 'application/pdf') {
       console.log('Selected PDF file:', selectedFile);
 
-      const formData = new FormData();
-      formData.append('pdf', selectedFile);
-
       try {
-        const response = await fetch(`${BASE_URL}/api/warranties2`, {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await response.json();
-        console.log("Server Response:", data);
-
-        if (response.ok) {
-          console.log("File upload successful");
-          alert('File upload successful');
-        } else {
-          console.error("File upload failed:", data);
-          alert("nu merge pentru ca response.ok.");
-        }
+        await uploadWarrantyPdf(selectedFile);
+        alert('File upload successful');
       } catch (error) {
         console.error('Error uploading file:', error);
-        alert('Yese din try');
+        alert('Upload failed. Please try again.');
       }
     } else {
       alert('Please select a valid PDF file.');

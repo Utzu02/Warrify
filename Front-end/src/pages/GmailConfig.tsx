@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { saveGmailOptions } from '../api/gmail';
 import { BASE_URL } from '../config';
 import './styles/GmailConfig.css';
 
@@ -38,20 +39,11 @@ const GmailConfig = () => {
     try {
       setError(null);
       setLoading(true);
-      const response = await fetch(`${BASE_URL}/api/gmail/options`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          maxResults,
-          startDate: startDate || null,
-          endDate: endDate || null
-        })
+      await saveGmailOptions({
+        maxResults,
+        startDate: startDate || null,
+        endDate: endDate || null
       });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        throw new Error(payload.error || 'Unable to save Gmail scan options.');
-      }
       window.location.href = `${BASE_URL}/auth/google`;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unexpected error. Please try again.');

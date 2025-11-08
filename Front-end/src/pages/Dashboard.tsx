@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import Cookies from "js-cookie";
 import "./styles/Dashboard.css";
 import type { Warranty } from "../types/dashboard";
-import { BASE_URL } from "../config";
+import { fetchUserWarranties } from "../api/users";
   
   interface DashProps {
     isLoggedIn?: boolean;
@@ -32,16 +32,7 @@ import { BASE_URL } from "../config";
             return;
           }
   
-          const response = await fetch(`${BASE_URL}/api/users/${userId}/warranties`, {
-            credentials: 'include',
-            signal: controller.signal
-          });
-  
-          const payload = await response.json().catch(() => ({}));
-  
-          if (!response.ok) {
-            throw new Error(payload.error || 'Failed to load warranties');
-          }
+          const payload = await fetchUserWarranties(userId, { signal: controller.signal });
   
           if (!isMounted) {
             return;

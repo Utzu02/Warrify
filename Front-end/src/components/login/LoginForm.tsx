@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { BASE_URL } from '../../config';
+import { loginUser } from '../../api/auth';
 import './LoginForm.css';
 
 const LoginForm = () => {
@@ -29,23 +29,12 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/api/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        Cookies.set('UID', data.userId, { expires: 7, path: '' });
-        setEmail('');
-        setPassword('');
-        setErrors({});
-        navigate('/');
-      } else {
-        alert(data.message || 'Login failed. Please try again.');
-      }
+      const data = await loginUser({ email, password });
+      Cookies.set('UID', data.userId, { expires: 7, path: '' });
+      setEmail('');
+      setPassword('');
+      setErrors({});
+      navigate('/');
     } catch (error) {
       console.error('Error during login:', error);
       alert('An error occurred. Please try again.');

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../../config';
+import { registerUser } from '../../api/auth';
 import './RegisterForm.css';
 
 const RegisterForm = () => {
@@ -51,22 +51,11 @@ const RegisterForm = () => {
 
     const username = name;
     try {
-      const response = await fetch(`${BASE_URL}/api/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password, terms })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        navigate('/');
-      } else {
-        setErrors({ email: data.message || 'Registration failed.' });
-      }
+      await registerUser({ username, email, password, terms });
+      navigate('/');
     } catch (error) {
       console.error('Error during registration:', error);
-      setErrors({ email: 'An error occurred. Please try again later.' });
+      setErrors({ email: error instanceof Error ? error.message : 'An error occurred. Please try again later.' });
     }
   };
 
