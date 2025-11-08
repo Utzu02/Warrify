@@ -1,5 +1,5 @@
 .grid-container {
-    margin: 5vh auto 0;
+    margin: 2vh auto 0;
     width: 90vw;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -11,11 +11,11 @@
     max-width: 1200px;
 }
 .grid-item {
+    border-radius: 24px;
+    box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e2e8f0;
     width: 100%;
     min-height: 120px;
-    box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.3);
-    border-radius: 7px;
-    background: #fff;
 }
 .flex {
     display: flex;

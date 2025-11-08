@@ -7,7 +7,7 @@
 .search-container {
   position: relative;
   width: min(90vw, 960px);
-  margin: 5vh auto 0vh;
+  margin: 2vh auto 0vh;
   font-family: unifysans, helvetica, arial, lato, sans-serif !important;
 }
 

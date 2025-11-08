@@ -1,7 +1,7 @@
 .contact-form-card {
   border-radius: 28px;
   padding: 3rem 3.5rem;
-  width: min(90vw, 720px);
+  width: 60%;
   background: #fff;
   box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
   border: 1px solid #e2e8f0;
@@ -69,6 +69,7 @@
 
 .contact-form-card__grid textarea {
   resize: vertical;
+  width: 100%;
 }
 
 .contact-form-card__full-width {

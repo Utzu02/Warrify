@@ -13,4 +13,5 @@
   justify-content: center;
   flex-direction: column;
   gap: 2rem;
+  padding-bottom: 6vh;
 }
