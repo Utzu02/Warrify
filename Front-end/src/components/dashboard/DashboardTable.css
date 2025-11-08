@@ -1,25 +1,30 @@
 .table-card {
-  padding: 2.5rem;
+  padding: 2.5rem !important;
 }
 
 .table-card .table-header {
   display: flex;
   align-items: center;
+  justify-content: start;
   gap: 1rem;
 }
-
+.table-card .table-header div {
+  margin: 0;
+}
+.table-card .table-header .pill {
+  margin: 0;
+}
 .table-card .warr-container {
   box-shadow: none;
   border-radius: 20px;
   margin: 1.25rem auto 0;
-  max-width: 1200px;
-  width: 100%;
 }
 
 .table-card .warr-header,
 .table-card .warr-entry {
   padding-left: 2rem;
   padding-right: 2rem;
+  cursor: pointer;
 }
 
 .table-card .table-footer {

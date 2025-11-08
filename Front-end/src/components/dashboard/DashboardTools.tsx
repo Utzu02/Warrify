@@ -68,6 +68,41 @@ const DashboardTools = ({
     </div>
 
     <div className="filters-container">
+      <div className="sort sort--inline">
+        <button className="sort-button sort-button--outline" onClick={onToggleSort}>
+          <span>{selectedSort ? selectedSort : 'Sort list'}</span>
+          {selectedSort ? (
+            <svg
+              className="dropdown-icon dropdown-icon--close"
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              onClick={(event) => {
+                event.stopPropagation();
+                onSelectSort('');
+              }}
+            >
+              <path d="M3 3L9 9M9 3L3 9" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          ) : (
+            <svg className="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 14 8" fill="none">
+              <path d="M1 1L7 7L13 1" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </button>
+
+        {isSortOpen && (
+          <div className="dropdown sort">
+            {sortOptions.map((option) => (
+              <button key={option} type="button" onClick={() => onSelectSort(option)} className="sort-option">
+                {option}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       <div className="filter-group">
         {filters.map((filter) => (
           <div
@@ -103,25 +138,6 @@ const DashboardTools = ({
             )}
           </div>
         ))}
-      </div>
-
-      <div className="sort sort--inline">
-        <button className="sort-button sort-button--outline" onClick={onToggleSort}>
-          <span>{selectedSort ? selectedSort : 'Sort list'}</span>
-          <svg className="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 14 8" fill="none">
-            <path d="M1 1L7 7L13 1" stroke="#475569" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-
-        {isSortOpen && (
-          <div className="dropdown sort">
-            {sortOptions.map((option) => (
-              <button key={option} type="button" onClick={() => onSelectSort(option)} className="sort-option">
-                {option}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   </section>
