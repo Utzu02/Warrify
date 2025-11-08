@@ -8,7 +8,7 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    const user = new User({ username, email, password, terms });
+    const user = new User({ username, email, password, terms, account_created_at: new Date() });
     await user.save();
     res.status(201).json({});
   } catch (error) {

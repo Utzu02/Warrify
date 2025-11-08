@@ -14,6 +14,7 @@ const warrantyDocumentSchema = new mongoose.Schema(
     purchaseDate: { type: Date },
     expirationDate: { type: Date },
     provider: { type: String, default: '' },
+    contentHash: { type: String, default: null },
     pdfData: { type: Buffer, required: true },
     contentType: { type: String, default: 'application/pdf' }
   },
@@ -21,5 +22,6 @@ const warrantyDocumentSchema = new mongoose.Schema(
 );
 
 warrantyDocumentSchema.index({ userId: 1, gmailMessageId: 1, attachmentId: 1 }, { unique: true });
+warrantyDocumentSchema.index({ userId: 1, contentHash: 1 }, { unique: true, sparse: true });
 
 export default mongoose.model('WarrantyDocument', warrantyDocumentSchema);

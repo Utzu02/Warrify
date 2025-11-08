@@ -367,17 +367,25 @@ async function persistWarrantyDocument({ userId, messageId, attachment, pdfBuffe
     return;
   }
 
+  const contentHash = createHash('sha256').update(pdfBuffer).digest('hex');
   const subject = getHeader(headers, 'Subject');
   const from = getHeader(headers, 'From');
   const dateHeader = getHeader(headers, 'Date');
   const messageDate = dateHeader ? new Date(dateHeader) : null;
 
   await WarrantyDocument.findOneAndUpdate(
-    { userId, gmailMessageId: messageId, attachmentId: attachment.attachmentId },
+    {
+      userId,
+      $or: [
+        { gmailMessageId: messageId, attachmentId: attachment.attachmentId },
+        { contentHash }
+      ]
+    },
     {
       userId,
       gmailMessageId: messageId,
       attachmentId: attachment.attachmentId,
+      contentHash,
       filename: attachment.filename || `document-${Date.now()}.pdf`,
       size: attachment.size || pdfBuffer.length,
       subject,

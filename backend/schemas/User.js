@@ -17,17 +17,14 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   terms: { type: Boolean, required: true },
-  lastScanAt: { type: Date }
-})
+  lastScanAt: { type: Date },
+  account_created_at: { type: Date, default: Date.now }
+}, { timestamps: true })
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);
-    const test1 = await bcrypt.hash(this.password, 10);
-    const test2 = await bcrypt.hash(this.password, 10);
-    console.log(test1)
-    console.log(test2)
   }
   next();
 });
