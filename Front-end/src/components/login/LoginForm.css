@@ -73,23 +73,23 @@
     font-size: 0.875rem;
   }
   
-  .submit-btn {
-    width: 100%;
+.submit-login-btn {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 1rem;
-    margin-top: 3vh;
-    background-color: #2d6ae2;
+    justify-content: center;
+    margin-top: 0vh;
+    padding: .9rem 3rem; 
+    background-color: #2a5dc5;
     color: white;
     border: none;
     border-radius: 999px;
     font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
   }
-  
-  .submit-btn:hover {
+
+  .submit-login-btn:hover {
     background-color: #1d4ed8;
   }
 

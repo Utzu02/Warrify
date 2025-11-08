@@ -1,3 +1,5 @@
+import './ContactStats.css';
+
 type Stat = {
   title: string;
   value: string;
@@ -10,9 +12,9 @@ type ContactStatsProps = {
 const ContactStats = ({ stats }: ContactStatsProps) => (
   <section className="contact-stats">
     {stats.map((stat) => (
-      <div className="contact-stat-card" key={stat.title}>
-        <span className="stat-value">{stat.value}</span>
-        <span className="stat-label">{stat.title}</span>
+      <div className="contact-stats__card" key={stat.title}>
+        <span className="contact-stats__value">{stat.value}</span>
+        <span className="contact-stats__label">{stat.title}</span>
       </div>
     ))}
   </section>

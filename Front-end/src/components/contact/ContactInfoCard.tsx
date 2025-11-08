@@ -9,6 +9,8 @@ type OfficeInfo = {
   liveChat: string;
 };
 
+import './ContactInfoCard.css';
+
 type ContactInfoCardProps = {
   image: string;
   overlayStatus: string;
@@ -19,35 +21,35 @@ type ContactInfoCardProps = {
 
 const ContactInfoCard = ({ image, overlayStatus, overlaySubtitle, channels, office }: ContactInfoCardProps) => (
   <div className="contact-info-card">
-    <div className="info-visual">
+    <div className="contact-info-card__visual">
       <img src={image} alt="Our support team" />
-      <div className="info-overlay">
+      <div className="contact-info-card__overlay">
         <p>{overlaySubtitle}</p>
         <strong>{overlayStatus}</strong>
       </div>
     </div>
-    <div className="info-content">
-      <div className="card-heading">
-        <span className="badge secondary">Channels</span>
+    <div className="contact-info-card__content">
+      <div className="contact-info-card__heading">
+        <span className="contact-info-card__badge contact-info-card__badge--secondary">Channels</span>
         <h3>Talk to a real person</h3>
         <p>Pick the best channel for you. We track every request, so you won’t repeat yourself.</p>
       </div>
-      <div className="info-grid">
+      <div className="contact-info-card__grid">
         {channels.map((channel) => (
-          <div key={channel.title} className="info-pill">
-            <p className="pill-title">{channel.title}</p>
-            <p className="pill-detail">{channel.detail}</p>
+          <div key={channel.title} className="contact-info-card__pill">
+            <p className="contact-info-card__pill-title">{channel.title}</p>
+            <p className="contact-info-card__pill-detail">{channel.detail}</p>
             <span>{channel.description}</span>
           </div>
         ))}
       </div>
-      <div className="office-hours">
+      <div className="contact-info-card__office">
         <div>
-          <p className="pill-title">Office</p>
+          <p className="contact-info-card__pill-title">Office</p>
           <p>{office.location}</p>
         </div>
         <div>
-          <p className="pill-title">Live chat</p>
+          <p className="contact-info-card__pill-title">Live chat</p>
           <p>{office.liveChat}</p>
         </div>
       </div>

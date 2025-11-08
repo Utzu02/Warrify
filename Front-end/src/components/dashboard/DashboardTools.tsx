@@ -20,7 +20,7 @@ const DashboardTools = ({
   onToggleSort,
   onSelectSort
 }: DashboardToolsProps) => (
-  <section className="dashboard-tools card">
+  <section className="dashboard-tools">
     <div className="search-container">
       <input
         type="text"

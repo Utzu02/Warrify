@@ -31,7 +31,10 @@ export const listUserWarranties = async (req, res) => {
       return res.status(400).json({ error: 'Invalid user id' });
     }
 
-    const warranties = await WarrantyDocument.find({ userId }).sort({ createdAt: -1 });
+    const warranties = await WarrantyDocument.find({ userId })
+      .select('productName subject purchaseDate expirationDate provider from filename size gmailMessageId attachmentId createdAt')
+      .sort({ createdAt: -1 })
+      .lean();
     const uniqueWarranties = [];
     const seenKeys = new Set();
 

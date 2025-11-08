@@ -1,0 +1,27 @@
+.contact-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.contact-stats__card {
+  padding: 1.5rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 15px 25px rgba(99, 102, 241, 0.12);
+  text-align: center;
+  min-width: 180px;
+}
+
+.contact-stats__value {
+  display: block;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.contact-stats__label {
+  color: #6b7280;
+}

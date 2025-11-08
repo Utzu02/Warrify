@@ -1,3 +1,5 @@
+import './ContactHero.css';
+
 type ContactHeroProps = {
   eyebrow: string;
   title: string;
@@ -6,9 +8,9 @@ type ContactHeroProps = {
 
 const ContactHero = ({ eyebrow, title, description }: ContactHeroProps) => (
   <section className="contact-hero">
-    <p className="eyebrow">{eyebrow}</p>
-    <h1>{title}</h1>
-    <p>{description}</p>
+    <p className="contact-hero__eyebrow">{eyebrow}</p>
+    <h1 className="contact-hero__title">{title}</h1>
+    <p className="contact-hero__description">{description}</p>
   </section>
 );
 

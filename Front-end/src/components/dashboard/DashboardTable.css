@@ -4,10 +4,8 @@
 
 .table-card .table-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding: 2rem 2.25rem 0;
 }
 
 .table-card .warr-container {

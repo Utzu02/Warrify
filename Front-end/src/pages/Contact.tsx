@@ -1,4 +1,4 @@
-import './styles/Contact.css';
+import './styles/ContactPage.css';
 import left from '../assets/people.jpg';
 import ContactHero from '../components/contact/ContactHero';
 import ContactStats from '../components/contact/ContactStats';

@@ -23,11 +23,11 @@
 .big-number {
     font-size: 30px;
     text-align: left;
-    margin-left: .5vw;
+    margin: 0;
 }
 .item-1-text {
     font-size: 13px;
-    margin-left: 0.5vw;
+    margin: 0.2rem 0 0;
     letter-spacing: .5px;
     color: gray;
 }

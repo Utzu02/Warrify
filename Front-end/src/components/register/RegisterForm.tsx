@@ -119,7 +119,7 @@ const RegisterForm = () => {
         </div>
         {errors.terms && <span className="error-message eroaretermeni">{errors.terms}</span>}
 
-        <button type="submit" className="submit-btn">
+        <button type="submit" className="submit-register-btn">
           Create account
         </button>
       </form>

@@ -1,5 +1,5 @@
 .dashboard-page {
-  width: min(1100px, 92vw);
+  width: 100vw;
   margin: 0 auto 4rem;
   padding-top: 2rem;
   display: flex;
@@ -29,7 +29,7 @@
   display: inline-block;
   padding: 0.25rem 0.85rem;
   border-radius: 999px;
-  background: #f1f5f9;
-  color: #475569;
+  background: #22c55e;
+  color:white;
   font-weight: 600;
 }

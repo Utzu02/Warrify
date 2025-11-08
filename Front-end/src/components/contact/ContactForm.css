@@ -1,0 +1,81 @@
+.contact-form-card {
+  border-radius: 28px;
+  padding: 3rem 3.5rem;
+  width: min(90vw, 720px);
+  background: #fff;
+  box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.contact-form-card__heading {
+  margin-bottom: 1.25rem;
+}
+
+.contact-form-card__badge {
+  display: inline-block;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12rem;
+  margin-bottom: 0.5rem;
+}
+
+.contact-form-card__title {
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.contact-form-card__description {
+  color: #475569;
+  line-height: 1.6;
+}
+
+.contact-form-card__grid {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem 1.5rem;
+}
+
+.contact-form-card__grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.contact-form-card__grid input,
+.contact-form-card__grid textarea {
+  border: 1px solid #cbd5f5;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: #f8fafc;
+  transition: border 0.2s ease;
+}
+
+.contact-form-card__grid input:focus,
+.contact-form-card__grid textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: #fff;
+}
+
+.contact-form-card__grid textarea {
+  resize: vertical;
+}
+
+.contact-form-card__full-width {
+  grid-column: 1 / -1;
+}
+
+.contact-form-card__button {
+  justify-content: center;
+  text-align: center;
+}

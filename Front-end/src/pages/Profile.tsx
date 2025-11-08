@@ -202,7 +202,7 @@ const Profile = () => {
           </header>
           <div className="subscription-card">
             <div>
-              <p className="pill">{subscriptionStatus}</p>
+              <p className="pill-profile">{subscriptionStatus}</p>
               <h3>{subscriptionType} plan</h3>
               <p className="expiry-date">Member since: {memberSince}</p>
             </div>

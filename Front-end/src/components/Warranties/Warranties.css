@@ -1,11 +1,10 @@
 .warr-container {
     width: 100%;
-    max-width: 1000px;
-    margin: 0 auto 3rem;
     background: #ffffff;
     border-radius: 18px;
     box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
     overflow: hidden;
+    width: 80vw;
 }
 
 .warr-header,
