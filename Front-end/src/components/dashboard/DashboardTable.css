@@ -1,23 +1,47 @@
+/* CSS Variables for consistency */
+:root {
+  --primary-color: #6366f1;
+  --primary-hover: #4f46e5;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --border-light: #e2e8f0;
+  --background-light: #f8fafc;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.1);
+  --radius-lg: 20px;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2.5rem;
+}
+
 .table-card {
-  padding: 2.5rem !important;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-md);
 }
 
 .table-card .table-header {
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 1rem;
+  margin-bottom: var(--spacing-md);
 }
+
 .table-card .table-header div {
   margin: 0;
 }
+
 .table-card .table-header .pill {
   margin: 0;
 }
+
 .table-card .warr-container {
   box-shadow: none;
-  border-radius: 20px;
-  margin: 1.25rem auto 0;
+  border-radius: var(--radius-lg);
+  margin: 1.25rem 0 0;
+  max-width: 100%;
+  width: 100%;
 }
 
 .table-card .warr-header,
@@ -25,25 +49,43 @@
   padding-left: 2rem;
   padding-right: 2rem;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.table-card .warr-entry:hover {
+  background: var(--background-light);
 }
 
 .table-card .table-footer {
   display: flex;
   justify-content: center;
-  padding: 1.5rem 0 0;
+  padding: var(--spacing-md) 0 0;
 }
 
 .view-more-btn {
   padding: 0.75rem 1.5rem;
   border-radius: 999px;
-  border: 1px solid #cbd5f5;
-  color: #1d4ed8;
+  border: 1px solid var(--border-light);
+  color: var(--primary-hover);
   background: transparent;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .view-more-btn:hover {
   background: #eef2ff;
+  border-color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+  .table-card {
+    padding: var(--spacing-md);
+  }
+
+  .table-card .warr-header,
+  .table-card .warr-entry {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

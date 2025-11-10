@@ -1,15 +1,24 @@
-.notfound {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 3vh;
-    font-size: 25px;
-    text-align: center;
-    color: black;
+/* CSS Variables */
+:root {
+  --primary-blue: #2a5dc5;
+  --text-dark: #0f172a;
 }
+
+.notfound {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+  font-size: clamp(1.25rem, 3vw, 1.5625rem);
+  text-align: center;
+  color: var(--text-dark);
+  padding: 1rem;
+}
+
 .notfoundtext {
-    color: #2a5dc5 !important;
+  color: var(--primary-blue);
+  font-weight: 600;
 }

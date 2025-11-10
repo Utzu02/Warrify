@@ -1,93 +1,110 @@
+/* CSS Variables */
+:root {
+  --border-color: #e2e8f0;
+  --border-color-light: #f1f5f9;
+  --hover-bg: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --shadow-md: 0 25px 45px rgba(15, 23, 42, 0.08);
+  --shadow-sm: 0 15px 30px rgba(15, 23, 42, 0.06);
+  --radius-lg: 18px;
+  --radius-md: 14px;
+}
+
 .warr-container {
-    width: 100%;
-    background: #ffffff;
-    border-radius: 18px;
-    box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
-    overflow: hidden;
-    width: 80vw;
+  width: 100%;
+  max-width: 100%;
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
 }
 
 .warr-header,
 .warr-entry {
-    width: 100%;
-    padding: 0.9rem 1.5rem;
+  width: 100%;
+  padding: 0.9rem 1.5rem;
 }
 
 .warr-header {
-    display: flex;
-    justify-content: space-between;
-    font-weight: 600;
-    color: #475569;
-    border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--hover-bg);
 }
 
 .warr-entry {
-    border-bottom: 1px solid #f1f5f9;
-    transition: background 0.2s ease;
+  border-bottom: 1px solid var(--border-color-light);
+  transition: background 0.2s ease;
 }
 
 .warr-entry:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .warr-entry:hover {
-    background: #f8fafc;
+  background: var(--hover-bg);
 }
 
 .warr-line {
-    display: flex;
-    justify-content: space-between;
-    gap: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
 }
 
 .warr-line li,
 .warr-header li {
-    width: 25%;
-    list-style: none;
-    color: #0f172a;
+  width: 25%;
+  list-style: none;
+  color: var(--text-primary);
 }
 
 .warr-line li small {
-    display: block;
-    color: #94a3b8;
-    font-size: 0.8rem;
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
 }
 
 @media (max-width: 768px) {
-    .warr-container {
-        border-radius: 14px;
-        box-shadow: 0 15px 30px rgba(15, 23, 42, 0.06);
-    }
+  .warr-container {
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
 
-    .warr-header {
-        display: none;
-    }
+  .warr-header {
+    display: none;
+  }
 
-    .warr-entry {
-        padding: 1rem 1.25rem;
-    }
+  .warr-entry {
+    padding: 1rem 1.25rem;
+  }
 
-    .warr-line {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
+  .warr-line {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 
-    .warr-line li {
-        width: 100%;
-        font-weight: 600;
-    }
+  .warr-line li {
+    width: 100%;
+    font-weight: 600;
+  }
 
-    .warr-line li::before {
-        display: block;
-        font-size: 0.75rem;
-        letter-spacing: 0.1rem;
-        text-transform: uppercase;
-        color: #94a3b8;
-        margin-bottom: 0.15rem;
-    }
+  .warr-line li::before {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.15rem;
+    font-weight: 500;
+  }
 
-    .warr-line li:nth-child(1)::before { content: 'Product'; }
-    .warr-line li:nth-child(2)::before { content: 'Purchased'; }
-    .warr-line li:nth-child(3)::before { content: 'Expires'; }
-    .warr-line li:nth-child(4)::before { content: 'Provider'; }
+  .warr-line li:nth-child(1)::before { content: 'Product'; }
+  .warr-line li:nth-child(2)::before { content: 'Purchased'; }
+  .warr-line li:nth-child(3)::before { content: 'Expires'; }
+  .warr-line li:nth-child(4)::before { content: 'Provider'; }
 }

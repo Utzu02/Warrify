@@ -1,15 +1,17 @@
 #root {
-  width: 100vw !important;
-  max-width: 100vw !important;
-  padding: 0 !important;
-  text-align: unset !important;
-}
-* {
-  margin: 0 auto;
+  width: 100vw;
+  max-width: 100vw;
   padding: 0;
-  box-sizing: content-box;
+  text-align: left;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   overflow-x: hidden;
-  font-family: Poppins, unifysans, helvetica, arial, lato, sans-serif !important;
+  font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }

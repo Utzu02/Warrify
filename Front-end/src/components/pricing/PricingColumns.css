@@ -1,53 +1,73 @@
+/* CSS Variables */
+:root {
+  --primary-blue: #2d6ae2;
+  --primary-hover: #1d4ed8;
+  --accent-orange: #ff6b35;
+  --border-light: #e2e8f0;
+  --bg-light: #f8fafc;
+  --text-primary: #1a365d;
+  --text-secondary: #4a5568;
+}
+
 /* PricingColumns.css */
 .pricing-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    padding-top: 0 !important;
-    padding: 1rem;
-    margin: 0 auto;
-    margin-bottom: 5vh;
-  }
-  
-  .pricing-column {
-    position: relative;
-    background: #ffffff;
-    border-radius: 12px;
-    width: 20vw;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
-  }
-  
-  .popular-badge {
-    position: absolute;
-    top: -15px;
-    right: -5px;
-    background: #ff6b35;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.8rem;
-  }
-  
-  h2 {
-    color: #2d6ae2;
-    margin-bottom: 1.5rem;
-    font-size: 1.4rem;
-  }
-  
-  .price-box {
-    background: #f8fafc;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    text-align: center;
-  }
-  
-  .price {
-    font-size: 1.8rem;
-    font-weight: 700;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1rem;
+  margin: 0 auto 5rem;
+  justify-content: center;
+  max-width: 1200px;
+}
+
+.pricing-column {
+  position: relative;
+  background: #ffffff;
+  border-radius: 12px;
+  flex: 1 1 280px;
+  max-width: 360px;
+  min-width: 280px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-light);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pricing-column:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -15px;
+  right: -5px;
+  background: var(--accent-orange);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
+}
+
+.pricing-column h2 {
+  color: var(--primary-blue);
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+}
+
+.price-box {
+  background: var(--bg-light);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.price {
+  font-size: 1.8rem;
+  font-weight: 700;
     color: #1a365d;
     line-height: 1.2;
   }
