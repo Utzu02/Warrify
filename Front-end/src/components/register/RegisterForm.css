@@ -1,9 +1,9 @@
 /* RegisterForm.css */
 .auth-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem 1rem 4rem;
+  height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   }
   
   .auth-form {
@@ -96,6 +96,8 @@
     align-items: center;
     justify-content: center;
     margin-top: 0vh;
+    margin-left: auto;
+    margin-right: auto;
     padding: .9rem 3rem;
     background-color: #2a5dc5;
     color: white;
@@ -120,7 +122,9 @@
   .auth-form {
     padding: 1.5rem;
   }
-
+  .auth-container {
+    height: calc(100vh - 93px);
+  }
   .terms-group {
     flex-direction: column;
     gap: 0.5rem;

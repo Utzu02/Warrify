@@ -51,3 +51,31 @@
     line-height: 1.6;
     font-size: 1.1rem;
   }
+
+  @media (max-width: 768px) {
+    .flex-benefit-home {
+      flex-direction: column;
+      width: 100%;
+      gap: 1.5rem;
+    }
+
+    .benefit-home-card {
+      width: 90%;
+      max-width: 500px;
+      min-height: auto;
+    }
+
+    .title-benefit-home {
+      font-size: 2rem;
+      padding-bottom: 2vh;
+      margin-bottom: 2vh;
+    }
+
+    .benefit-home-title {
+      font-size: 1.25rem;
+    }
+
+    .benefit-home-description {
+      font-size: 1rem;
+    }
+  }

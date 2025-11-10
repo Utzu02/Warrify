@@ -184,6 +184,7 @@
 .feature-list {
     padding-left: 1rem;
     color: #475569;
+    list-style: none;
     line-height: 1.7;
 }
 

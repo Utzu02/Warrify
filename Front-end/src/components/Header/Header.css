@@ -267,6 +267,12 @@
   .header--open .secondary-nav {
     display: flex !important;
     max-height: 1000px;
+    justify-content: center;
+    align-items: center !important;
+    background-color: white;
+    padding-bottom: 1rem;
+    position: absolute;
+    left: 0;
     animation: slideDown 0.3s ease-out;
   }
 
@@ -281,25 +287,12 @@
     }
   }
 
-  /* Mobile navigation styles */
-  .header--open .primary-nav {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border-color);
-  }
-
   .header ul {
     flex-direction: column !important;
     gap: 0 !important;
     width: 100%;
     padding: 0;
     align-items: stretch !important;
-  }
-
-  .header--open .primary-nav,
-  .header--open .secondary-nav {
-    align-items: stretch !important;
-    flex-direction: column !important;
   }
 
   .primary-nav li,
@@ -357,7 +350,10 @@
   }
 
   .secondary-nav .button {
-    width: 100%;
-    margin: 0.25rem 0;
+    width: 80%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0.25rem;
   }
 }

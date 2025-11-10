@@ -3,6 +3,7 @@
     justify-content: center;
     align-items: center;
     display: flex;
+    margin: 1.5rem auto;
   }
   
   .file-input {
@@ -25,4 +26,12 @@
   
   .import-manual-button:hover {
     background-color: #ff5400;
+  }
+
+  @media (max-width: 768px) {
+    .import-manual-button {
+      padding: 8px 16px;
+      font-size: 14px;
+      max-width: 160px;
+    }
   }

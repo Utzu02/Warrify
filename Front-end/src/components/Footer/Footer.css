@@ -1,6 +1,15 @@
 footer {
     margin-top: 10vh;
     position: relative;
+    height: auto;
+    bottom: 0;
+    width: 100vw;
+    overflow: hidden;
+}
+footer svg {
+    display: block;
+    width: 100%;
+    height: auto;
 }
 .license {
     color: rgba(255, 255, 255, 0.829);

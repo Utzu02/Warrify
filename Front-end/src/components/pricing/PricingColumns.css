@@ -98,6 +98,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 auto;
     padding: .8rem;
     background: #2d6ae2;
     color: white;
@@ -110,5 +111,37 @@
   
   .buy-button:hover {
     background: #1d4ed8;
+  }
+
+  @media (max-width: 768px) {
+    .pricing-container {
+      width: 90%;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .pricing-column {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .price {
+      font-size: 1.5rem;
+    }
+
+    .specs {
+      min-height: auto;
+    }
+
+    .specs p {
+      font-size: 0.85rem;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+
+    .features li {
+      font-size: 0.9rem;
+    }
   }
   

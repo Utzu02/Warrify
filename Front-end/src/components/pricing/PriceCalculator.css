@@ -22,6 +22,7 @@
     background: #dfe6e9;
     border-radius: 4px;
     outline: none;
+    appearance: none;
     -webkit-appearance: none;
   }
   
@@ -88,4 +89,14 @@
   .incepand {
     color: rgba(0, 0, 0, 0.563);
     margin-bottom: 1vh;
+  }
+  @media (max-width: 768px) {
+    .price-calculator {
+      width: 90vw;
+    }
+    .container-price {
+      flex-direction: column;
+      width: 90vw;
+      gap: 3vh;
+    }
   }

@@ -167,10 +167,6 @@ const Profile = () => {
               <span className="value">{userData?.email || '—'}</span>
             </div>
             <div className="info-item">
-              <span className="label">User ID</span>
-              <span className="value">#{userData?._id || '—'}</span>
-            </div>
-            <div className="info-item">
               <span className="label">Member since</span>
               <span className="value">{memberSince}</span>
             </div>

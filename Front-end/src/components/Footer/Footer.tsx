@@ -3,21 +3,13 @@ import './Footer.css'
 function Footer() {
     return (
         <footer
-            style={{
-                width: "100vw",          /* Forțează lățimea să fie întreaga lățime a viewport-ului */
-                height: "35vh",          /* Înălțimea se calculează automat pe baza aspect ratio */
-                overflow: "hidden",      /* Ascunde orice conținut care depășește containerul */
-                marginLeft: "-50vw",     /* Compensează pentru aliniere la centru (dacă e necesar) */
-                left: "50%",             /* Centrează containerul pe orizontală */
-                position: "relative",    /* Permite ajustări de poziție */
-            }}
         >
             <svg
-                viewBox="0 0 385 91"     /* Aspect ratio: 385 / 91 ≈ 4.23:1 */
+                viewBox="0 0 385 91"
                 preserveAspectRatio="xMidYMid meet"
                 style={{
-                    width: "100%",         /* Umple întreaga lățime a containerului (100vw) */
-                    height: "auto",        /* Calculează înălțimea proporțional cu viewBox */
+                    width: "100%",
+                    height: "auto",
                 }}
             >
                 <path

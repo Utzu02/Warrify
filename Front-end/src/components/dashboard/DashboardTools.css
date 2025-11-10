@@ -210,10 +210,26 @@
 }
 
 @media (max-width: 768px) {
+  .search-container {
+    width: 90%;
+    margin: 1.5rem auto 0;
+  }
+
+  .search-input {
+    font-size: 1rem;
+    padding: 0.875rem 3rem 0.875rem 1rem;
+  }
+
   .filters-container {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    width: 90%;
+  }
+
+  .filter-group {
+    width: 100%;
+    justify-content: center;
   }
 
   .sort--inline {
