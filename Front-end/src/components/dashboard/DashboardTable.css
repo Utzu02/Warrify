@@ -14,7 +14,10 @@
 }
 
 .table-card {
+  width: min(90vw, 1200px);
+  margin: 0 auto;
   padding: var(--spacing-lg);
+  padding: 1.5rem !important;
   border-radius: var(--radius-lg);
   background: white;
   box-shadow: var(--shadow-md);
@@ -41,13 +44,12 @@
   border-radius: var(--radius-lg);
   margin: 1.25rem 0 0;
   max-width: 100%;
+  overflow-x: auto;
   width: 100%;
 }
 
 .table-card .warr-header,
 .table-card .warr-entry {
-  padding-left: 2rem;
-  padding-right: 2rem;
   cursor: pointer;
   transition: background 0.2s ease;
 }

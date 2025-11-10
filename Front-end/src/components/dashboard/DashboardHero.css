@@ -2,6 +2,8 @@
   display: flex;
   justify-content: space-between;
   gap: 2rem;
+  width: min(80vw, 1200px);
+  margin: 0 auto;
   align-items: center;
 }
 

@@ -130,6 +130,7 @@
   position: static;
   margin-top: 2rem;
   border-radius: 8px;
+  margin-left: 2rem;
   width: 180px;
   max-width: 100%;
 }
