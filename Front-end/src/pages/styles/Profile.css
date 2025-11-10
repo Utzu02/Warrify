@@ -27,6 +27,7 @@
     margin-bottom: 0.5rem;
     color: #0f172a;
 }
+
 .profile-hero .hero-copy {
     margin: 0;
     color: #475569;
@@ -212,5 +213,9 @@
 
     .profile-sections {
         flex-direction: column;
+    }
+
+    .section-header a{
+        border-radius: 25px;
     }
 }

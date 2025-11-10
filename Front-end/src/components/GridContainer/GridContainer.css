@@ -206,13 +206,20 @@
 
 @media (max-width: 768px) {
     .grid-container {
+        margin-top: 0;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .grid-item-2, .grid-item-1 {
+        padding: .5rem;
     }
 
     .button.grid {
         position: static;
         align-self: flex-start;
         margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        width: fit-content;
     }
 
     .modal-content {

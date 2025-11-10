@@ -115,15 +115,14 @@
 
   @media (max-width: 768px) {
     .pricing-container {
-      width: 90%;
+      width: 100%;
       flex-direction: column;
       gap: 2rem;
       margin-bottom: 3rem;
     }
 
     .pricing-column {
-      max-width: 100%;
-      width: 100%;
+      width: 90%;
     }
 
     .price {
