@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { BASE_URL } from '../config';
 import { fetchGmailEmails } from '../api/gmail';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import './styles/GmailStatus.css';
 
 interface Attachment {
@@ -121,8 +122,7 @@ const GmailStatus = () => {
 
         {loading && (
           <div className="status-loading">
-            <span className="spinner" />
-            <p>{statusMessage}</p>
+            <LoadingSpinner message={statusMessage} size="large" />
           </div>
         )}
 

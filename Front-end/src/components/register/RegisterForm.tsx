@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api/auth';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import './RegisterForm.css';
 
 const RegisterForm = () => {
@@ -10,6 +11,7 @@ const RegisterForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [terms, setTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{
     name?: string;
     email?: string;
@@ -51,13 +53,20 @@ const RegisterForm = () => {
 
     const username = name;
     try {
+      setIsLoading(true);
       await registerUser({ username, email, password, terms });
       navigate('/');
     } catch (error) {
       console.error('Error during registration:', error);
       setErrors({ email: error instanceof Error ? error.message : 'An error occurred. Please try again later.' });
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return <LoadingSpinner message="Creating your account..." size="large" fullPage />;
+  }
 
   return (
     <div className="auth-container">

@@ -3,6 +3,7 @@ import './styles/Profile.css';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { fetchUserProfile, fetchUserWarranties } from '../api/users';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
 type ApiUser = {
   _id: string;
@@ -121,6 +122,10 @@ const Profile = () => {
   const subscriptionType = userData?.terms ? 'Premium' : 'Free';
   const subscriptionStatus = userData?.terms ? 'Active' : 'Trial';
 
+  if (loading) {
+    return <LoadingSpinner message="Loading your profile..." size="large" fullPage />;
+  }
+
   return (
     <div className="profile-page">
       <section className="profile-hero card">
@@ -142,8 +147,6 @@ const Profile = () => {
           </div>
         ))}
       </section>
-
-      {loading && <p className="loading-state">Loading profile...</p>}
 
       <section className="profile-sections">
         <div className="card">

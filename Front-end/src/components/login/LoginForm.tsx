@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { loginUser } from '../../api/auth';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import './LoginForm.css';
 
 const LoginForm = () => {
@@ -10,6 +11,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +31,7 @@ const LoginForm = () => {
     }
 
     try {
+      setIsLoading(true);
       const data = await loginUser({ email, password });
       Cookies.set('UID', data.userId, { expires: 7, path: '' });
       setEmail('');
@@ -38,8 +41,14 @@ const LoginForm = () => {
     } catch (error) {
       console.error('Error during login:', error);
       alert('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return <LoadingSpinner message="Logging you in..." size="large" fullPage />;
+  }
 
   return (
     <div className="login">

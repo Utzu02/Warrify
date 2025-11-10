@@ -259,8 +259,10 @@ import { fetchUserWarranties } from "../api/users";
           filters={filters}
           onFilterChange={handleFilterChange}
         />
-        <DashboardTable warranties={filteredAndSortedWarranties} />
-        {loadingWarranties && <p className="loading-state">Loading your warranties...</p>}
+        <DashboardTable 
+          warranties={filteredAndSortedWarranties} 
+          isLoading={loadingWarranties} 
+        />
         {warrantyError && <p className="error-state">{warrantyError}</p>}
       </div>
     );
