@@ -181,6 +181,7 @@
   }
 
   .home-try {
+    margin: 0 auto;
     margin-top: 1.5rem;
     width: 60%;
     max-width: 260px;

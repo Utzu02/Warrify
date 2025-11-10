@@ -4,7 +4,7 @@ import './Header.css';
 import Cookies from 'js-cookie';
 import pozalogo from '../../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -14,6 +14,8 @@ const Header = ({ isLoggedIn }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation().pathname;
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const logOut = () => {
     Cookies.remove('UID');
@@ -22,8 +24,57 @@ const Header = ({ isLoggedIn }: HeaderProps) => {
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
+  // Close menu when route changes
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Close menu when scrolling
+      if (menuOpen) {
+        setMenuOpen(false);
+      }
+
+      // Don't do anything if we haven't scrolled more than 500px
+      if (currentScrollY < 500) {
+        setIsHeaderVisible(true);
+        setLastScrollY(currentScrollY);
+        return;
+      }
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          // Scrolling down - hide header
+          if (currentScrollY > lastScrollY && currentScrollY > 500) {
+            setIsHeaderVisible(false);
+          } 
+          // Scrolling up - show header
+          else if (currentScrollY < lastScrollY) {
+            setIsHeaderVisible(true);
+          }
+
+          setLastScrollY(currentScrollY);
+          ticking = false;
+        });
+
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY, menuOpen]);
+
   return (
-    <header className={`header ${menuOpen ? 'header--open' : ''}`}>
+    <header className={`header ${menuOpen ? 'header--open' : ''} ${!isHeaderVisible ? 'header--hidden' : ''}`}>
       <div className="leftSide">
         <div className="hamburger-header">
           <Link to="/home" className="logo-link">
