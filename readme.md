@@ -91,13 +91,6 @@ Warrify
 - By default `gmailCrud.js` uses the `deepseek-chat` model. Adjust the model or URL to match your plan if necessary.
 - DeepSeek is used only to answer “Does this PDF look like a warranty?”; if you want richer extraction you can extend `persistWarrantyDocument`.
 
-## Typical Workflow
-1. **Register & login** (`/register`, `/login`). Successful login drops a `UID` cookie used for lightweight auth.
-2. **Manual upload**: Use the **Import manual** button on the dashboard (`Front-end/src/components/ImportFile/ImportFile.tsx`). Files are stored via `/api/warranties2`.
-3. **Gmail ingest**: Open `/gmail-config`, choose how many messages to scan and (optionally) the date range, then authenticate with Google. After processing you are redirected to `/gmail-status` where progress, attachment counts, and download links are displayed.
-4. **Review warranties**: `/dashboard` shows filters, search, and sorting; `/profile` summarizes scan history and subscription.
-5. **Repeat** as new invoices arrive. Each scan updates `lastScanAt` so you can track freshness.
-
 ## API Surface (selected endpoints)
 | Method & Path | Description | Handler |
 | --- | --- | --- |
@@ -112,12 +105,6 @@ Warrify
 | `GET /api/emails/:messageId/attachments/:attachmentId` | Download a Gmail attachment vetted as a warranty. | `backend/crud/gmailCrud.js` |
 
 > Authorization is intentionally simple: the frontend includes `x-user-id` for state-changing calls, while Gmail routes rely on `express-session`. For production you should harden this with JWTs or real session storage.
-
-## Troubleshooting & Tips
-- **CORS or cookie issues** – ensure `FRONTEND_URL` exactly matches the Vite origin, including protocol and port.
-- **Gmail scan returns 401** – the session lost its access token; re-run `/gmail-config` → “Start Gmail import.”
-- **PDF rejected** – the heuristic/AI requires at least three warranty-like signals. Adjust the prompt in `gmailCrud.js` or skip DeepSeek in development.
-- **Large attachments** – Gmail API limits download sizes; keep `maxResults` reasonable (1–50 as enforced in the UI).
 
 ## License
 MIT License – see the repository for details.
