@@ -13,16 +13,16 @@ The backend watches Gmail for PDF attachments, runs OCR + DeepSeek to verify tha
 ## System Overview
 ```
 Warrify
-├─ Front-end/      # Vite + React 19 SPA, React Router 7
+├─ Front-end/
 │  └─ src/
-│     ├─ pages/    # Home, Dashboard, Profile, GmailConfig, GmailStatus, etc.
-│     ├─ components/ (Dashboard widgets, ImportFile, GmailLogin, LoadingSpinner…)
-│     └─ api/      # Fetch helpers that proxy to the backend (uses `VITE_BASE_URL`)
-└─ backend/        # Node 18+ + Express API
-   ├─ crud/        # Business logic for auth, users, Gmail ingest, warranty docs
-   ├─ routes/      # REST endpoints mounted under `/api` plus Gmail OAuth routes
-   ├─ schemas/     # Mongoose models (`User`, `WarrantyDocument`, `Warranty`)
-   └─ utils/       # Gmail parsing helpers, filename sanitizers, etc.
+│     ├─ pages/
+│     ├─ components/
+│     └─ api/
+└─ backend/
+   ├─ crud/
+   ├─ routes/
+   ├─ schemas/
+   └─ utils/
 ```
 
 **Data flow**
@@ -36,72 +36,53 @@ Warrify
 4. Dashboard/profile pages query `/api/users/:id/warranties` and `/api/users/:id/scan-info` to show cards, filters, and stats.
 
 ## Tech Stack
-- **Frontend:** React 19 + Vite, TypeScript, CSS modules, js-cookie, React Router.
+- **Frontend:** React + Vite, TypeScript, CSS modules, js-cookie, React Router.
 - **Backend:** Node.js, Express, axios, googleapis, multer, pdf-parse, DeepSeek API, express-session.
 - **Database:** MongoDB (Mongoose models).
 - **AI/OCR:** `pdf-parse` for extraction, DeepSeek for final validation.
 
 ## Prerequisites
-- Node.js 18+ and npm.
+- Node.js(express) and npm.
 - MongoDB instance (local or Atlas).
 - Google Cloud project with the Gmail API enabled and a Web OAuth client.
 - DeepSeek API key (or any compatible key if you fork/replace the AI provider).
-- Modern browser (Chrome/Edge) for the Vite dev server.
 
 ## Environment Variables
-Create two `.env` files: one in `backend/` and one in `Front-end/`. Never commit real secrets.
 
 ### Backend (`backend/.env`)
-| Variable | Required | Purpose | Example |
-| --- | --- | --- | --- |
-| `MONGO_URI` | ✅ | Connection string for the MongoDB database that stores users and warranty docs. | `mongodb+srv://username:password@cluster.example.mongodb.net/warrify` |
-| `PORT` | ⛔ (defaults to 8080) | Port that the Express server listens on. | `8080` |
-| `FRONTEND_URL` | ✅ | Origin allowed by CORS and used for redirects after Gmail auth. Must match the Vite dev server (default `http://localhost:5173`). | `http://localhost:5173` |
-| `GOOGLE_CLIENT_ID` | ✅ | OAuth Client ID from Google Cloud (type Web). | `1234567890-abc.apps.googleusercontent.com` |
-| `GOOGLE_CLIENT_SECRET` | ✅ | OAuth client secret paired with the ID above. | `GOCSPX-xxxxxxxxxxxxxxxxxxxx` |
-| `GOOGLE_REDIRECT_URI` | ✅ | Must match the authorized redirect in Google Cloud. Default is `http://localhost:8080/auth/google/callback`. | `http://localhost:8080/auth/google/callback` |
-| `SESSION_SECRET` | ✅ | Secret used by `express-session` inside `routes/googleRoutes.js` to secure Gmail scan sessions. Use a long random string. | `super-long-random-string` |
-| `DEEPSEEK_API_KEY` | ✅ | Token used to call DeepSeek for AI-based PDF validation. | `sk-xxxx` |
-| `DEEPSEEK_API_URL` | ⛔ (optional) | Override the default DeepSeek endpoint (`https://api.deepseek.com/v1/chat/completions`) if needed. | `https://api.deepseek.com/v1/chat/completions` |
+| Variable | Required | Example |
+| --- | --- | --- |
+| `MONGO_URI` | Yes | `mongodb+srv://username:password@cluster.example.mongodb.net/warrify` |
+| `FRONTEND_URL` | Yes | `http://localhost:5173` |
+| `GOOGLE_CLIENT_ID` | Yes | `1234567890-abc.apps.googleusercontent.com` |
+| `GOOGLE_CLIENT_SECRET` | Yes | `GOCSPX-xxxxxxxxxxxxxxxxxxxx` |
+| `GOOGLE_REDIRECT_URI` | Yes | `http://localhost:8080/auth/google/callback` |
+| `SESSION_SECRET` | Yes | `super-long-random-string` |
+| `DEEPSEEK_API_KEY` | Yes | `sk-xxxx` |
+| `DEEPSEEK_API_URL` | Optional | `https://api.deepseek.com/v1/chat/completions` |
 
 ### Frontend (`Front-end/.env`)
-| Variable | Required | Purpose | Example |
-| --- | --- | --- | --- |
-| `VITE_BASE_URL` | ✅ | Base URL for all API calls made from the React app. Should point to the backend server above. | `http://localhost:8080` |
-
-> **Tip:** Keep the frontend and backend origins in sync (`FRONTEND_URL` ↔ `VITE_BASE_URL`) so cookies and sessions (needed by Gmail import) work correctly.
+| Variable | Required | Example |
+| --- | --- | --- |
+| `VITE_BASE_URL` | Yes | `http://localhost:8080` |
 
 ## Getting Started
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/<your-org>/Warrify.git
-   cd Warrify
-   ```
-2. **Install dependencies**
-   ```bash
-   cd backend && npm install
-   cd ../Front-end && npm install
-   ```
-3. **Configure environments** – create the `.env` files listed above with your own secrets.
-4. **Run MongoDB** – start `mongod` locally or make sure your Atlas cluster is reachable.
-5. **Start the backend**
+1. **Start the backend**
    ```bash
    cd backend
    npm run start   # runs nodemon script.js on PORT (default 8080)
    ```
-6. **Start the frontend**
+2. **Start the frontend**
    ```bash
    cd Front-end
    npm run dev     # Vite serves the SPA on http://localhost:5173
    ```
-7. Open `http://localhost:5173` in your browser. Register a user, log in, and begin importing warranties.
+3. Open `http://localhost:5173` in your browser. Register a user, log in, and begin importing warranties.
 
 ## Google OAuth & Gmail API Setup
 1. Visit [console.cloud.google.com](https://console.cloud.google.com/), create a project, and enable the **Gmail API**.
 2. Configure the OAuth consent screen (Internal or External) and add the scopes `https://www.googleapis.com/auth/gmail.readonly`.
-3. Create **OAuth 2.0 Client Credentials (Web application)**. Add authorized redirect URI `http://localhost:8080/auth/google/callback` (plus any production URL you plan to use).
-4. Copy the Client ID and secret into `backend/.env`.
-5. Update `FRONTEND_URL` and `GOOGLE_REDIRECT_URI` whenever the front-end or backend host changes.
+3. Create **OAuth 2.0 Client Credentials (Web application)**. Add authorized redirect URI `http://localhost:8080/auth/google/callback`.
 6. During development, the Gmail flow is initiated from `/gmail-config` → `Start Gmail import`, which redirects to `/auth/google`.
 
 ## DeepSeek Configuration
@@ -137,7 +118,6 @@ Create two `.env` files: one in `backend/` and one in `Front-end/`. Never commit
 - **Gmail scan returns 401** – the session lost its access token; re-run `/gmail-config` → “Start Gmail import.”
 - **PDF rejected** – the heuristic/AI requires at least three warranty-like signals. Adjust the prompt in `gmailCrud.js` or skip DeepSeek in development.
 - **Large attachments** – Gmail API limits download sizes; keep `maxResults` reasonable (1–50 as enforced in the UI).
-- **Mongo duplicates** – `WarrantyDocument` hashes the PDF contents to avoid saving the same warranty twice.
 
 ## License
 MIT License – see the repository for details.
