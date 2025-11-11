@@ -1,75 +1,143 @@
-# Warrify - Warranty Management System
+# Warrify – AI-Powered Warranty Workspace
 
-## Description
+Warrify helps individuals and teams centralize every warranty document they receive.  
+The backend watches Gmail for PDF attachments, runs OCR + DeepSeek to verify that a file is actually a warranty, stores it securely in MongoDB, and exposes it to the React dashboard. Users can also upload PDFs manually, review summaries, and monitor what is about to expire.
 
-Warrify is an innovative application that helps users efficiently and automatically organize and manage their warranties. Using an intelligent crawler, Warrify automatically extracts warranties from emails using OCR and the DeepSeek API, providing a complete storage and notification solution.
+## Core Capabilities
+- **Smart Gmail import** – configurable scans through Gmail via OAuth, downloads PDF attachments, scores them with heuristics + DeepSeek, and saves only validated warranties.
+- **Manual ingestion** – upload PDFs from the dashboard when a warranty is not in email.
+- **Dashboard insights** – searchable/sortable tables, status cards, and warnings for warranties that expire soon (`Front-end/src/pages/Dashboard.tsx`).
+- **Profile overview** – quick stats, subscription state, and account metadata gathered from `/api/users/:id` (`Front-end/src/pages/Profile.tsx`).
+- **Status pages & flows** – `/gmail-config` for scan options, `/gmail-status` to see ingestion progress, plus landing, pricing, and contact pages to explain the product.
 
-## Technologies Used
-
-- **Frontend:** Vite + React
-- **Backend:** Node.js + Express
-- **Database:** MongoDB
-- **OCR & AI:** DeepSeek API for extracting information from documents
-
-## Main Features
-
-- **Automatically extracts warranties from emails** using an AI-powered crawler.
-- **Advanced OCR** for recognizing and organizing information from documents.
-- **Intuitive dashboard** for viewing warranties and analytics.
-- **Smart notifications** for warranty expiration and renewal.
-- **Loss protection** through automatic document backup.
-
-## Installation and Usage
-
-### 1. Clone Repository
-
-```bash
-git clone https://github.com/username/warrify.git
-cd warrify
+## System Overview
+```
+Warrify
+├─ Front-end/      # Vite + React 19 SPA, React Router 7
+│  └─ src/
+│     ├─ pages/    # Home, Dashboard, Profile, GmailConfig, GmailStatus, etc.
+│     ├─ components/ (Dashboard widgets, ImportFile, GmailLogin, LoadingSpinner…)
+│     └─ api/      # Fetch helpers that proxy to the backend (uses `VITE_BASE_URL`)
+└─ backend/        # Node 18+ + Express API
+   ├─ crud/        # Business logic for auth, users, Gmail ingest, warranty docs
+   ├─ routes/      # REST endpoints mounted under `/api` plus Gmail OAuth routes
+   ├─ schemas/     # Mongoose models (`User`, `WarrantyDocument`, `Warranty`)
+   └─ utils/       # Gmail parsing helpers, filename sanitizers, etc.
 ```
 
-### 2. Backend Setup
+**Data flow**
+1. Users register/login (`backend/crud/authCrud.js`). Passwords are hashed with bcrypt. The frontend stores the returned Mongo `_id` in a `UID` cookie and attaches it to each request through the custom `apiFetch` helper.
+2. Gmail import:
+   - `/gmail-config` saves scan options to the session.
+   - `/auth/google` begins the OAuth flow.
+   - `backend/crud/gmailCrud.js` uses Google APIs to list messages, downloads PDF attachments, runs `pdf-parse` plus a DeepSeek prompt to confirm the document, then saves metadata + binary data in `WarrantyDocument`.
+   - `/gmail-status` polls `/api/emails` to display progress and provide download links.
+3. Manual uploads hit `/api/warranties2` and are stored in the `Warranty` collection via `multer`.
+4. Dashboard/profile pages query `/api/users/:id/warranties` and `/api/users/:id/scan-info` to show cards, filters, and stats.
 
-```bash
-cd backend
-npm install
-npm run start  # Start server (using nodemon)
-```
+## Tech Stack
+- **Frontend:** React 19 + Vite, TypeScript, CSS modules, js-cookie, React Router.
+- **Backend:** Node.js, Express, axios, googleapis, multer, pdf-parse, DeepSeek API, express-session.
+- **Database:** MongoDB (Mongoose models).
+- **AI/OCR:** `pdf-parse` for extraction, DeepSeek for final validation.
 
-### 3. Frontend Setup
+## Prerequisites
+- Node.js 18+ and npm.
+- MongoDB instance (local or Atlas).
+- Google Cloud project with the Gmail API enabled and a Web OAuth client.
+- DeepSeek API key (or any compatible key if you fork/replace the AI provider).
+- Modern browser (Chrome/Edge) for the Vite dev server.
 
-```bash
-cd frontend
-npm install
-npm run dev  # Start frontend server
-```
+## Environment Variables
+Create two `.env` files: one in `backend/` and one in `Front-end/`. Never commit real secrets.
 
-### 4. Database Configuration
+### Backend (`backend/.env`)
+| Variable | Required | Purpose | Example |
+| --- | --- | --- | --- |
+| `MONGO_URI` | ✅ | Connection string for the MongoDB database that stores users and warranty docs. | `mongodb+srv://username:password@cluster.example.mongodb.net/warrify` |
+| `PORT` | ⛔ (defaults to 8080) | Port that the Express server listens on. | `8080` |
+| `FRONTEND_URL` | ✅ | Origin allowed by CORS and used for redirects after Gmail auth. Must match the Vite dev server (default `http://localhost:5173`). | `http://localhost:5173` |
+| `GOOGLE_CLIENT_ID` | ✅ | OAuth Client ID from Google Cloud (type Web). | `1234567890-abc.apps.googleusercontent.com` |
+| `GOOGLE_CLIENT_SECRET` | ✅ | OAuth client secret paired with the ID above. | `GOCSPX-xxxxxxxxxxxxxxxxxxxx` |
+| `GOOGLE_REDIRECT_URI` | ✅ | Must match the authorized redirect in Google Cloud. Default is `http://localhost:8080/auth/google/callback`. | `http://localhost:8080/auth/google/callback` |
+| `SESSION_SECRET` | ✅ | Secret used by `express-session` inside `routes/googleRoutes.js` to secure Gmail scan sessions. Use a long random string. | `super-long-random-string` |
+| `DEEPSEEK_API_KEY` | ✅ | Token used to call DeepSeek for AI-based PDF validation. | `sk-xxxx` |
+| `DEEPSEEK_API_URL` | ⛔ (optional) | Override the default DeepSeek endpoint (`https://api.deepseek.com/v1/chat/completions`) if needed. | `https://api.deepseek.com/v1/chat/completions` |
 
-Make sure you have MongoDB installed and running either locally or on a cloud server.
+### Frontend (`Front-end/.env`)
+| Variable | Required | Purpose | Example |
+| --- | --- | --- | --- |
+| `VITE_BASE_URL` | ✅ | Base URL for all API calls made from the React app. Should point to the backend server above. | `http://localhost:8080` |
 
-### 5. Environment Variables Configuration
+> **Tip:** Keep the frontend and backend origins in sync (`FRONTEND_URL` ↔ `VITE_BASE_URL`) so cookies and sessions (needed by Gmail import) work correctly.
 
-To properly run the application, create a `.env` file in the `backend` directory with the following variables:
+## Getting Started
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/<your-org>/Warrify.git
+   cd Warrify
+   ```
+2. **Install dependencies**
+   ```bash
+   cd backend && npm install
+   cd ../Front-end && npm install
+   ```
+3. **Configure environments** – create the `.env` files listed above with your own secrets.
+4. **Run MongoDB** – start `mongod` locally or make sure your Atlas cluster is reachable.
+5. **Start the backend**
+   ```bash
+   cd backend
+   npm run start   # runs nodemon script.js on PORT (default 8080)
+   ```
+6. **Start the frontend**
+   ```bash
+   cd Front-end
+   npm run dev     # Vite serves the SPA on http://localhost:5173
+   ```
+7. Open `http://localhost:5173` in your browser. Register a user, log in, and begin importing warranties.
 
-```ini
-MONGO_URI= # MongoDB cluster URI (does not work locally)
-GOOGLE_CLIENT_ID= # OAuth client ID
-GOOGLE_CLIENT_SECRET= # OAuth client secret
-DEEPSEEK_API_URL= # DeepSeek API URL
-DEEPSEEK_API_KEY= # DeepSeek API key
-```
+## Google OAuth & Gmail API Setup
+1. Visit [console.cloud.google.com](https://console.cloud.google.com/), create a project, and enable the **Gmail API**.
+2. Configure the OAuth consent screen (Internal or External) and add the scopes `https://www.googleapis.com/auth/gmail.readonly`.
+3. Create **OAuth 2.0 Client Credentials (Web application)**. Add authorized redirect URI `http://localhost:8080/auth/google/callback` (plus any production URL you plan to use).
+4. Copy the Client ID and secret into `backend/.env`.
+5. Update `FRONTEND_URL` and `GOOGLE_REDIRECT_URI` whenever the front-end or backend host changes.
+6. During development, the Gmail flow is initiated from `/gmail-config` → `Start Gmail import`, which redirects to `/auth/google`.
 
-### 6. Usage
+## DeepSeek Configuration
+- Create an account at [https://www.deepseek.com/](https://www.deepseek.com/) (or your chosen AI provider).
+- Generate an API key and store it as `DEEPSEEK_API_KEY`.
+- By default `gmailCrud.js` uses the `deepseek-chat` model. Adjust the model or URL to match your plan if necessary.
+- DeepSeek is used only to answer “Does this PDF look like a warranty?”; if you want richer extraction you can extend `persistWarrantyDocument`.
 
-- Log in with your Gmail account to allow the crawler to extract warranties.
-- Access the dashboard to view and organize your warranties.
-- Receive automatic notifications about their expiration.
+## Typical Workflow
+1. **Register & login** (`/register`, `/login`). Successful login drops a `UID` cookie used for lightweight auth.
+2. **Manual upload**: Use the **Import manual** button on the dashboard (`Front-end/src/components/ImportFile/ImportFile.tsx`). Files are stored via `/api/warranties2`.
+3. **Gmail ingest**: Open `/gmail-config`, choose how many messages to scan and (optionally) the date range, then authenticate with Google. After processing you are redirected to `/gmail-status` where progress, attachment counts, and download links are displayed.
+4. **Review warranties**: `/dashboard` shows filters, search, and sorting; `/profile` summarizes scan history and subscription.
+5. **Repeat** as new invoices arrive. Each scan updates `lastScanAt` so you can track freshness.
+
+## API Surface (selected endpoints)
+| Method & Path | Description | Handler |
+| --- | --- | --- |
+| `POST /api/register` | Create a user (username, email, password, terms). | `backend/crud/authCrud.js` |
+| `POST /api/login` | Login and return the user `_id`. | `backend/crud/authCrud.js` |
+| `GET /api/users/:id` | Retrieve a user document (requires `x-user-id`). | `backend/crud/userCrud.js` |
+| `GET /api/users/:id/warranties` | List deduplicated warranties saved during Gmail scans. | `backend/crud/warrantyDocumentCrud.js` |
+| `GET /api/users/:id/scan-info` | Fetch the `lastScanAt` timestamp. | `backend/crud/warrantyDocumentCrud.js` |
+| `POST /api/warranties2` | Upload a PDF manually (multipart form field `pdf`). | `backend/crud/warrantyFileCrud.js` |
+| `POST /api/gmail/options` | Store Gmail scan preferences in the session. | `backend/crud/gmailCrud.js` |
+| `GET /api/emails` | Trigger the Gmail scan based on stored options. | `backend/crud/gmailCrud.js` |
+| `GET /api/emails/:messageId/attachments/:attachmentId` | Download a Gmail attachment vetted as a warranty. | `backend/crud/gmailCrud.js` |
+
+> Authorization is intentionally simple: the frontend includes `x-user-id` for state-changing calls, while Gmail routes rely on `express-session`. For production you should harden this with JWTs or real session storage.
+
+## Troubleshooting & Tips
+- **CORS or cookie issues** – ensure `FRONTEND_URL` exactly matches the Vite origin, including protocol and port.
+- **Gmail scan returns 401** – the session lost its access token; re-run `/gmail-config` → “Start Gmail import.”
+- **PDF rejected** – the heuristic/AI requires at least three warranty-like signals. Adjust the prompt in `gmailCrud.js` or skip DeepSeek in development.
+- **Large attachments** – Gmail API limits download sizes; keep `maxResults` reasonable (1–50 as enforced in the UI).
+- **Mongo duplicates** – `WarrantyDocument` hashes the PDF contents to avoid saving the same warranty twice.
 
 ## License
-
-The project is open-source and distributed under the MIT license.
-
----
-
-**Warrify - Simplified warranty organization!**
+MIT License – see the repository for details.
