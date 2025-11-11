@@ -86,7 +86,6 @@ Warrify
 6. During development, the Gmail flow is initiated from `/gmail-config` → `Start Gmail import`, which redirects to `/auth/google`.
 
 ## DeepSeek Configuration
-- Create an account at [https://www.deepseek.com/](https://www.deepseek.com/) (or your chosen AI provider).
 - Generate an API key and store it as `DEEPSEEK_API_KEY`.
 - By default `gmailCrud.js` uses the `deepseek-chat` model. Adjust the model or URL to match your plan if necessary.
 - DeepSeek is used only to answer “Does this PDF look like a warranty?”; if you want richer extraction you can extend `persistWarrantyDocument`.
@@ -104,7 +103,7 @@ Warrify
 | `GET /api/emails` | Trigger the Gmail scan based on stored options. | `backend/crud/gmailCrud.js` |
 | `GET /api/emails/:messageId/attachments/:attachmentId` | Download a Gmail attachment vetted as a warranty. | `backend/crud/gmailCrud.js` |
 
-> Authorization is intentionally simple: the frontend includes `x-user-id` for state-changing calls, while Gmail routes rely on `express-session`. For production you should harden this with JWTs or real session storage.
+> Authorization is simple: the frontend includes `x-user-id` for state-changing calls, while Gmail routes rely on `express-session`.
 
 ## License
 MIT License – see the repository for details.
