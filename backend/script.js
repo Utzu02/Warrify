@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-// import warrantyRoutes from './routes/warrantyRoutes.js';
 import warrantiesRoutes2 from './routes/warrantyRoutes2.js';
 import dotenv from 'dotenv';
 import googleRoutes from './routes/googleRoutes.js'
@@ -14,34 +13,29 @@ dotenv.config();
 
 const app = express();
 
-// Middleware CORS (permite frontend-ului să comunice cu backend-ul)
 app.use(cors({
-  origin: process.env.FRONTEND_URL, // ex: "http://localhost:3000"
-  credentials: true // permite transmiterea cookie-urilor
+  origin: process.env.FRONTEND_URL,
+  credentials: true
 }));
 
-// Middleware pentru sesiuni
 app.use(session({
-  secret: "your-secret-key", // Înlocuiește cu o cheie complexă
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: false, // Setează "true" DOAR în producție (HTTPS)
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
-    sameSite: "lax" // Permite cookie-uri cross-site
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
   }
 }));
 app.use(bodyParser.json());
 
-// Routes
 app.use('/api', userRoutes);
-// app.use('/api', warrantyRoutes);
 app.use('/api', authRoutes);
 app.use('/',googleRoutes);
 app.use('/api', warrantiesRoutes2);
 app.use('/api', warrantyDocumentRoutes);
 
-// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
