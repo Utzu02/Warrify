@@ -433,30 +433,26 @@ async function extractPDFText(buffer) {
       throw new Error('Fișierul nu este un PDF valid');
     }
 
-    // Try to parse PDF - wrap in nested try-catch to handle pdf-parse internal errors
-    let data;
-    try {
-      const { default: pdfParse } = await import('pdf-parse');
-      data = await pdfParse(buffer, {
-        max: 0,
-        version: 'v1.10.100'
-      });
-    } catch (parseError) {
-      // If pdf-parse fails with file system errors, try without options
-      console.warn('pdf-parse failed with options, retrying without:', parseError.message);
-      const { default: pdfParse } = await import('pdf-parse');
-      
-      // Set working directory temporarily to avoid ENOENT errors
-      const originalCwd = process.cwd();
-      try {
-        process.chdir('/tmp');
-        data = await pdfParse(buffer);
-      } finally {
-        process.chdir(originalCwd);
-      }
-    }
+    // Use pdfjs-dist instead of pdf-parse (works better on Vercel)
+    const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
     
-    let text = data.text;
+    const loadingTask = pdfjsLib.getDocument({
+      data: new Uint8Array(buffer),
+      useSystemFonts: true,
+      standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/standard_fonts/'
+    });
+    
+    const pdf = await loadingTask.promise;
+    let text = '';
+    
+    // Extract text from all pages (limit to first 10 pages for performance)
+    const numPages = Math.min(pdf.numPages, 10);
+    for (let i = 1; i <= numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const pageText = content.items.map((item) => ('str' in item ? item.str : '')).join(' ');
+      text += pageText + ' ';
+    }
 
     text = text
       .replace(/\s+/g, ' ')
