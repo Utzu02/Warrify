@@ -43,6 +43,20 @@ const GmailStatus = () => {
   
   const { socket, socketId } = useSocket();
 
+  // Save Google token from URL to localStorage
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    
+    if (token) {
+      localStorage.setItem('googleAccessToken', decodeURIComponent(token));
+      console.log('✅ Google access token saved to localStorage');
+      
+      // Clean URL (remove token from URL for security)
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   // Socket event listeners
   useEffect(() => {
     if (!socket) return;

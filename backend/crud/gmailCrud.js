@@ -39,12 +39,15 @@ export const authCallback = async (req, res) => {
   try {
     const { code } = req.query;
     const { tokens } = await oauth2Client.getToken(code);
-    req.session.accessToken = tokens.access_token;
+    
+    // Encode token to pass it to frontend via URL (will be saved in localStorage)
+    const encodedToken = encodeURIComponent(tokens.access_token);
     const redirectUrl = process.env.FRONTEND_URL
-      ? `${process.env.FRONTEND_URL}/gmail-status`
-      : '/gmail-status';
+      ? `${process.env.FRONTEND_URL}/gmail-status?token=${encodedToken}`
+      : `/gmail-status?token=${encodedToken}`;
     res.redirect(redirectUrl);
   } catch (error) {
+    console.error('Google auth error:', error);
     res.redirect(`${process.env.FRONTEND_URL}/error?code=auth_failed`);
   }
 };
@@ -61,7 +64,10 @@ export const saveGmailOptionsHandler = (req, res) => {
 
 export const fetchEmails = async (req, res) => {
   try {
-    const accessToken = req.session.accessToken;
+    // Get token from Authorization header (sent from frontend)
+    const authHeader = req.headers.authorization;
+    const accessToken = authHeader?.replace('Bearer ', '');
+    
     if (!accessToken) {
       return res
         .status(401)
@@ -77,6 +83,7 @@ export const fetchEmails = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
+    
     const io = req.app.get('io');
     const socketId = req.query.socketId;
 
