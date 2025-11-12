@@ -434,7 +434,10 @@ async function extractPDFText(buffer) {
     }
 
     const { default: pdfParse } = await import('pdf-parse');
-    const data = await pdfParse(buffer);
+    const data = await pdfParse(buffer, {
+      // Disable external file loading to prevent ENOENT errors on Vercel
+      max: 0
+    });
     let text = data.text;
 
     text = text
