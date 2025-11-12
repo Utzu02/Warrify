@@ -57,7 +57,10 @@ const io = new Server(httpServer, {
     origin: process.env.FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST"]
-  }
+  },
+  path: '/socket.io/',
+  transports: ['polling', 'websocket'],
+  allowEIO3: true
 });
 
 // Make io accessible to routes
@@ -121,7 +124,9 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 
-httpServer.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Socket.IO is ready for connections`);
+httpServer.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`📡 Socket.IO is ready for connections`);
+  console.log(`🔗 Frontend URL: ${process.env.FRONTEND_URL}`);
+  console.log(`🌍 CORS enabled for: ${process.env.FRONTEND_URL || "*"}`);
 });

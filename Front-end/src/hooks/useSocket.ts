@@ -17,9 +17,11 @@ export const useSocket = (): UseSocketReturn => {
     console.log('Initializing socket connection to:', BASE_URL);
     
     // Create socket connection with reconnection settings
+    // Try polling first (more reliable on some hosting platforms)
     const socketInstance = io(BASE_URL, {
       withCredentials: true,
-      transports: ['websocket', 'polling'],
+      transports: ['polling', 'websocket'],
+      path: '/socket.io/',
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
