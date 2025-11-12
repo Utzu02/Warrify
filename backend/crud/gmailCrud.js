@@ -433,51 +433,55 @@ async function extractPDFText(buffer) {
       throw new Error('Fișierul nu este un PDF valid');
     }
 
-    // Polyfill DOMMatrix for Node.js
-    if (typeof global.DOMMatrix === 'undefined') {
-      global.DOMMatrix = class DOMMatrix {
-        constructor() {
-          this.a = 1; this.b = 0; this.c = 0;
-          this.d = 1; this.e = 0; this.f = 0;
+    // Use pdf2json - stable library for serverless environments
+    const PDFParser = (await import('pdf2json')).default;
+    
+    return new Promise((resolve, reject) => {
+      const pdfParser = new PDFParser(null, 1);
+      
+      pdfParser.on('pdfParser_dataError', (errData) => {
+        console.error('pdf2json error:', errData.parserError);
+        resolve(''); // Return empty string on error to skip document
+      });
+      
+      pdfParser.on('pdfParser_dataReady', (pdfData) => {
+        try {
+          // Extract text from all pages
+          let text = '';
+          if (pdfData.Pages) {
+            pdfData.Pages.forEach((page) => {
+              if (page.Texts) {
+                page.Texts.forEach((textItem) => {
+                  if (textItem.R) {
+                    textItem.R.forEach((r) => {
+                      if (r.T) {
+                        text += decodeURIComponent(r.T) + ' ';
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+          
+          // Clean and normalize text
+          text = text
+            .replace(/\s+/g, ' ')
+            .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+            .replace(/\s{2,}/g, ' ')
+            .substring(0, 3000)
+            .trim();
+          
+          resolve(text);
+        } catch (parseError) {
+          console.error('Error parsing PDF data:', parseError.message);
+          resolve('');
         }
-      };
-    }
-
-    // Use pdfjs-dist for Node.js
-    const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
-    
-    // Don't use worker in Node.js/serverless environment
-    const loadingTask = pdfjsLib.getDocument({
-      data: new Uint8Array(buffer),
-      useSystemFonts: false,
-      standardFontDataUrl: null,
-      verbosity: 0, // Disable warnings
-      useWorkerFetch: false,
-      isEvalSupported: false,
-      disableAutoFetch: true,
-      disableStream: true
+      });
+      
+      // Parse the buffer
+      pdfParser.parseBuffer(buffer);
     });
-    
-    const pdf = await loadingTask.promise;
-    let text = '';
-    
-    // Extract text from all pages (limit to first 10 pages for performance)
-    const numPages = Math.min(pdf.numPages, 10);
-    for (let i = 1; i <= numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      const pageText = content.items.map((item) => ('str' in item ? item.str : '')).join(' ');
-      text += pageText + ' ';
-    }
-
-    text = text
-      .replace(/\s+/g, ' ')
-      .replace(/[^\p{L}\p{N}\s]/gu, ' ')
-      .replace(/\s{2,}/g, ' ')
-      .substring(0, 3000)
-      .trim();
-
-    return text;
   } catch (error) {
     console.error('Eroare extragere text:', error.message);
     return '';
