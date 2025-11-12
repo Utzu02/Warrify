@@ -78,17 +78,39 @@ export const fetchEmails = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    const io = req.app.get('io');
+    const socketId = req.query.socketId;
+
+    // Process emails asynchronously with socket updates
     const scanOptions = req.session.gmailOptions || DEFAULT_SCAN_OPTIONS;
-    const result = await fetchWarrantyEmails({
+    console.log('=== FETCH EMAILS CALLED ===');
+    console.log('Session gmailOptions:', req.session.gmailOptions);
+    console.log('Using scanOptions:', scanOptions);
+    console.log('========================');
+
+    // Send immediate response to avoid timeout
+    res.json({ success: true, message: 'Processing started. Listen to socket events for progress.' });
+
+    fetchWarrantyEmails({
       accessToken,
       userId,
-      scanOptions
+      scanOptions,
+      io,
+      socketId
+    }).then(async (result) => {
+      await setLastScanAt(userId, new Date());
+      clearOptions(req.session);
+      
+      if (io && socketId) {
+        io.to(socketId).emit('gmail:complete', result);
+      }
+    }).catch((error) => {
+      console.error('Error processing emails:', error);
+      if (io && socketId) {
+        io.to(socketId).emit('gmail:error', { error: error.message });
+      }
     });
 
-    await setLastScanAt(userId, new Date());
-    clearOptions(req.session);
-
-    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -146,21 +168,69 @@ const clearOptions = (session) => {
   session.gmailOptions = { ...DEFAULT_SCAN_OPTIONS };
 };
 
-async function fetchWarrantyEmails({ accessToken, userId, scanOptions }) {
+async function fetchWarrantyEmails({ accessToken, userId, scanOptions, io, socketId }) {
+  console.log('Starting fetchWarrantyEmails with scanOptions:', scanOptions);
+  
+  if (io && socketId) {
+    io.to(socketId).emit('gmail:status', { message: 'Connecting to Gmail...', step: 1, total: 4 });
+  }
+
   const messages = await fetchAllMessages(accessToken, scanOptions);
+  
+  console.log(`📬 Fetched ${messages.length} total emails to scan`);
+  
+  if (io && socketId) {
+    io.to(socketId).emit('gmail:status', { 
+      message: `Found ${messages.length} emails to scan...`, 
+      step: 2, 
+      total: 4 
+    });
+  }
+
   const results = [];
+  let emailsWithPDFs = 0;
+  let emailsWithoutPDFs = 0;
 
   for (let i = 0; i < messages.length; i += 1) {
     if (i > 0 && i % MAX_CONCURRENT_REQUESTS === 0) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
+    if (io && socketId) {
+      io.to(socketId).emit('gmail:progress', {
+        current: i + 1,
+        total: messages.length,
+        message: `Processing email ${i + 1} of ${messages.length}...`
+      });
+    }
+
     try {
       const result = await processSingleEmail(messages[i].id, accessToken, userId);
-      if (result) results.push(result);
+      if (result) {
+        emailsWithPDFs++;
+        console.log(`✅ Email ${i + 1}/${messages.length} has warranty attachments:`, result.subject);
+        results.push(result);
+      } else {
+        emailsWithoutPDFs++;
+        console.log(`⏭️  Email ${i + 1}/${messages.length} skipped (no PDF attachments or no warranty)`);
+      }
     } catch (error) {
-      console.error(`Eroare mesaj ${i}:`, error.message);
+      console.error(`❌ Error processing email ${i + 1}:`, error.message);
     }
+  }
+
+  console.log(`\n📊 Scan Summary:`);
+  console.log(`   Total emails scanned: ${messages.length}`);
+  console.log(`   Emails with PDFs: ${emailsWithPDFs}`);
+  console.log(`   Emails without PDFs: ${emailsWithoutPDFs}`);
+  console.log(`   Warranty documents found: ${results.length}\n`);
+
+  if (io && socketId) {
+    io.to(socketId).emit('gmail:status', { 
+      message: 'Finalizing scan...', 
+      step: 4, 
+      total: 4 
+    });
   }
 
   return {
@@ -175,7 +245,16 @@ async function fetchAllMessages(token, scanOptions = DEFAULT_SCAN_OPTIONS) {
   const desiredTotal = clamp(scanOptions?.maxResults || DEFAULT_SCAN_OPTIONS.maxResults, 1, MAX_SCAN_RESULTS);
   const startDate = parseDateString(scanOptions?.startDate);
   const endDate = parseDateString(scanOptions?.endDate);
-  const queryParts = ['has:attachment', '(mimeType:application/pdf OR filename:.pdf)'];
+  
+  console.log('fetchAllMessages called with:');
+  console.log('  desiredTotal:', desiredTotal);
+  console.log('  startDate:', startDate);
+  console.log('  endDate:', endDate);
+  
+  // Strategy: Search for emails with attachments only (more efficient)
+  // Then filter for PDFs during processing
+  const queryParts = ['has:attachment'];
+  
   if (startDate) {
     queryParts.push(`after:${formatGmailDate(startDate)}`);
   }
@@ -184,16 +263,24 @@ async function fetchAllMessages(token, scanOptions = DEFAULT_SCAN_OPTIONS) {
     inclusiveEnd.setDate(inclusiveEnd.getDate() + 1);
     queryParts.push(`before:${formatGmailDate(inclusiveEnd)}`);
   }
+  
   const query = queryParts.join(' ');
+  
+  console.log('🔍 Gmail API query:', query);
+  console.log('📅 Date range: from', startDate, 'to', endDate);
+  console.log('📧 Will fetch up to', desiredTotal, 'emails with attachments');
 
   do {
     try {
+      const batchSize = Math.min(10, desiredTotal - messages.length);
+      console.log(`Fetching batch: current=${messages.length}, batchSize=${batchSize}, remaining=${desiredTotal - messages.length}`);
+      
       const response = await axios.get(
         'https://gmail.googleapis.com/gmail/v1/users/me/messages',
         {
           headers: { Authorization: `Bearer ${token}` },
           params: {
-            maxResults: Math.min(10, desiredTotal - messages.length),
+            maxResults: batchSize,
             pageToken,
             q: query
           },
@@ -201,8 +288,20 @@ async function fetchAllMessages(token, scanOptions = DEFAULT_SCAN_OPTIONS) {
         }
       );
 
-      messages = messages.concat(response.data.messages || []);
+      console.log('📬 Gmail API Response:', JSON.stringify({
+        messagesCount: response.data.messages?.length || 0,
+        resultSizeEstimate: response.data.resultSizeEstimate,
+        nextPageToken: response.data.nextPageToken ? 'EXISTS' : 'NULL'
+      }, null, 2));
+
+      const newMessages = response.data.messages || [];
+      console.log(`Received ${newMessages.length} messages in this batch`);
+      
+      messages = messages.concat(newMessages);
       pageToken = response.data.nextPageToken;
+      
+      console.log(`Total messages so far: ${messages.length}/${desiredTotal}, hasNextPage: ${!!pageToken}`);
+      
       if (messages.length >= desiredTotal) break;
     } catch (error) {
       console.error('Eroare preluare mesaje:', error.message);
@@ -210,7 +309,9 @@ async function fetchAllMessages(token, scanOptions = DEFAULT_SCAN_OPTIONS) {
     }
   } while (pageToken && messages.length < desiredTotal);
 
-  return messages.filter((msg) => msg?.id);
+  const filtered = messages.filter((msg) => msg?.id);
+  console.log(`Returning ${filtered.length} valid messages`);
+  return filtered;
 }
 
 async function processSingleEmail(id, token, userId) {
@@ -226,11 +327,24 @@ async function processSingleEmail(id, token, userId) {
 
     const headers = msgRes.data.payload?.headers || [];
     const parts = msgRes.data.payload?.parts || [];
+    
     const attachments = extractPDFAttachments(parts);
+    
+    // Log if email has no PDF attachments
+    if (attachments.length === 0) {
+      return null;
+    }
+    
+    const subject = getHeader(headers, 'Subject');
+    console.log(`\n📎 Processing: ${subject}`);
+    console.log(`   Found ${attachments.length} PDF(s): ${attachments.map(a => a.filename).join(', ')}`);
+    
     const warrantyAttachments = [];
 
     for (const attachment of attachments) {
       try {
+        console.log(`Processing attachment: ${attachment.filename}`);
+        
         const attachmentRes = await axios.get(
           `https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/attachments/${attachment.attachmentId}`,
           {
@@ -240,7 +354,11 @@ async function processSingleEmail(id, token, userId) {
         );
 
         const pdfBuffer = Buffer.from(attachmentRes.data.data, 'base64');
-        if (await isWarrantyDocument(pdfBuffer)) {
+        
+        const isWarranty = await isWarrantyDocument(pdfBuffer);
+        console.log(`Attachment ${attachment.filename} is warranty: ${isWarranty}`);
+        
+        if (isWarranty) {
           await persistWarrantyDocument({
             userId,
             messageId: id,
@@ -255,11 +373,13 @@ async function processSingleEmail(id, token, userId) {
           });
         }
       } catch (error) {
-        console.error(`Eroare atașament ${attachment.attachmentId}:`, error.message);
+        console.error(`Error processing attachment ${attachment.filename}:`, error.message);
+        console.log(`Skipping attachment ${attachment.filename} and continuing...`);
+        // Continue to next attachment
       }
     }
 
-    return warrantyAttachments.length > 0
+    const result = warrantyAttachments.length > 0
       ? {
           id,
           subject: getHeader(headers, 'Subject'),
@@ -268,6 +388,14 @@ async function processSingleEmail(id, token, userId) {
           attachments: warrantyAttachments
         }
       : null;
+    
+    if (result) {
+      console.log(`✅ Email ${id} processed: ${warrantyAttachments.length} warranty document(s) saved`);
+    } else {
+      console.log(`⏭️  Email ${id} has no warranty documents`);
+    }
+    
+    return result;
   } catch (error) {
     console.error(`Eroare procesare ${id}:`, error.message);
     return null;
@@ -307,13 +435,14 @@ async function isWarrantyDocument(pdfBuffer) {
   const contentHash = createHash('sha256').update(pdfBuffer).digest('hex');
 
   if (warrantyCache.has(contentHash)) {
+    console.log('PDF found in cache, returning cached result');
     return warrantyCache.get(contentHash);
   }
 
   try {
     const pdfText = await extractPDFText(pdfBuffer);
     if (!pdfText.trim()) {
-      console.warn('Document ignorat: nu s-a putut extrage text (posibil PDF protejat).');
+      console.log('⚠️ PDF ignored: Could not extract text (possibly protected/corrupted). SKIPPING and CONTINUING with next attachment...');
       warrantyCache.set(contentHash, false);
       return false;
     }

@@ -37,6 +37,37 @@
   color: #1f2933;
 }
 
+.progress-container {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 1.5rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(79, 70, 229, 0.3);
+}
+
+.progress-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-align: center;
+  margin: 0;
+  font-weight: 500;
+}
+
 .spinner {
   width: 48px;
   height: 48px;
@@ -58,6 +89,9 @@
   padding: 1rem;
   border-radius: 12px;
   margin-bottom: 1rem;
+}
+.status-error .button {
+  margin-top: 1rem;
 }
 
 .status-summary {

@@ -24,7 +24,12 @@
   margin-bottom: 0.5rem;
   display: inline-block;
 }
-
+.flex-warr {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
 .pill {
   display: inline-block;
   padding: 0.25rem 0.85rem;

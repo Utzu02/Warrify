@@ -76,7 +76,7 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
             <p><strong>Provider:</strong> {selectedWarranty.provider || 'Unknown'}</p>
             <p><strong>File name:</strong> {selectedWarranty.filename}</p>
           </div>
-          <div>
+          <div className='modal-previewdownload'>
             <button className='button buttoninvert modal-war-2' onClick={handleViewPdf} disabled={!downloadUrl}>
               View PDF
             </button>

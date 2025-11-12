@@ -1,13 +1,21 @@
-export const extractPDFAttachments = (parts, attachments = []) => {
+export const extractPDFAttachments = (parts, attachments = [], depth = 0) => {
   parts.forEach((part) => {
-    if (part.mimeType === 'application/pdf' || part.filename?.endsWith('.pdf')) {
+    // Check if it's a PDF attachment
+    const isPDF = part.mimeType === 'application/pdf' || part.filename?.endsWith('.pdf');
+    const hasAttachmentId = part.body?.attachmentId;
+    
+    if (isPDF && hasAttachmentId) {
       attachments.push({
         filename: part.filename || `document-${Date.now()}.pdf`,
         size: part.body?.size || 0,
         attachmentId: part.body?.attachmentId
       });
     }
-    if (part.parts) extractPDFAttachments(part.parts, attachments);
+    
+    // Recursively check nested parts
+    if (part.parts) {
+      extractPDFAttachments(part.parts, attachments, depth + 1);
+    }
   });
   return attachments;
 };

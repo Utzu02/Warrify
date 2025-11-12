@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { BASE_URL } from '../config';
 import { fetchGmailEmails } from '../api/gmail';
+import { useSocket } from '../hooks/useSocket';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import './styles/GmailStatus.css';
 
@@ -20,19 +21,67 @@ interface ProcessedEmail {
   attachments: Attachment[];
 }
 
-const statusSteps = [
-  'Connecting to Gmail...',
-  'Looking for PDF attachments...',
-  'Checking if each document is a warranty...',
-  'Almost done...'
-];
+interface SocketProgress {
+  current: number;
+  total: number;
+  message: string;
+}
+
+interface SocketStatus {
+  message: string;
+  step: number;
+  total: number;
+}
 
 const GmailStatus = () => {
   const [documents, setDocuments] = useState<ProcessedEmail[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState(statusSteps[0]);
+  const [statusMessage, setStatusMessage] = useState('Connecting to Gmail...');
+  const [progress, setProgress] = useState<SocketProgress | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  
+  const { socket, socketId } = useSocket();
+
+  // Socket event listeners
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleStatus = (data: SocketStatus) => {
+      setStatusMessage(data.message);
+    };
+
+    const handleProgress = (data: SocketProgress) => {
+      setProgress(data);
+      setStatusMessage(data.message);
+    };
+
+    const handleComplete = (result: { total: number; documents: ProcessedEmail[] }) => {
+      const now = new Date();
+      setDocuments(result.documents || []);
+      setLastUpdated(now);
+      setLoading(false);
+      setProgress(null);
+    };
+
+    const handleError = (data: { error: string }) => {
+      setError(data.error);
+      setLoading(false);
+      setProgress(null);
+    };
+
+    socket.on('gmail:status', handleStatus);
+    socket.on('gmail:progress', handleProgress);
+    socket.on('gmail:complete', handleComplete);
+    socket.on('gmail:error', handleError);
+
+    return () => {
+      socket.off('gmail:status', handleStatus);
+      socket.off('gmail:progress', handleProgress);
+      socket.off('gmail:complete', handleComplete);
+      socket.off('gmail:error', handleError);
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (!loading) {
@@ -40,9 +89,16 @@ const GmailStatus = () => {
     }
 
     let index = 0;
+    const defaultSteps = [
+      'Connecting to Gmail...',
+      'Looking for PDF attachments...',
+      'Checking if each document is a warranty...',
+      'Almost done...'
+    ];
+    
     const intervalId = setInterval(() => {
-      index = (index + 1) % statusSteps.length;
-      setStatusMessage(statusSteps[index]);
+      index = (index + 1) % defaultSteps.length;
+      setStatusMessage(defaultSteps[index]);
     }, 2500);
 
     return () => clearInterval(intervalId);
@@ -63,33 +119,32 @@ const GmailStatus = () => {
           return;
         }
 
-        const payload = await fetchGmailEmails<{ total: number; documents: ProcessedEmail[] }>();
-
-        if (!isMounted) {
+        if (!socketId) {
+          setError('Socket connection not established. Please refresh the page.');
+          setLoading(false);
           return;
         }
 
-        const now = new Date();
-        setDocuments(payload.documents || []);
-        setLastUpdated(now);
+        await fetchGmailEmails(socketId);
+        // Results will be handled by socket events
+
       } catch (err) {
         if (!isMounted) {
           return;
         }
         setError(err instanceof Error ? err.message : 'Unexpected error.');
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     }
 
-    loadEmails();
+    if (socketId) {
+      loadEmails();
+    }
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [socketId]);
 
   const totalAttachments = useMemo(() => {
     return documents.reduce((sum, doc) => sum + doc.attachments.length, 0);
@@ -123,6 +178,19 @@ const GmailStatus = () => {
         {loading && (
           <div className="status-loading">
             <LoadingSpinner message={statusMessage} size="large" />
+            {progress && progress.total > 0 && (
+              <div className="progress-container">
+                <div className="progress-bar">
+                  <div 
+                    className="progress-fill" 
+                    style={{ width: `${(progress.current / progress.total) * 100}%` }}
+                  />
+                </div>
+                <p className="progress-text">
+                  {progress.current} / {progress.total} emails processed
+                </p>
+              </div>
+            )}
           </div>
         )}
 

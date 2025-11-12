@@ -26,6 +26,7 @@
     "nodemon": "^3.1.9",
     "pdf-parse": "^1.1.1",
     "pdfreader": "^3.0.7",
+    "socket.io": "^4.8.1",
     "uuid": "^11.1.0"
   }
 }

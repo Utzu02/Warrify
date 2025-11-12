@@ -25,9 +25,11 @@ const DashboardTable = ({ warranties, isLoading = false }: DashboardTableProps) 
       <div className="table-header">
         <div>
           <p className="eyebrow">Documents</p>
-          <h2>Your warranties</h2>
+          <div className='flex-warr'>
+            <h2>Your warranties</h2>
+            <span className="pill">{warranties.length} active</span>
+          </div>
         </div>
-        <span className="pill">{warranties.length} active</span>
       </div>
       {isLoading ? (
         <div className="loading-inline">

@@ -6,4 +6,7 @@ export const saveGmailOptions = (payload: { maxResults: number; startDate: strin
     body: JSON.stringify(payload)
   });
 
-export const fetchGmailEmails = <T = { total: number; documents: unknown[] }>() => apiFetch<T>('/api/emails');
+export const fetchGmailEmails = <T = { total: number; documents: unknown[] }>(socketId?: string) => {
+  const url = socketId ? `/api/emails?socketId=${socketId}` : '/api/emails';
+  return apiFetch<T>(url);
+};

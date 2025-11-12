@@ -84,4 +84,7 @@
   .form-actions {
     flex-direction: column-reverse;
   }
+  .gmail-config-page {
+    height: calc(100dvh - 93px);
+  }
 }

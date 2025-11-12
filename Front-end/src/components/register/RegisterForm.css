@@ -123,7 +123,7 @@
     padding: 1.5rem;
   }
   .auth-container {
-    height: calc(100vh - 93px);
+    height: calc(100dvh - 93px);
   }
   .terms-group {
     flex-direction: column;
