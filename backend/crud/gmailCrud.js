@@ -446,14 +446,16 @@ async function extractPDFText(buffer) {
     // Use pdfjs-dist for Node.js
     const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
     
-    // Disable worker for serverless
-    pdfjsLib.GlobalWorkerOptions.workerSrc = null;
-    
+    // Don't use worker in Node.js/serverless environment
     const loadingTask = pdfjsLib.getDocument({
       data: new Uint8Array(buffer),
       useSystemFonts: false,
       standardFontDataUrl: null,
-      verbosity: 0 // Disable warnings
+      verbosity: 0, // Disable warnings
+      useWorkerFetch: false,
+      isEvalSupported: false,
+      disableAutoFetch: true,
+      disableStream: true
     });
     
     const pdf = await loadingTask.promise;
