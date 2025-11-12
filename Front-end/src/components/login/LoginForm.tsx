@@ -33,7 +33,16 @@ const LoginForm = () => {
     try {
       setIsLoading(true);
       const data = await loginUser({ email, password });
-      Cookies.set('UID', data.userId, { expires: 7, path: '' });
+      
+      // Set cookie with proper attributes
+      const isProduction = window.location.hostname !== 'localhost';
+      Cookies.set('UID', data.userId, { 
+        expires: 7, 
+        path: '/',
+        sameSite: isProduction ? 'None' : 'Lax',
+        secure: isProduction
+      });
+      
       setEmail('');
       setPassword('');
       setErrors({});

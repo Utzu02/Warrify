@@ -76,11 +76,14 @@ app.use(cors({
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false, // Don't create session until something stored
+  name: 'warrify.sid', // Custom cookie name
   cookie: {
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    // Don't set domain - let browser handle it automatically
   }
 }));
 app.use(bodyParser.json());
