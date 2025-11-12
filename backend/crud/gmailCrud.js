@@ -433,55 +433,21 @@ async function extractPDFText(buffer) {
       throw new Error('Fișierul nu este un PDF valid');
     }
 
-    // Use pdf2json - stable library for serverless environments
-    const PDFParser = (await import('pdf2json')).default;
+    // Use pdf-parse - simple and reliable
+    const pdf = await import('pdf-parse/lib/pdf-parse.js');
+    const data = await pdf.default(buffer);
     
-    return new Promise((resolve, reject) => {
-      const pdfParser = new PDFParser(null, 1);
-      
-      pdfParser.on('pdfParser_dataError', (errData) => {
-        console.error('pdf2json error:', errData.parserError);
-        resolve(''); // Return empty string on error to skip document
-      });
-      
-      pdfParser.on('pdfParser_dataReady', (pdfData) => {
-        try {
-          // Extract text from all pages
-          let text = '';
-          if (pdfData.Pages) {
-            pdfData.Pages.forEach((page) => {
-              if (page.Texts) {
-                page.Texts.forEach((textItem) => {
-                  if (textItem.R) {
-                    textItem.R.forEach((r) => {
-                      if (r.T) {
-                        text += decodeURIComponent(r.T) + ' ';
-                      }
-                    });
-                  }
-                });
-              }
-            });
-          }
-          
-          // Clean and normalize text
-          text = text
-            .replace(/\s+/g, ' ')
-            .replace(/[^\p{L}\p{N}\s]/gu, ' ')
-            .replace(/\s{2,}/g, ' ')
-            .substring(0, 3000)
-            .trim();
-          
-          resolve(text);
-        } catch (parseError) {
-          console.error('Error parsing PDF data:', parseError.message);
-          resolve('');
-        }
-      });
-      
-      // Parse the buffer
-      pdfParser.parseBuffer(buffer);
-    });
+    let text = data.text || '';
+    
+    // Clean and normalize text
+    text = text
+      .replace(/\s+/g, ' ')
+      .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+      .replace(/\s{2,}/g, ' ')
+      .substring(0, 3000)
+      .trim();
+
+    return text;
   } catch (error) {
     console.error('Eroare extragere text:', error.message);
     return '';
