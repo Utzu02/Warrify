@@ -433,11 +433,29 @@ async function extractPDFText(buffer) {
       throw new Error('Fișierul nu este un PDF valid');
     }
 
-    const { default: pdfParse } = await import('pdf-parse');
-    const data = await pdfParse(buffer, {
-      // Disable external file loading to prevent ENOENT errors on Vercel
-      max: 0
-    });
+    // Try to parse PDF - wrap in nested try-catch to handle pdf-parse internal errors
+    let data;
+    try {
+      const { default: pdfParse } = await import('pdf-parse');
+      data = await pdfParse(buffer, {
+        max: 0,
+        version: 'v1.10.100'
+      });
+    } catch (parseError) {
+      // If pdf-parse fails with file system errors, try without options
+      console.warn('pdf-parse failed with options, retrying without:', parseError.message);
+      const { default: pdfParse } = await import('pdf-parse');
+      
+      // Set working directory temporarily to avoid ENOENT errors
+      const originalCwd = process.cwd();
+      try {
+        process.chdir('/tmp');
+        data = await pdfParse(buffer);
+      } finally {
+        process.chdir(originalCwd);
+      }
+    }
+    
     let text = data.text;
 
     text = text
