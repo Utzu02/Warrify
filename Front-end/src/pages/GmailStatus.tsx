@@ -130,12 +130,22 @@ const GmailStatus = () => {
 
         console.log(isProduction ? 'Starting Gmail scan (production mode - no Socket.IO)' : 'Starting Gmail scan with Socket.IO');
         
+        console.log('📤 Sending request to backend...');
+        const startTime = Date.now();
+        
         const result = await fetchGmailEmails(socketId || undefined);
+        
+        const elapsed = Date.now() - startTime;
+        console.log(`✅ Received response after ${elapsed}ms:`, result);
         
         // On production, we get the result immediately (no socket events)
         if (isProduction && result) {
+          console.log('Setting documents:', result.documents?.length || 0);
           setDocuments((result.documents || []) as ProcessedEmail[]);
           setLastUpdated(new Date());
+          setLoading(false);
+        } else if (isProduction) {
+          console.log('⚠️ No result received on production');
           setLoading(false);
         }
         // On local dev, results will be handled by socket events

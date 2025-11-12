@@ -77,7 +77,6 @@ export const fetchEmails = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-
     const io = req.app.get('io');
     const socketId = req.query.socketId;
 
