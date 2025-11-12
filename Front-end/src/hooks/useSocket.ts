@@ -19,28 +19,47 @@ export const useSocket = (): UseSocketReturn => {
     
     console.log('Initializing socket connection to:', BASE_URL);
     
-    // Create socket connection
+    // Create socket connection with reconnection settings
     const socketInstance = io(BASE_URL, {
       withCredentials: true,
-      transports: isProduction ? ['polling'] : ['websocket', 'polling']
+      transports: isProduction ? ['polling'] : ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 5,
+      timeout: 20000
     });
 
     socketRef.current = socketInstance;
 
     socketInstance.on('connect', () => {
-      console.log('Socket connected:', socketInstance.id);
+      console.log('✅ Socket connected:', socketInstance.id);
       setIsConnected(true);
       setSocketId(socketInstance.id || null);
     });
 
-    socketInstance.on('disconnect', () => {
-      console.log('Socket disconnected');
+    socketInstance.on('disconnect', (reason) => {
+      console.log('❌ Socket disconnected:', reason);
       setIsConnected(false);
       setSocketId(null);
+      
+      // Auto-reconnect if server initiated disconnect
+      if (reason === 'io server disconnect') {
+        console.log('🔄 Reconnecting...');
+        socketInstance.connect();
+      }
+    });
+
+    socketInstance.on('reconnect', (attemptNumber) => {
+      console.log(`✅ Socket reconnected after ${attemptNumber} attempts`);
+    });
+
+    socketInstance.on('reconnect_attempt', (attemptNumber) => {
+      console.log(`🔄 Reconnection attempt ${attemptNumber}...`);
     });
 
     socketInstance.on('connect_error', (error) => {
-      console.error('Socket connection error:', error);
+      console.error('⚠️ Socket connection error:', error.message);
       setIsConnected(false);
     });
 

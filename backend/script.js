@@ -16,6 +16,41 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
+// MongoDB connection with better error handling and timeout settings
+const connectDB = async () => {
+  try {
+    if (mongoose.connection.readyState === 1) {
+      console.log('MongoDB already connected');
+      return;
+    }
+    
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+      minPoolSize: 2, // Maintain at least 2 socket connections
+    });
+    
+    console.log('✅ Connected to MongoDB');
+  } catch (err) {
+    console.error('❌ Failed to connect to MongoDB:', err.message);
+    // Retry connection after 5 seconds
+    setTimeout(connectDB, 5000);
+  }
+};
+
+// Handle MongoDB connection events
+mongoose.connection.on('disconnected', () => {
+  console.log('⚠️ MongoDB disconnected, attempting to reconnect...');
+  connectDB();
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('❌ MongoDB connection error:', err.message);
+});
+
 // Initialize Socket.IO
 const io = new Server(httpServer, {
   cors: {
@@ -47,18 +82,33 @@ app.use(session({
 }));
 app.use(bodyParser.json());
 
+// Middleware to ensure MongoDB connection
+app.use(async (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    console.log('⚠️ MongoDB not connected, attempting to reconnect...');
+    try {
+      await connectDB();
+      next();
+    } catch (error) {
+      console.error('❌ Failed to reconnect to MongoDB:', error.message);
+      return res.status(503).json({ 
+        success: false, 
+        error: 'Database connection unavailable. Please try again.' 
+      });
+    }
+  } else {
+    next();
+  }
+});
+
 app.use('/api', userRoutes);
 app.use('/api', authRoutes);
 app.use('/',googleRoutes);
 app.use('/api', warrantiesRoutes2);
 app.use('/api', warrantyDocumentRoutes);
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch((err) => console.error('Failed to connect to MongoDB', err));
+// Connect to MongoDB on startup
+connectDB();
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
