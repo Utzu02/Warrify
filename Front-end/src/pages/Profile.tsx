@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import './styles/Profile.css';
-import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { Link, useSearchParams } from 'react-router-dom';
 import { fetchUserProfile, fetchUserWarranties } from '../api/users';
+import { getGmailSettings, connectGmail, disconnectGmail, GmailSettings } from '../api/gmailSettings';
+import { useAuth } from '../contexts/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
+import GmailSettingsModal from '../components/GmailSettingsModal/GmailSettingsModal';
 
 type ApiUser = {
   _id: string;
@@ -43,30 +45,51 @@ const formatFullName = (username?: string) => {
 };
 
 const Profile = () => {
+  const { user } = useAuth();
+  const [searchParams] = useSearchParams();
   const [userData, setUserData] = useState<ApiUser | null>(null);
   const [stats, setStats] = useState<ProfileStats>({ total: 0, expiringSoon: 0 });
+  const [gmailSettings, setGmailSettings] = useState<GmailSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showGmailSuccess, setShowGmailSuccess] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+
+  // Check if redirected from Gmail OAuth
+  useEffect(() => {
+    if (searchParams.get('gmail') === 'connected') {
+      setShowGmailSuccess(true);
+      // Clear the URL parameter
+      window.history.replaceState({}, document.title, window.location.pathname);
+      // Hide success message after 5 seconds
+      setTimeout(() => setShowGmailSuccess(false), 5000);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
-    const userId = Cookies.get('UID');
-    if (!userId) {
+    // Get user from AuthContext
+    if (!user) {
       setError('Please log in to view your profile.');
       setLoading(false);
       return;
     }
+
+    const userId = user.id;
 
     const controller = new AbortController();
 
     const loadProfile = async () => {
       try {
         setError(null);
-        const [userPayload, warrantiesPayload] = await Promise.all([
+        const [userPayload, warrantiesPayload, gmailPayload] = await Promise.all([
           fetchUserProfile(userId, { signal: controller.signal }),
-          fetchUserWarranties(userId, { signal: controller.signal })
+          fetchUserWarranties(userId, { signal: controller.signal }),
+          getGmailSettings()
         ]);
 
         setUserData(userPayload as ApiUser);
+        setGmailSettings(gmailPayload);
+        
         const items: WarrantySummary[] = (warrantiesPayload.items as WarrantySummary[]) || [];
         const total = items.length;
         const now = Date.now();
@@ -98,7 +121,7 @@ const Profile = () => {
     loadProfile();
 
     return () => controller.abort();
-  }, []);
+  }, [user]);
 
   const quickStats = useMemo(
     () => [
@@ -128,11 +151,17 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
+      {showGmailSuccess && (
+        <div className="gmail-success-banner">
+          ✅ Gmail connected successfully! Your default settings are ready to use.
+        </div>
+      )}
+      
       <section className="profile-hero card">
         <div>
           <p className="eyebrow">Account</p>
           <h1>Hello, {userData?.username || 'there'}!</h1>
-          <p className="hero-copy">You’re in control of your workspace details, security, and subscription.</p>
+          <p className="hero-copy">You're in control of your workspace details, security, and subscription.</p>
           {error && <p className="error-state">{error}</p>}
         </div>
         <div className="avatar-circle">{avatarInitial}</div>
@@ -178,6 +207,80 @@ const Profile = () => {
 
         <div className="card">
           <header className="section-header">
+            <h2>Gmail Integration</h2>
+            {gmailSettings?.isConnected ? (
+              <div className="header-actions">
+                <button
+                  onClick={() => setShowSettingsModal(true)}
+                  className="icon-button"
+                  title="Configure settings"
+                  aria-label="Configure Gmail settings"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+                <button
+                  onClick={async () => {
+                    try {
+                      await disconnectGmail();
+                      setGmailSettings(prev => prev ? { ...prev, isConnected: false, connectedAt: null } : null);
+                    } catch (error) {
+                      alert('Failed to disconnect Gmail');
+                    }
+                  }}
+                  className="ghost-button"
+                >
+                  Disconnect
+                </button>
+              </div>
+            ) : (
+              <button onClick={connectGmail} className="button buttoninvert">
+                Connect Gmail
+              </button>
+            )}
+          </header>
+          {gmailSettings?.isConnected ? (
+            <div className="gmail-settings">
+              <div className="connection-status">
+                <p className="pill-profile">Connected</p>
+                <p className="connection-info">
+                  Connected on {formatDate(gmailSettings.connectedAt || undefined)}
+                </p>
+              </div>
+              <div className="settings-summary">
+                <h3>Current Preferences</h3>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="label">Max Results</span>
+                    <span className="value">{gmailSettings.defaultSettings.maxResults}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Start Date</span>
+                    <span className="value">{gmailSettings.defaultSettings.startDate ? formatDate(gmailSettings.defaultSettings.startDate) : 'Not set'}</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">End Date</span>
+                    <span className="value">{gmailSettings.defaultSettings.endDate ? formatDate(gmailSettings.defaultSettings.endDate) : 'Not set'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="gmail-disconnected">
+              <p>Connect your Gmail account to automatically scan for warranty documents.</p>
+              <ul className="feature-list">
+                <li>Automatic warranty detection from emails</li>
+                <li>Secure OAuth2 authentication</li>
+                <li>Read-only access to attachments</li>
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="card">
+          <header className="section-header">
             <h2>Subscription</h2>
             <Link to="/pricing" className="button buttoninvert">
               Manage plan
@@ -197,6 +300,17 @@ const Profile = () => {
           </div>
         </div>
       </section>
+
+      <GmailSettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+        initialSettings={gmailSettings}
+        onSave={(updatedSettings) => {
+          setGmailSettings(updatedSettings);
+          setShowGmailSuccess(true);
+          setTimeout(() => setShowGmailSuccess(false), 3000);
+        }}
+      />
     </div>
   );
 };

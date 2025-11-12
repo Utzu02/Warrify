@@ -27,6 +27,9 @@ const oauth2Client = new google.auth.OAuth2(
 const warrantyCache = new Map();
 
 export const authRedirect = (req, res) => {
+  // Store userId in session to retrieve after OAuth callback
+  req.session.pendingAuthUserId = req.userId;
+  
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: ['https://www.googleapis.com/auth/gmail.readonly'],
@@ -40,11 +43,34 @@ export const authCallback = async (req, res) => {
     const { code } = req.query;
     const { tokens } = await oauth2Client.getToken(code);
     
-    // Encode token to pass it to frontend via URL (will be saved in localStorage)
-    const encodedToken = encodeURIComponent(tokens.access_token);
+    // Store Google token in httpOnly cookie
+    res.cookie('googleToken', tokens.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 60 * 60 * 1000 // 1 hour (Google tokens typically expire in 1 hour)
+    });
+
+    // Get userId from session (stored in authRedirect)
+    const userId = req.session.pendingAuthUserId;
+    if (userId) {
+      try {
+        const User = (await import('../schemas/User.js')).default;
+        await User.findByIdAndUpdate(userId, {
+          'gmail.isConnected': true,
+          'gmail.connectedAt': new Date()
+        });
+        // Clear the pending userId from session
+        delete req.session.pendingAuthUserId;
+      } catch (err) {
+        console.error('Failed to update user Gmail status:', err);
+      }
+    }
+    
+    // Redirect to Gmail status page to start scanning
     const redirectUrl = process.env.FRONTEND_URL
-      ? `${process.env.FRONTEND_URL}/gmail-status?token=${encodedToken}`
-      : `/gmail-status?token=${encodedToken}`;
+      ? `${process.env.FRONTEND_URL}/gmail-status`
+      : `/gmail-status`;
     res.redirect(redirectUrl);
   } catch (error) {
     console.error('Google auth error:', error);
@@ -64,9 +90,14 @@ export const saveGmailOptionsHandler = (req, res) => {
 
 export const fetchEmails = async (req, res) => {
   try {
-    // Get token from Authorization header (sent from frontend)
+    // Get token from Authorization header OR from httpOnly cookie
     const authHeader = req.headers.authorization;
-    const accessToken = authHeader?.replace('Bearer ', '');
+    let accessToken = authHeader?.replace('Bearer ', '');
+    
+    // If not in header, try to get from cookie
+    if (!accessToken) {
+      accessToken = req.cookies?.googleToken;
+    }
     
     if (!accessToken) {
       return res
@@ -74,7 +105,8 @@ export const fetchEmails = async (req, res) => {
         .json({ error: 'Missing Google access token. Please connect your Gmail account again.' });
     }
 
-    const userId = req.headers['x-user-id'] || req.query.userId;
+    // Use userId from JWT middleware (set by userMiddleware)
+    const userId = req.userId;
     if (!userId) {
       return res.status(400).json({ error: 'Missing or invalid user identifier' });
     }

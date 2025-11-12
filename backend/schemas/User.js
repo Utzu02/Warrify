@@ -18,7 +18,18 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   terms: { type: Boolean, required: true },
   lastScanAt: { type: Date },
-  account_created_at: { type: Date, default: Date.now }
+  account_created_at: { type: Date, default: Date.now },
+  
+  // Gmail integration settings
+  gmail: {
+    isConnected: { type: Boolean, default: false },
+    connectedAt: { type: Date },
+    defaultSettings: {
+      maxResults: { type: Number, default: 10, min: 1, max: 100 },
+      startDate: { type: String, default: null }, // ISO date string or null
+      endDate: { type: String, default: null }    // ISO date string or null
+    }
+  }
 }, { timestamps: true })
 
 // Hash password before saving

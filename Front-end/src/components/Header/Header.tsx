@@ -1,7 +1,7 @@
 
 import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
-import Cookies from 'js-cookie';
+import { useAuth } from '../../contexts/AuthContext';
 import pozalogo from '../../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -12,13 +12,14 @@ interface HeaderProps {
 
 const Header = ({ isLoggedIn }: HeaderProps) => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const location = useLocation().pathname;
   const [menuOpen, setMenuOpen] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  const logOut = () => {
-    Cookies.remove('UID');
+  const logOut = async () => {
+    await logout();
     navigate('/');
   };
 

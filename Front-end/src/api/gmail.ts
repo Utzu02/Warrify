@@ -25,13 +25,7 @@ export const fetchGmailEmails = <T = { total: number; documents: unknown[] }>(so
   
   const url = `/api/emails?${params.toString()}`;
   
-  // Get Google access token from localStorage
-  const googleToken = localStorage.getItem('googleAccessToken');
-  const headers: Record<string, string> = {};
-  
-  if (googleToken) {
-    headers['Authorization'] = `Bearer ${googleToken}`;
-  }
-  
-  return apiFetch<T>(url, { headers });
+  // Google token is sent automatically via httpOnly cookie
+  // No need to manually add Authorization header
+  return apiFetch<T>(url, {});
 };

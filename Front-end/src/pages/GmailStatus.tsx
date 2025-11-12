@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { useAuth } from '../contexts/AuthContext';
 import { BASE_URL } from '../config';
 import { fetchGmailEmails } from '../api/gmail';
+import { getGmailSettings } from '../api/gmailSettings';
 import { useSocket } from '../hooks/useSocket';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import './styles/GmailStatus.css';
@@ -34,16 +35,14 @@ interface SocketStatus {
 }
 
 const GmailStatus = () => {
-  const [documents, setDocuments] = useState<ProcessedEmail[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState('Connecting to Gmail...');
-  const [progress, setProgress] = useState<SocketProgress | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  
+  const { user } = useAuth();
   const { socket, socketId } = useSocket();
-
-  // Save Google token from URL to localStorage
+  const [documents, setDocuments] = useState<ProcessedEmail[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState('Preparing to scan...');
+  const [progress, setProgress] = useState<SocketProgress | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);  // Save Google token from URL to localStorage
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -126,8 +125,7 @@ const GmailStatus = () => {
         setLoading(true);
         setError(null);
 
-        const userId = Cookies.get('UID');
-        if (!userId) {
+        if (!user) {
           setError('Please log in to run the Gmail scan.');
           setLoading(false);
           return;
@@ -182,8 +180,23 @@ const GmailStatus = () => {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  const handleRetry = () => {
-    window.location.href = `${BASE_URL}/auth/google`;
+  const handleRetry = async () => {
+    try {
+      // Check if Gmail is already connected
+      const settings = await getGmailSettings();
+      
+      if (settings.isConnected) {
+        // Already connected, reload the page to restart the scan
+        window.location.reload();
+      } else {
+        // Not connected, redirect to Google OAuth
+        window.location.href = `${BASE_URL}/auth/google`;
+      }
+    } catch (err) {
+      console.error('Failed to check Gmail connection:', err);
+      // If check fails, assume need to reconnect
+      window.location.href = `${BASE_URL}/auth/google`;
+    }
   };
 
   const buildDownloadUrl = (messageId: string, attachment: Attachment) => {

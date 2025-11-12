@@ -3,8 +3,9 @@ import LoginLightbox from "../components/LoginLightbox/LoginLightbox";
 import DashboardHero from "../components/dashboard/DashboardHero";
 import DashboardTools from "../components/dashboard/DashboardTools";
 import DashboardTable from "../components/dashboard/DashboardTable";
+import GmailConfigModal from "../components/GmailConfigModal/GmailConfigModal";
 import { useEffect, useMemo, useState } from "react";
-import Cookies from "js-cookie";
+import { useAuth } from "../contexts/AuthContext";
 import "./styles/Dashboard.css";
 import type { Warranty } from "../types/dashboard";
 import { fetchUserWarranties } from "../api/users";
@@ -14,9 +15,11 @@ import { fetchUserWarranties } from "../api/users";
   }
   
   const Dashboard = ({ isLoggedIn }: DashProps) => {
+    const { user } = useAuth();
     const [warranties, setWarranties] = useState<Warranty[]>([]);
     const [loadingWarranties, setLoadingWarranties] = useState(true);
     const [warrantyError, setWarrantyError] = useState<string | null>(null);
+    const [showGmailConfigModal, setShowGmailConfigModal] = useState(false);
   
     useEffect(() => {
       let isMounted = true;
@@ -24,15 +27,14 @@ import { fetchUserWarranties } from "../api/users";
   
       const loadWarranties = async () => {
         try {
-          const userId = Cookies.get('UID');
-          if (!userId) {
+          if (!user) {
             setWarrantyError('Please log in to view your warranties.');
             setWarranties([]);
             setLoadingWarranties(false);
             return;
           }
   
-          const payload = await fetchUserWarranties(userId, { signal: controller.signal });
+          const payload = await fetchUserWarranties(user.id, { signal: controller.signal });
   
           if (!isMounted) {
             return;
@@ -69,7 +71,7 @@ import { fetchUserWarranties } from "../api/users";
         isMounted = false;
         controller.abort();
       };
-    }, []);
+    }, [user]);
   
     const [sortOption, setSortOption] = useState<string>("");
     const [searchQuery, setSearchQuery] = useState("");
@@ -123,6 +125,24 @@ import { fetchUserWarranties } from "../api/users";
           return expirationFilters.some((days) => date - now <= days * 24 * 60 * 60 * 1000);
         });
       }
+
+      // Filter by Is Expired
+      const isExpiredFilters = activeFilters.isExpired ?? [];
+      if (isExpiredFilters.length > 0) {
+        const now = Date.now();
+        result = result.filter((w) => {
+          const expDate = w.expirationDate ? new Date(w.expirationDate).getTime() : null;
+          if (!expDate) return false;
+          const isExpired = expDate < now;
+          
+          // Check if warranty matches any selected filter
+          return isExpiredFilters.some((filter) => {
+            if (filter === 'yes') return isExpired;
+            if (filter === 'no') return !isExpired;
+            return false;
+          });
+        });
+      }
   
       // Sortare
       const today = new Date();
@@ -158,7 +178,7 @@ import { fetchUserWarranties } from "../api/users";
         default:
           return result;
       }
-    }, [warranties, searchQuery, sortOption]);
+    }, [warranties, searchQuery, sortOption, activeFilters]);
 
     const managedWarranties = warranties.length;
     const expiringSoonCount = useMemo(() => {
@@ -197,33 +217,91 @@ import { fetchUserWarranties } from "../api/users";
       return Array.from(new Set(warranties.map(mapFn).filter(Boolean))) as string[];
     };
 
+    const getWarrantyCount = (filterKey: string, filterValue: string | number): number => {
+      const now = Date.now();
+      
+      switch (filterKey) {
+        case 'productName':
+          return warranties.filter(w => w.productName === filterValue).length;
+        
+        case 'provider':
+          return warranties.filter(w => w.provider === filterValue).length;
+        
+        case 'purchaseDate': {
+          const days = filterValue as number;
+          return warranties.filter(w => {
+            const date = w.purchaseDate ? new Date(w.purchaseDate).getTime() : null;
+            if (!date) return false;
+            return now - date <= days * 24 * 60 * 60 * 1000;
+          }).length;
+        }
+        
+        case 'expirationDate': {
+          const days = filterValue as number;
+          return warranties.filter(w => {
+            const date = w.expirationDate ? new Date(w.expirationDate).getTime() : null;
+            if (!date) return false;
+            return date - now <= days * 24 * 60 * 60 * 1000;
+          }).length;
+        }
+        
+        case 'isExpired': {
+          return warranties.filter(w => {
+            const expDate = w.expirationDate ? new Date(w.expirationDate).getTime() : null;
+            if (!expDate) return false;
+            const isExpired = expDate < now;
+            return filterValue === 'yes' ? isExpired : !isExpired;
+          }).length;
+        }
+        
+        default:
+          return 0;
+      }
+    };
+
     const filters = [
       {
         key: 'productName',
         label: 'Product name',
-        options: uniqueValues((w) => w.productName).map((value) => ({ label: value, value }))
+        options: uniqueValues((w) => w.productName).map((value) => ({ 
+          label: value, 
+          value,
+          count: getWarrantyCount('productName', value)
+        }))
       },
       {
         key: 'provider',
         label: 'Provider',
-        options: uniqueValues((w) => w.provider).map((value) => ({ label: value, value }))
+        options: uniqueValues((w) => w.provider).map((value) => ({ 
+          label: value, 
+          value,
+          count: getWarrantyCount('provider', value)
+        }))
       },
       {
         key: 'purchaseDate',
         label: 'Purchase date',
         options: [
-          { label: 'Last 7 days', value: 7 },
-          { label: 'Last 30 days', value: 30 },
-          { label: 'Last 90 days', value: 90 }
+          { label: 'Last 7 days', value: 7, count: getWarrantyCount('purchaseDate', 7) },
+          { label: 'Last 30 days', value: 30, count: getWarrantyCount('purchaseDate', 30) },
+          { label: 'Last 90 days', value: 90, count: getWarrantyCount('purchaseDate', 90) }
         ]
       },
       {
         key: 'expirationDate',
         label: 'Expiration date',
         options: [
-          { label: 'Next 7 days', value: 7 },
-          { label: 'Next 30 days', value: 30 },
-          { label: 'Next 90 days', value: 90 }
+          { label: 'Next 7 days', value: 7, count: getWarrantyCount('expirationDate', 7) },
+          { label: 'Next 30 days', value: 30, count: getWarrantyCount('expirationDate', 30) },
+          { label: 'Next 90 days', value: 90, count: getWarrantyCount('expirationDate', 90) }
+        ]
+      },
+      {
+        key: 'isExpired',
+        label: 'Is Expired',
+        options: [
+          { label: 'Yes', value: 'yes', count: getWarrantyCount('isExpired', 'yes') },
+          { label: 'No', value: 'no', count: getWarrantyCount('isExpired', 'no') }
         ]
       }
     ];
@@ -240,7 +318,10 @@ import { fetchUserWarranties } from "../api/users";
     return (
       <div className="dashboard-page">
         {!isLoggedIn && <LoginLightbox />}
-        <DashboardHero activeCount={filteredAndSortedWarranties.length} />
+        <DashboardHero 
+          activeCount={filteredAndSortedWarranties.length} 
+          onSyncGmail={() => setShowGmailConfigModal(true)}
+        />
         <GridContainer
           managedCount={managedWarranties}
           expiringSoonCount={expiringSoonCount}
@@ -264,6 +345,10 @@ import { fetchUserWarranties } from "../api/users";
           isLoading={loadingWarranties} 
         />
         {warrantyError && <p className="error-state">{warrantyError}</p>}
+        <GmailConfigModal 
+          isOpen={showGmailConfigModal} 
+          onClose={() => setShowGmailConfigModal(false)} 
+        />
       </div>
     );
   };

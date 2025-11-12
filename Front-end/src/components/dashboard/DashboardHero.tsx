@@ -1,11 +1,11 @@
 import './DashboardHero.css';
-import { Link } from 'react-router-dom';
 
 type DashboardHeroProps = {
   activeCount: number;
+  onSyncGmail: () => void;
 };
 
-const DashboardHero = ({ activeCount }: DashboardHeroProps) => {
+const DashboardHero = ({ activeCount, onSyncGmail }: DashboardHeroProps) => {
   return (
   <section className="dashboard-hero card">
     <div>
@@ -17,9 +17,9 @@ const DashboardHero = ({ activeCount }: DashboardHeroProps) => {
       </p>
     </div>
     <div className="hero-actions">
-      <Link to="/gmail-config" className="dashboard-btn primary">
+      <button onClick={onSyncGmail} className="dashboard-btn primary">
         Sync Gmail
-      </Link>
+      </button>
       <a href="#warranties" className="dashboard-btn ghost">
         View {activeCount} warranties
       </a>

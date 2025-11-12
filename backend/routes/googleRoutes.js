@@ -31,7 +31,8 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/auth/google', authRedirect);
+// Auth redirect - requires authentication to know which user is connecting
+router.get('/auth/google', userMiddleware, authRedirect);
 router.get('/auth/google/callback', authCallback);
 router.post('/api/gmail/options', userMiddleware, saveGmailOptionsHandler);
 router.get('/api/emails', userMiddleware, fetchEmails);

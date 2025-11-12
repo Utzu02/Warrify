@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../../api/auth';
+import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import './RegisterForm.css';
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -54,8 +55,9 @@ const RegisterForm = () => {
     const username = name;
     try {
       setIsLoading(true);
-      await registerUser({ username, email, password, terms });
-      navigate('/');
+      await register(username, email, password, terms);
+      
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error during registration:', error);
       setErrors({ email: error instanceof Error ? error.message : 'An error occurred. Please try again later.' });

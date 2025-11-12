@@ -7,6 +7,28 @@
     gap: 2rem;
 }
 
+.gmail-success-banner {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    font-weight: 500;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .card {
     background: #fff;
     border-radius: 28px;
@@ -120,6 +142,35 @@
     color: #0f172a;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.icon-button {
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5f5;
+    background: white;
+    color: #1d4ed8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.icon-button:hover {
+    background: #eef2ff;
+    border-color: #1d4ed8;
+}
+
+.icon-button svg {
+    width: 20px;
+    height: 20px;
+}
+
 .ghost-button {
     padding: 0.45rem 1.2rem;
     border-radius: 999px;
@@ -201,6 +252,84 @@
     margin-right: 0.35rem;
 }
 
+.gmail-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.connection-info {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.settings-summary {
+    margin-top: 1.5rem;
+}
+
+.settings-summary h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #0f172a;
+}
+
+.settings-form h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #0f172a;
+}
+
+.settings-description {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.settings-form .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.settings-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #334155;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.settings-form input[type="number"],
+.settings-form input[type="date"] {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.settings-form input[type="number"]:focus,
+.settings-form input[type="date"]:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.gmail-disconnected {
+    color: #64748b;
+}
+
+.gmail-disconnected p {
+    margin-bottom: 1rem;
+}
+
 @media (max-width: 640px) {
     .card {
         padding: 2rem 1.5rem;
@@ -217,5 +346,16 @@
 
     .section-header a{
         border-radius: 25px;
+    }
+    
+    .connection-status {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .settings-form input[type="number"],
+    .settings-form input[type="date"] {
+        max-width: 100%;
     }
 }

@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header/Header'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -11,49 +12,38 @@ import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import Pricing from './pages/Pricing';
 import GmailStatus from './pages/GmailStatus';
-import GmailConfig from './pages/GmailConfig';
-import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
+import { useAuth } from './contexts/AuthContext';
 
-
-function App() {
-  const [loggedIn, setIsLoggedIn] = useState(false)
-
-  useEffect(() => {
-    
-    const interval = setInterval(() => {
-      const id = Cookies.get("UID");
-      if (id) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    }, 300);
-    setTimeout(() => {
-      return () => clearInterval(interval);
-    },1201)
-  }, []);
+function AppContent() {
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
-      <Router>
-        {<Header isLoggedIn={loggedIn}/>}
-        <Routes>
-          <Route path="/" element={<Navigate to='/home' />} />
-          <Route path="/home" element={<Home />}/>
-          <Route path="/profile" element={<Profile />}/>
-          <Route path="/register" element={<Register />}/>
-          <Route path="/login" element={<Login />}/>
-          <Route path="/dashboard" element={<Dashboard isLoggedIn={loggedIn}/>}/>
-          <Route path="/about" element={<About />}/>
-          <Route path="/contact" element={<Contact />}/>
-          <Route path="/pricing" element={<Pricing />}/>
-          <Route path="/gmail-config" element={<GmailConfig />}/>
-          <Route path="/gmail-status" element={<GmailStatus />}/>
-          <Route path="/not-found" element={<NotFound />}/>
-        </Routes>
-      </Router>
+      <Header isLoggedIn={isAuthenticated}/>
+      <Routes>
+        <Route path="/" element={<Navigate to='/home' />} />
+        <Route path="/home" element={<Home />}/>
+        <Route path="/profile" element={<Profile />}/>
+        <Route path="/register" element={<Register />}/>
+        <Route path="/login" element={<Login />}/>
+        <Route path="/dashboard" element={<Dashboard isLoggedIn={isAuthenticated}/>}/>
+        <Route path="/about" element={<About />}/>
+        <Route path="/contact" element={<Contact />}/>
+        <Route path="/pricing" element={<Pricing />}/>
+        <Route path="/gmail-status" element={<GmailStatus />}/>
+        <Route path="/not-found" element={<NotFound />}/>
+      </Routes>
     </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </Router>
   )
 }
 

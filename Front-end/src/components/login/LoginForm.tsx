@@ -1,24 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { loginUser } from '../../api/auth';
+import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import './LoginForm.css';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const { login } = useAuth();
+  const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ emailOrUsername?: string; password?: string }>({});
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: typeof errors = {};
 
-    if (!email) {
-      newErrors.email = 'The email address is mandatory';
+    if (!emailOrUsername) {
+      newErrors.emailOrUsername = 'Email or username is mandatory';
     }
 
     if (!password) {
@@ -32,21 +32,12 @@ const LoginForm = () => {
 
     try {
       setIsLoading(true);
-      const data = await loginUser({ email, password });
+      await login(emailOrUsername, password);
       
-      // Set cookie with proper attributes
-      const isProduction = window.location.hostname !== 'localhost';
-      Cookies.set('UID', data.userId, { 
-        expires: 7, 
-        path: '/',
-        sameSite: isProduction ? 'None' : 'Lax',
-        secure: isProduction
-      });
-      
-      setEmail('');
+      setEmailOrUsername('');
       setPassword('');
       setErrors({});
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error during login:', error);
       alert('An error occurred. Please try again.');
@@ -66,15 +57,15 @@ const LoginForm = () => {
           <h2>Sign in</h2>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="emailOrUsername">Email or Username</label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={errors.email ? 'error' : ''}
+              type="text"
+              id="emailOrUsername"
+              value={emailOrUsername}
+              onChange={(e) => setEmailOrUsername(e.target.value)}
+              className={errors.emailOrUsername ? 'error' : ''}
             />
-            {errors.email && <span className="error-message">{errors.email}</span>}
+            {errors.emailOrUsername && <span className="error-message">{errors.emailOrUsername}</span>}
           </div>
 
           <div className="form-group">

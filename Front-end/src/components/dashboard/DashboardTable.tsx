@@ -9,12 +9,13 @@ type DashboardTableProps = {
   isLoading?: boolean;
 };
 
-const MAX_VISIBLE = 10;
+const MAX_VISIBLE = 15; // Load 15 warranties at a time
 
 const DashboardTable = ({ warranties, isLoading = false }: DashboardTableProps) => {
   const [visibleCount, setVisibleCount] = useState(MAX_VISIBLE);
 
   const canShowMore = useMemo(() => warranties.length > visibleCount, [warranties.length, visibleCount]);
+  const remainingCount = warranties.length - visibleCount;
 
   const handleShowMore = () => {
     setVisibleCount((prev) => Math.min(prev + MAX_VISIBLE, warranties.length));
@@ -22,15 +23,6 @@ const DashboardTable = ({ warranties, isLoading = false }: DashboardTableProps) 
 
   return (
     <section id="warranties" className="table-card card">
-      <div className="table-header">
-        <div>
-          <p className="eyebrow">Documents</p>
-          <div className='flex-warr'>
-            <h2>Your warranties</h2>
-            <span className="pill">{warranties.length} active</span>
-          </div>
-        </div>
-      </div>
       {isLoading ? (
         <div className="loading-inline">
           <LoadingSpinner message="Loading your warranties..." size="medium" />
@@ -41,7 +33,7 @@ const DashboardTable = ({ warranties, isLoading = false }: DashboardTableProps) 
           {canShowMore && (
             <div className="table-footer">
               <button className="view-more-btn" onClick={handleShowMore}>
-                View more
+                Load more ({Math.min(remainingCount, MAX_VISIBLE)} of {remainingCount} remaining)
               </button>
             </div>
           )}

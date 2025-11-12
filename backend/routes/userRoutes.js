@@ -4,7 +4,10 @@ import {
   listUsers,
   getUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  updateGmailSettings,
+  getGmailSettings,
+  disconnectGmail
 } from '../crud/userCrud.js';
 import { userMiddleware } from '../middleware/userMiddleware.js';
 
@@ -15,5 +18,10 @@ router.get('/users', userMiddleware, listUsers);
 router.get('/users/:id', userMiddleware, getUser);
 router.patch('/users/:id', userMiddleware, updateUser);
 router.delete('/users/:id', userMiddleware, deleteUser);
+
+// Gmail settings routes
+router.get('/gmail/settings', userMiddleware, getGmailSettings);
+router.post('/gmail/settings', userMiddleware, updateGmailSettings);
+router.post('/gmail/disconnect', userMiddleware, disconnectGmail);
 
 export default router;

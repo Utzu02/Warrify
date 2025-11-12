@@ -2,11 +2,13 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import warrantiesRoutes2 from './routes/warrantyRoutes2.js';
+import pdfValidationRoutes from './routes/pdfValidationRoutes.js';
 import dotenv from 'dotenv';
 import googleRoutes from './routes/googleRoutes.js'
 import warrantyDocumentRoutes from './routes/warrantyDocumentRoutes.js';
@@ -73,6 +75,9 @@ app.use(cors({
   credentials: true
 }));
 
+// Parse cookies before session middleware
+app.use(cookieParser());
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -112,6 +117,7 @@ app.use('/api', authRoutes);
 app.use('/',googleRoutes);
 app.use('/api', warrantiesRoutes2);
 app.use('/api', warrantyDocumentRoutes);
+app.use('/api', pdfValidationRoutes);
 
 // Connect to MongoDB on startup
 connectDB();

@@ -1,7 +1,8 @@
 import './GridContainer.css';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import Cookies from 'js-cookie';
+import { useAuth } from '../../contexts/AuthContext';
 import GmailButton from '../GmailLogin/GmailLogin';
+import GmailConfigModal from '../GmailConfigModal/GmailConfigModal';
 import FileImport from '../ImportFile/ImportFile';
 import { fetchScanInfo } from '../../api/users';
 
@@ -54,7 +55,9 @@ function GridContainer({
   remainingCount = 0,
   isLoadingCounts = false
 }: GridContainerProps) {
+  const { user } = useAuth();
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showGmailConfigModal, setShowGmailConfigModal] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const [lastCheckInfo, setLastCheckInfo] = useState<RelativeTime>(DEFAULT_RELATIVE_TIME);
   const managedDisplay = isLoadingCounts ? '—' : managedCount.toString();
@@ -63,20 +66,19 @@ function GridContainer({
   const hasDanger = !isLoadingCounts && expiringSoonCount > 0;
 
   const fetchLastScan = useCallback(async () => {
-    const userId = Cookies.get('UID');
-    if (!userId) {
+    if (!user) {
       setLastCheckInfo({ ...DEFAULT_RELATIVE_TIME });
       return;
     }
 
     try {
-      const payload = await fetchScanInfo(userId);
+      const payload = await fetchScanInfo(user.id);
       setLastCheckInfo(formatRelativeTime(payload.lastScanAt));
     } catch (error) {
       console.error('Failed to load scan info', error);
       setLastCheckInfo({ ...DEFAULT_RELATIVE_TIME });
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     fetchLastScan();
@@ -112,17 +114,17 @@ function GridContainer({
       </div>
       <div className="grid-item grid-item-2">
         <div className="item-2-row-1 flex">
-          <div className="big-number">{remainingDisplay}</div>
-          <div className="item-1-text">Remaining warranties</div>
-        </div>
-      </div>
-      <div className="grid-item grid-item-2">
-        <div className="item-2-row-1 flex">
           <div className="big-number">{managedDisplay}</div>
           <div className="item-1-text">Managed warranties</div>
           <button onClick={() => setShowImportModal(true)} className="button buttoninvert grid">
             Import
           </button>
+        </div>
+      </div>
+      <div className="grid-item grid-item-2">
+        <div className="item-2-row-1 flex">
+          <div className="big-number">{remainingDisplay}</div>
+          <div className="item-1-text">Remaining warranties</div>
         </div>
       </div>
       <div className="grid-item grid-item-3">
@@ -152,12 +154,19 @@ function GridContainer({
               </button>
             </div>
             <div className="modal-body">
-              <GmailButton />
+              <GmailButton onClick={() => {
+                setShowImportModal(false);
+                setShowGmailConfigModal(true);
+              }} />
               <FileImport />
             </div>
           </div>
         </div>
       )}
+      <GmailConfigModal 
+        isOpen={showGmailConfigModal} 
+        onClose={() => setShowGmailConfigModal(false)} 
+      />
     </div>
   );
 }

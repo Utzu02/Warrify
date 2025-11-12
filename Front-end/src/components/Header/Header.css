@@ -23,7 +23,7 @@
   margin: 0;
   padding: 0 3vw;
   background: rgba(255, 255, 255, 0.92);
-  font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 16px;
   display: flex;
   letter-spacing: 0.4px;
@@ -106,6 +106,7 @@
   transition: color 0.25s ease;
   height: var(--header-height);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .listSectiuni:hover {
@@ -182,7 +183,7 @@
 }
 
 .text { 
-  font-family: Arial, sans-serif; 
+  font-family: 'Poppins', sans-serif; 
   font-size: 48px; 
   font-weight: bold; 
   fill: #2d6ae2; 

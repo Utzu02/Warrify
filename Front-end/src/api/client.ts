@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie';
 import { BASE_URL } from '../config';
 
 export type ApiOptions = RequestInit & {
@@ -20,11 +19,8 @@ export async function apiFetch<T = unknown>(path: string, options: ApiOptions = 
   const init: RequestInit = { ...rest };
   const mergedHeaders = new Headers(headers || undefined);
 
-  const userId = Cookies.get('UID');
-  if (!skipAuth && userId) {
-    mergedHeaders.set('x-user-id', userId);
-  }
-
+  // No need to manually set user ID - JWT is sent automatically via httpOnly cookie
+  
   if (init.body instanceof FormData) {
     // let browser set boundary
   } else if (init.body && !mergedHeaders.has('Content-Type')) {
@@ -32,7 +28,7 @@ export async function apiFetch<T = unknown>(path: string, options: ApiOptions = 
   }
 
   init.headers = mergedHeaders;
-  init.credentials = 'include';
+  init.credentials = 'include'; // Send httpOnly cookies
 
   const response = await fetch(`${BASE_URL}${path}`, init);
   const data = await parseJsonSafe(response);
