@@ -5,7 +5,7 @@ import { BASE_URL } from '../config';
 import './styles/GmailConfig.css';
 
 const MIN_RESULTS = 1;
-const MAX_RESULTS = 50;
+const MAX_RESULTS = 100;
 
 const GmailConfig = () => {
   const navigate = useNavigate();

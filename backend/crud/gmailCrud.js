@@ -11,7 +11,7 @@ dotenv.config();
 
 const MAX_CONCURRENT_REQUESTS = 3;
 const REQUEST_TIMEOUT = 30000;
-const MAX_SCAN_RESULTS = 50;
+const MAX_SCAN_RESULTS = 100;
 export const DEFAULT_SCAN_OPTIONS = {
   maxResults: 10,
   startDate: null,
@@ -87,10 +87,16 @@ export const fetchEmails = async (req, res) => {
     const io = req.app.get('io');
     const socketId = req.query.socketId;
 
-    // Process emails asynchronously with socket updates
-    const scanOptions = req.session.gmailOptions || DEFAULT_SCAN_OPTIONS;
+    // Get scan options from multiple sources (query params, body, or session)
+    const scanOptions = {
+      maxResults: parseInt(req.query.maxResults || req.body?.maxResults) || req.session.gmailOptions?.maxResults || DEFAULT_SCAN_OPTIONS.maxResults,
+      startDate: req.query.startDate || req.body?.startDate || req.session.gmailOptions?.startDate || DEFAULT_SCAN_OPTIONS.startDate,
+      endDate: req.query.endDate || req.body?.endDate || req.session.gmailOptions?.endDate || DEFAULT_SCAN_OPTIONS.endDate
+    };
+    
     console.log('=== FETCH EMAILS CALLED ===');
     console.log('Session gmailOptions:', req.session.gmailOptions);
+    console.log('Query params:', { maxResults: req.query.maxResults, startDate: req.query.startDate, endDate: req.query.endDate });
     console.log('Using scanOptions:', scanOptions);
     console.log('Has Socket.IO:', !!io);
     console.log('Has socketId:', !!socketId);
