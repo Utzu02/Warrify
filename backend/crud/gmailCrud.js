@@ -433,13 +433,17 @@ async function extractPDFText(buffer) {
       throw new Error('Fișierul nu este un PDF valid');
     }
 
-    // Use pdfjs-dist instead of pdf-parse (works better on Vercel)
+    // Use pdfjs-dist for Node.js with canvas
     const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
+    
+    // Set canvas for Node.js environment
+    const NodeCanvasFactory = (await import('canvas')).default;
     
     const loadingTask = pdfjsLib.getDocument({
       data: new Uint8Array(buffer),
-      useSystemFonts: true,
-      standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/standard_fonts/'
+      useSystemFonts: false,
+      standardFontDataUrl: null,
+      verbosity: 0 // Disable warnings
     });
     
     const pdf = await loadingTask.promise;
