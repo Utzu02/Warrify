@@ -86,9 +86,30 @@ export const fetchEmails = async (req, res) => {
     console.log('=== FETCH EMAILS CALLED ===');
     console.log('Session gmailOptions:', req.session.gmailOptions);
     console.log('Using scanOptions:', scanOptions);
+    console.log('Has Socket.IO:', !!io);
+    console.log('Has socketId:', !!socketId);
     console.log('========================');
 
-    // Send immediate response to avoid timeout
+    // If no Socket.IO (production/Vercel), wait for result and return directly
+    if (!io || !socketId) {
+      console.log('No Socket.IO - processing synchronously and returning result');
+      const result = await fetchWarrantyEmails({
+        accessToken,
+        userId,
+        scanOptions,
+        io: null,
+        socketId: null
+      });
+      
+      await setLastScanAt(userId);
+      return res.json({ 
+        success: true, 
+        total: result.total,
+        documents: result.documents 
+      });
+    }
+
+    // With Socket.IO (local dev), send immediate response and process async
     res.json({ success: true, message: 'Processing started. Listen to socket events for progress.' });
 
     fetchWarrantyEmails({

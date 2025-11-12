@@ -14,6 +14,14 @@ export const useSocket = (): UseSocketReturn => {
   const [socketId, setSocketId] = useState<string | null>(null);
 
   useEffect(() => {
+    // Skip Socket.IO on production (Vercel doesn't support it)
+    const isProduction = window.location.hostname !== 'localhost';
+    
+    if (isProduction) {
+      console.log('Socket.IO disabled on production (Vercel limitation)');
+      return;
+    }
+    
     console.log('Initializing socket connection to:', BASE_URL);
     
     // Create socket connection

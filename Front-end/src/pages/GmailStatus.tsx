@@ -119,14 +119,26 @@ const GmailStatus = () => {
           return;
         }
 
-        if (!socketId) {
-          setError('Socket connection not established. Please refresh the page.');
-          setLoading(false);
+        // On production (Vercel), socketId won't exist - that's OK
+        const isProduction = window.location.hostname !== 'localhost';
+        
+        if (!isProduction && !socketId) {
+          // Local dev requires socket connection
+          console.log('Waiting for socket connection...');
           return;
         }
 
-        await fetchGmailEmails(socketId);
-        // Results will be handled by socket events
+        console.log(isProduction ? 'Starting Gmail scan (production mode - no Socket.IO)' : 'Starting Gmail scan with Socket.IO');
+        
+        const result = await fetchGmailEmails(socketId || undefined);
+        
+        // On production, we get the result immediately (no socket events)
+        if (isProduction && result) {
+          setDocuments((result.documents || []) as ProcessedEmail[]);
+          setLastUpdated(new Date());
+          setLoading(false);
+        }
+        // On local dev, results will be handled by socket events
 
       } catch (err) {
         if (!isMounted) {
@@ -137,7 +149,9 @@ const GmailStatus = () => {
       }
     }
 
-    if (socketId) {
+    // On production, start immediately. On local dev, wait for socketId
+    const isProduction = window.location.hostname !== 'localhost';
+    if (isProduction || socketId) {
       loadEmails();
     }
 
