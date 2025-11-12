@@ -108,9 +108,3 @@
   .warr-line li:nth-child(3)::before { content: 'Expires'; }
   .warr-line li:nth-child(4)::before { content: 'Provider'; }
 }
-
-.modal-previewdownload {
-  margin-top: 1rem;
-  display: flex;
-  gap: 1rem;
-}

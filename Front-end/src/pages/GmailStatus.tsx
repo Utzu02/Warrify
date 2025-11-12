@@ -119,30 +119,7 @@ const GmailStatus = () => {
           return;
         }
 
-        const isProduction = window.location.hostname !== 'localhost';
-        
-        // On production: direct API call without Socket.IO
-        if (isProduction) {
-          console.log('Starting Gmail scan (production mode - direct API)');
-          
-          console.log('📤 Sending request to backend...');
-          const startTime = Date.now();
-          
-          const result = await fetchGmailEmails(undefined);
-          
-          const elapsed = Date.now() - startTime;
-          console.log(`✅ Received response after ${elapsed}ms:`, result);
-          
-          if (result) {
-            console.log('Setting documents:', result.documents?.length || 0);
-            setDocuments((result.documents || []) as ProcessedEmail[]);
-            setLastUpdated(new Date());
-          }
-          setLoading(false);
-          return;
-        }
-        
-        // On localhost: wait for socket connection
+        // Wait for socket connection
         if (!socketId) {
           console.log('Waiting for socket connection...');
           return;
@@ -170,8 +147,8 @@ const GmailStatus = () => {
     }
 
     // Start immediately on production, wait for socketId on localhost
-    const isProduction = window.location.hostname !== 'localhost';
-    if (isProduction || socketId) {
+    // Start when socketId is available
+    if (socketId) {
       loadEmails();
     }
 
