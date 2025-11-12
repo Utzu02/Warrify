@@ -119,36 +119,23 @@ const GmailStatus = () => {
           return;
         }
 
-        // On production (Vercel), socketId won't exist - that's OK
-        const isProduction = window.location.hostname !== 'localhost';
-        
-        if (!isProduction && !socketId) {
-          // Local dev requires socket connection
+        // Wait for socket connection (works with polling on production too)
+        if (!socketId) {
           console.log('Waiting for socket connection...');
           return;
         }
 
-        console.log(isProduction ? 'Starting Gmail scan (production mode - no Socket.IO)' : 'Starting Gmail scan with Socket.IO');
+        console.log('Starting Gmail scan with Socket.IO (polling on production)');
         
         console.log('📤 Sending request to backend...');
         const startTime = Date.now();
         
-        const result = await fetchGmailEmails(socketId || undefined);
+        await fetchGmailEmails(socketId);
         
         const elapsed = Date.now() - startTime;
-        console.log(`✅ Received response after ${elapsed}ms:`, result);
+        console.log(`✅ Request sent after ${elapsed}ms`);
         
-        // On production, we get the result immediately (no socket events)
-        if (isProduction && result) {
-          console.log('Setting documents:', result.documents?.length || 0);
-          setDocuments((result.documents || []) as ProcessedEmail[]);
-          setLastUpdated(new Date());
-          setLoading(false);
-        } else if (isProduction) {
-          console.log('⚠️ No result received on production');
-          setLoading(false);
-        }
-        // On local dev, results will be handled by socket events
+        // Results will be handled by socket events (gmail:complete)
 
       } catch (err) {
         if (!isMounted) {
@@ -159,9 +146,8 @@ const GmailStatus = () => {
       }
     }
 
-    // On production, start immediately. On local dev, wait for socketId
-    const isProduction = window.location.hostname !== 'localhost';
-    if (isProduction || socketId) {
+    // Start when socketId is available
+    if (socketId) {
       loadEmails();
     }
 

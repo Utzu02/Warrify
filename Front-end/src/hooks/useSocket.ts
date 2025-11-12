@@ -14,20 +14,15 @@ export const useSocket = (): UseSocketReturn => {
   const [socketId, setSocketId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Skip Socket.IO on production (Vercel doesn't support it)
+    // Use polling on production (Vercel doesn't support WebSockets)
     const isProduction = window.location.hostname !== 'localhost';
-    
-    if (isProduction) {
-      console.log('Socket.IO disabled on production (Vercel limitation)');
-      return;
-    }
     
     console.log('Initializing socket connection to:', BASE_URL);
     
     // Create socket connection
     const socketInstance = io(BASE_URL, {
       withCredentials: true,
-      transports: ['websocket', 'polling']
+      transports: isProduction ? ['polling'] : ['websocket', 'polling']
     });
 
     socketRef.current = socketInstance;

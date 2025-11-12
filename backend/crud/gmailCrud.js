@@ -89,26 +89,15 @@ export const fetchEmails = async (req, res) => {
     console.log('Has socketId:', !!socketId);
     console.log('========================');
 
-    // If no Socket.IO (production/Vercel), wait for result and return directly
+    // Always use Socket.IO for real-time updates (polling on production)
     if (!io || !socketId) {
-      console.log('No Socket.IO - processing synchronously and returning result');
-      const result = await fetchWarrantyEmails({
-        accessToken,
-        userId,
-        scanOptions,
-        io: null,
-        socketId: null
-      });
-      
-      await setLastScanAt(userId);
-      return res.json({ 
-        success: true, 
-        total: result.total,
-        documents: result.documents 
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Socket.IO connection required. Please refresh the page.' 
       });
     }
 
-    // With Socket.IO (local dev), send immediate response and process async
+    // Process with Socket.IO (works with polling on Vercel)    // With Socket.IO (local dev), send immediate response and process async
     res.json({ success: true, message: 'Processing started. Listen to socket events for progress.' });
 
     fetchWarrantyEmails({
