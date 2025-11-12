@@ -433,11 +433,21 @@ async function extractPDFText(buffer) {
       throw new Error('Fișierul nu este un PDF valid');
     }
 
-    // Use pdfjs-dist for Node.js with canvas
+    // Polyfill DOMMatrix for Node.js
+    if (typeof global.DOMMatrix === 'undefined') {
+      global.DOMMatrix = class DOMMatrix {
+        constructor() {
+          this.a = 1; this.b = 0; this.c = 0;
+          this.d = 1; this.e = 0; this.f = 0;
+        }
+      };
+    }
+
+    // Use pdfjs-dist for Node.js
     const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
     
-    // Set canvas for Node.js environment
-    const NodeCanvasFactory = (await import('canvas')).default;
+    // Disable worker for serverless
+    pdfjsLib.GlobalWorkerOptions.workerSrc = null;
     
     const loadingTask = pdfjsLib.getDocument({
       data: new Uint8Array(buffer),
