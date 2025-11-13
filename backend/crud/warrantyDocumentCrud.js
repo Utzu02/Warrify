@@ -68,7 +68,7 @@ export const listUserWarranties = async (req, res) => {
 export const downloadWarrantyFile = async (req, res) => {
   try {
     const { warrantyId } = req.params;
-    const { userId } = req.query;
+    const { userId, preview } = req.query;
 
     if (!isValidObjectId(warrantyId) || !isValidObjectId(userId)) {
       return res.status(400).json({ error: 'Invalid identifiers' });
@@ -80,7 +80,11 @@ export const downloadWarrantyFile = async (req, res) => {
     }
 
     res.set('Content-Type', warranty.contentType || 'application/pdf');
-    res.set('Content-Disposition', `attachment; filename="${sanitizeFilename(warranty.filename)}"`);
+    
+    // Use 'inline' for preview, 'attachment' for download
+    const disposition = preview === 'true' ? 'inline' : 'attachment';
+    res.set('Content-Disposition', `${disposition}; filename="${sanitizeFilename(warranty.filename)}"`);
+    
     return res.send(warranty.pdfData);
   } catch (error) {
     console.error('download warranty error', error);

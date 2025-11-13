@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Button from '../Button';
 import './ContactForm.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -10,7 +11,7 @@ const ContactForm = () => {
   const headingRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const inputsRef = useRef<(HTMLLabelElement | null)[]>([]);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -107,13 +108,11 @@ const ContactForm = () => {
           How can we help?
           <textarea rows={5} placeholder="Share details about your workflow, timeline, or question." />
         </label>
-        <button 
-          ref={buttonRef}
-          type="submit" 
-          className="button buttoninvert contact-form-card__button contact-form-card__full-width"
-        >
-          Send message
-        </button>
+        <div ref={buttonRef} className="contact-form-card__full-width">
+          <Button type="submit" variant="primary" size="large" fullWidth>
+            Send message
+          </Button>
+        </div>
       </form>
     </div>
   );

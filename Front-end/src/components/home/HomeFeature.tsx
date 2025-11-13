@@ -103,9 +103,9 @@ function HomeFeature({
   return (
     <section ref={sectionRef} className={`home-feature-section ${reversed ? 'home-feature-alt' : ''}`}>
       <div className="home-feature-container">
+        {!reversed && <span className="home-feature-pill-label">{label}</span>}
         <div className={`home-feature-grid ${reversed ? 'home-feature-grid-reversed' : ''}`}>
           <div ref={contentRef} className="home-feature-content">
-            <span className="home-feature-pill-label">{label}</span>
             <h2 className="home-feature-title">{title}</h2>
             <p className="home-feature-description">{description}</p>
             <ul className="home-feature-list">

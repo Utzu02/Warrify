@@ -1,0 +1,108 @@
+/* ============================================
+   PLAN CARD
+   Individual pricing plan card
+   ============================================ */
+
+.plan-card {
+  position: relative;
+  background: var(--pricing-bg-primary, #FFFFFF);
+  border: 2px solid var(--pricing-gray-200, #E5E7EB);
+  border-radius: var(--pricing-radius-xl, 20px);
+  padding: var(--pricing-space-10, 40px) var(--pricing-space-8, 32px);
+  box-shadow: var(--pricing-shadow-md, 0 4px 6px rgba(0, 0, 0, 0.07));
+  transition: all var(--pricing-transition-slow, 300ms);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--pricing-shadow-hover, 0 20px 35px rgba(37, 99, 235, 0.15));
+}
+
+.plan-card-popular {
+  background: linear-gradient(to bottom, rgba(37, 99, 235, 0.02), rgba(59, 130, 246, 0.03));
+  border-color: var(--pricing-primary-blue, #2563EB);
+  border-width: 2px;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+}
+
+/* Header */
+.plan-card-header {
+  margin-bottom: var(--pricing-space-6, 24px);
+}
+
+.plan-card-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--pricing-space-4, 16px);
+}
+
+.plan-card-title {
+  color: var(--pricing-gray-900, #111827);
+  font-family: var(--pricing-font-family, 'Poppins', sans-serif);
+  font-size: var(--pricing-text-2xl, 1.5rem);
+  font-weight: var(--pricing-font-bold, 700);
+  margin: 0 0 var(--pricing-space-3, 12px) 0;
+}
+
+.plan-card-description {
+  color: var(--pricing-gray-500, #6B7280);
+  font-family: var(--pricing-font-family, 'Poppins', sans-serif);
+  font-size: var(--pricing-text-sm, 0.9375rem);
+  font-weight: var(--pricing-font-normal, 400);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Price */
+.plan-card-price {
+  background: var(--pricing-bg-primary, #FFFFFF);
+  padding: var(--pricing-space-6, 24px);
+  border-radius: var(--pricing-radius-lg, 16px);
+  text-align: center;
+  margin-bottom: var(--pricing-space-6, 24px);
+  border: 1px solid var(--pricing-gray-100, #F3F4F6);
+}
+
+.plan-card-price-amount {
+  color: var(--pricing-gray-900, #111827);
+  font-family: var(--pricing-font-family, 'Poppins', sans-serif);
+  font-size: var(--pricing-text-3xl, 2rem);
+  font-weight: var(--pricing-font-bold, 700);
+  line-height: 1.2;
+  margin-bottom: var(--pricing-space-1, 4px);
+}
+
+.plan-card-price-period {
+  color: var(--pricing-gray-500, #6B7280);
+  font-family: var(--pricing-font-family, 'Poppins', sans-serif);
+  font-size: var(--pricing-text-xs, 0.875rem);
+  font-weight: var(--pricing-font-normal, 400);
+}
+
+/* CTA */
+.plan-card-cta {
+  margin-top: auto;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  .plan-card {
+    padding: var(--pricing-space-6, 24px);
+  }
+
+  .plan-card-icon {
+    font-size: 2rem;
+  }
+
+  .plan-card-title {
+    font-size: var(--pricing-text-xl, 1.25rem);
+  }
+
+  .plan-card-price-amount {
+    font-size: var(--pricing-text-2xl, 1.5rem);
+  }
+}

@@ -1,0 +1,60 @@
+/* ============================================
+   PRICING GRID
+   Container for multiple pricing plan cards
+   ============================================ */
+
+.pricing-grid-title {
+    color: var(--pricing-gray-900, #111827);
+    font-family: var(--pricing-font-family, 'Poppins', sans-serif);
+    font-size: var(--pricing-text-3xl, 2rem);
+    font-weight: var(--pricing-font-bold, 700);
+    text-align: center;
+    margin: 0 0 var(--pricing-space-16, 64px) 0;
+    line-height: 1.2;
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--pricing-space-8, 32px);
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--pricing-space-6, 24px);
+    }
+
+    .pricing-grid-title {
+        font-size: var(--pricing-text-4xl, 2.5rem);
+    }
+}
+
+/* Desktop: 3 columns */
+@media (min-width: 1024px) {
+    .pricing-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--pricing-space-8, 32px);
+    }
+}
+
+/* Large Desktop: optimize spacing */
+@media (min-width: 1280px) {
+
+    .pricing-grid-title {
+        margin-bottom: var(--pricing-space-16, 64px);
+    }
+}
+
+/* Mobile: reduce spacing */
+@media (max-width: 640px) {
+    .pricing-grid {
+        gap: var(--pricing-space-6, 24px);
+    }
+
+    .pricing-grid-title {
+        font-size: var(--pricing-text-2xl, 1.5rem);
+        margin-bottom: var(--pricing-space-8, 32px);
+    }
+}

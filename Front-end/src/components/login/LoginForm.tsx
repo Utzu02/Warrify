@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import Button from '../Button';
 import './LoginForm.css';
 import gsap from 'gsap';
 
@@ -137,9 +138,9 @@ const LoginForm = () => {
             <Link to="/forgot-password" className="forgot-link">Forgot password?</Link>
           </div>
 
-          <button type="submit" className="submit-login-btn">
+          <Button type="submit" variant="primary" size="medium" fullWidth>
             Sign in
-          </button>
+          </Button>
 
           <p className="register-link">
             Don't have an account? <Link to="/register">Register</Link>

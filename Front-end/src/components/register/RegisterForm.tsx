@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import Button from '../Button';
 import './RegisterForm.css';
 import gsap from 'gsap';
 
@@ -208,9 +209,9 @@ const RegisterForm = () => {
             {errors.terms && <span className="error-message terms-error">{errors.terms}</span>}
           </div>
 
-          <button type="submit" className="submit-register-btn">
+          <Button type="submit" variant="primary" size="medium" fullWidth>
             Create account
-          </button>
+          </Button>
 
           <p className="login-link">
             Already have an account? <Link to="/login">Sign in</Link>

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getGmailSettings } from '../../api/gmailSettings';
 import { saveGmailOptions } from '../../api/gmail';
 import { BASE_URL } from '../../config';
+import Button from '../Button';
 import './GmailConfigModal.css';
 
 interface GmailConfigModalProps {
@@ -177,26 +178,29 @@ const GmailConfigModal = ({ isOpen, onClose }: GmailConfigModalProps) => {
           {error && <div className="form-error">{error}</div>}
 
           <div className="form-actions">
-            <button 
+            <Button
               type="button" 
-              className="button button-secondary"
+              variant="secondary"
+              size="medium"
               onClick={loadDefaultSettings}
               disabled={loading || loadingDefaults}
+              loading={loadingDefaults}
             >
               {loadingDefaults ? 'Loading...' : 'Apply preferences'}
-            </button>
+            </Button>
             <div className="action-buttons">
-              <button 
+              <Button
                 type="button" 
-                className="button button-ghost" 
+                variant="ghost" 
+                size="medium"
                 onClick={onClose} 
                 disabled={loading}
               >
                 Cancel
-              </button>
-              <button type="submit" className="button button-primary" disabled={loading}>
+              </Button>
+              <Button type="submit" variant="primary" size="medium" disabled={loading} loading={loading}>
                 {loading ? 'Starting…' : 'Start Gmail import'}
-              </button>
+              </Button>
             </div>
           </div>
         </form>

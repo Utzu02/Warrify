@@ -1,0 +1,229 @@
+/* ============================================
+   BUTTON COMPONENT - BASE STYLES
+   Standardized button system based on login button
+   ============================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  line-height: 1.5;
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(30, 102, 245, 0.3);
+}
+
+/* ============================================
+   SIZE VARIANTS
+   ============================================ */
+
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 12px;
+}
+
+.btn-medium {
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 16px;
+}
+
+.btn-large {
+  padding: 1rem 2rem;
+  font-size: 1.05rem;
+  border-radius: 16px;
+}
+
+/* ============================================
+   VARIANT - PRIMARY (Based on login button)
+   ============================================ */
+
+.btn-primary {
+  background: #1e66f5;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-primary:hover:not(.btn-disabled) {
+  background: #1557d9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(30, 102, 245, 0.3);
+}
+
+.btn-primary:active:not(.btn-disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(30, 102, 245, 0.2);
+}
+
+/* ============================================
+   VARIANT - SECONDARY
+   ============================================ */
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: #020617;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+.btn-secondary:hover:not(.btn-disabled) {
+  background: #e2e8f0;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1);
+}
+
+.btn-secondary:active:not(.btn-disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+/* ============================================
+   VARIANT - GHOST
+   ============================================ */
+
+.btn-ghost {
+  background: transparent;
+  color: #1e66f5;
+  border: 2px solid #1e66f5;
+}
+
+.btn-ghost:hover:not(.btn-disabled) {
+  background: rgba(30, 102, 245, 0.1);
+  border-color: #1557d9;
+  color: #1557d9;
+  transform: translateY(-1px);
+}
+
+.btn-ghost:active:not(.btn-disabled) {
+  transform: translateY(0);
+  background: rgba(30, 102, 245, 0.15);
+}
+
+/* ============================================
+   VARIANT - DANGER
+   ============================================ */
+
+.btn-danger {
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-danger:hover:not(.btn-disabled) {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:active:not(.btn-disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+/* ============================================
+   STATES
+   ============================================ */
+
+.btn-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-full-width {
+  width: 100%;
+}
+
+/* ============================================
+   ICONS
+   ============================================ */
+
+.btn-icon-left,
+.btn-icon-right {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon-left svg,
+.btn-icon-right svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-small .btn-icon-left svg,
+.btn-small .btn-icon-right svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-large .btn-icon-left svg,
+.btn-large .btn-icon-right svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+
+.btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: btn-spin 0.6s linear infinite;
+}
+
+.btn-secondary .btn-spinner,
+.btn-ghost .btn-spinner {
+  border-color: rgba(30, 102, 245, 0.3);
+  border-top-color: #1e66f5;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .btn-medium {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .btn-large {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+}

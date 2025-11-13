@@ -1,0 +1,28 @@
+/* ============================================
+   PRICE BADGE
+   "Most Popular" badge for plan cards
+   ============================================ */
+
+.price-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--pricing-gradient-badge, linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%));
+  color: var(--pricing-gray-900, #1F2937);
+  padding: 8px 24px;
+  border-radius: var(--pricing-radius-full, 999px);
+  font-family: var(--pricing-font-family, 'Poppins', sans-serif);
+  font-size: var(--pricing-text-sm, 0.9375rem);
+  font-weight: var(--pricing-font-semibold, 600);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+@media (max-width: 640px) {
+  .price-badge {
+    font-size: 0.75rem;
+    padding: 4px 16px;
+  }
+}

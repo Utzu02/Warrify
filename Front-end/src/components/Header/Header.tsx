@@ -138,11 +138,6 @@ const Header = ({ isLoggedIn }: HeaderProps) => {
           ) : (
             <>
               <li>
-                <Link to="/register" className="button buttoninvert">
-                  Try for free
-                </Link>
-              </li>
-              <li>
                 <Link to="/login" className="button">
                   Login
                 </Link>

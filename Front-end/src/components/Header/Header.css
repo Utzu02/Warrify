@@ -14,9 +14,11 @@
   --button-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
   --hover-bg: #f8fafc;
 }
+
 .mobileShow {
-    display: none;
+  display: none;
 }
+
 .header {
   height: var(--header-height);
   width: 100%;
@@ -45,25 +47,32 @@
   transform: translateY(-100%);
 }
 
-.leftSide img {
-  height: 56px;
-  margin: 0;
-}
-.hamburger-header { 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
+.hamburger-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .leftSide {
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  flex: 0 0 auto;
 }
 
 .leftSide .logoheader {
   margin-right: 0;
+}
+
+.leftSide .primary-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.rightSide {
+  flex: 0 0 auto;
 }
 
 .rightSide .textSectiuni {
@@ -132,6 +141,18 @@
   background-color: var(--primary-color);
 }
 
+ 
+.logo-link {
+  margin-left: 10vw;
+  height: fit-content;
+  height: 90px;
+}
+
+.leftSide img {
+  height: 90px;
+  margin: 0;
+}
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -141,26 +162,29 @@
   font-weight: 600;
   color: var(--text-primary);
   background: transparent;
-  border: 1.5px solid var(--primary-color);
-  border-radius: 999px;
+  border: 1.5px solid #1e66f5;
+  border-radius: 16px;
   cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: var(--button-shadow);
+  box-shadow: 0 8px 20px rgba(30, 102, 245, 0.15);
 }
 
 .button:hover {
-  background-color: var(--primary-lighter);
-  color: var(--primary-darker);
+  background-color: #e3f2fd;
+  color: #1557d9;
 }
 
 .buttoninvert {
   color: #fff;
-  background-color: var(--primary-color);
+  background-color: #1e66f5;
+  border-color: #1e66f5;
 }
 
 .buttoninvert:hover {
-  background-color: var(--primary-dark);
+  background-color: #1557d9;
   color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(30, 102, 245, 0.3);
 }
 
 .logo-w {
@@ -173,20 +197,20 @@
 }
 
 /* SVG logo styles */
-.w-letter { 
-  fill: #2d6ae2; 
+.w-letter {
+  fill: #2d6ae2;
 }
 
-.cross-line { 
-  stroke: #ff6b35; 
-  stroke-width: 8; 
+.cross-line {
+  stroke: #ff6b35;
+  stroke-width: 8;
 }
 
-.text { 
-  font-family: 'Poppins', sans-serif; 
-  font-size: 48px; 
-  font-weight: bold; 
-  fill: #2d6ae2; 
+.text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 48px;
+  font-weight: bold;
+  fill: #2d6ae2;
 }
 
 @media (max-width: 1024px) {
@@ -197,6 +221,18 @@
 }
 
 @media (max-width: 768px) {
+
+  .logo-link {
+    margin-left: 0;
+    height: fit-content;
+    height: 63px;
+  }
+
+  .leftSide img {
+    height: 63px;
+    margin: 0;
+  }
+
   .header {
     flex-direction: column;
     align-items: flex-start;
@@ -253,12 +289,15 @@
   .hamburger.is-active span:nth-child(3) {
     transform: translateY(-6.5px) rotate(-45deg);
   }
+
   .mobileShow {
     display: block;
   }
+
   .primary-nav {
     display: none !important;
   }
+
   /* Hide navigation by default on mobile */
   .secondary-nav {
     display: none !important;
@@ -291,6 +330,7 @@
       opacity: 0;
       transform: translateY(-10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);

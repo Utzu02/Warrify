@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveGmailOptions } from '../api/gmail';
 import { BASE_URL } from '../config';
+import Button from '../components/Button';
 import './GmailConfig.css';
 
 const MIN_RESULTS = 1;
@@ -80,12 +81,12 @@ const GmailConfig = () => {
           </div>
           {error && <div className="form-error">{error}</div>}
           <div className="form-actions">
-            <button type="button" className="button buttoninvert" onClick={() => navigate(-1)} disabled={loading}>
+            <Button type="button" variant="secondary" size="medium" onClick={() => navigate(-1)} disabled={loading}>
               Cancel
-            </button>
-            <button type="submit" className="button" disabled={loading}>
+            </Button>
+            <Button type="submit" variant="primary" size="medium" disabled={loading} loading={loading}>
               {loading ? 'Starting…' : 'Start Gmail import'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

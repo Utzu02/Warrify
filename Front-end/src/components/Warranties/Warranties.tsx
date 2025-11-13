@@ -31,9 +31,11 @@ const useDownloadUrl = (warrantyId?: string) => {
   
   return useMemo(() => {
     if (!warrantyId || !user) {
-      return null;
+      return { downloadUrl: null, previewUrl: null };
     }
-    return `${BASE_URL}/api/warranties/${warrantyId}/download?userId=${user.id}`;
+    const downloadUrl = `${BASE_URL}/api/warranties/${warrantyId}/download?userId=${user.id}`;
+    const previewUrl = `${BASE_URL}/api/warranties/${warrantyId}/download?userId=${user.id}&preview=true`;
+    return { downloadUrl, previewUrl };
   }, [warrantyId, user]);
 };
 
@@ -43,7 +45,7 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [warrantyToDelete, setWarrantyToDelete] = useState<Warranty | null>(null);
   const itemsToRender = warranties.slice(0, limit);
-  const downloadUrl = useDownloadUrl(selectedWarranty?.id);
+  const { downloadUrl, previewUrl } = useDownloadUrl(selectedWarranty?.id);
 
   // Select/Deselect all
   const handleSelectAll = (checked: boolean) => {
@@ -103,8 +105,9 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
   const someSelected = selectedIds.size > 0;
 
   const handleViewPdf = () => {
-    if (downloadUrl) {
-      window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+    if (previewUrl) {
+      // Open PDF in a new tab for preview with inline disposition
+      window.open(previewUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -266,7 +269,7 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
       
       {selectedWarranty && (
         <ModalWarranty onClose={() => setSelectedWarranty(null)}>
-          <h2>{selectedWarranty.productName || selectedWarranty.filename} Details</h2>
+          <h2>{selectedWarranty.productName || selectedWarranty.filename}</h2>
           <div className="modal-details">
             <p><strong>Purchase Date:</strong> {formatDate(selectedWarranty.purchaseDate)}</p>
             <p><strong>Expiration Date:</strong> {formatDate(selectedWarranty.expirationDate)}</p>
@@ -274,7 +277,7 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
             <p><strong>File name:</strong> {selectedWarranty.filename}</p>
           </div>
           <div className='modal-previewdownload'>
-            <button className='button buttoninvert modal-war-2' onClick={handleViewPdf} disabled={!downloadUrl}>
+            <button className='button buttoninvert modal-war-2' onClick={handleViewPdf} disabled={!previewUrl}>
               View PDF
             </button>
             {downloadUrl ? (

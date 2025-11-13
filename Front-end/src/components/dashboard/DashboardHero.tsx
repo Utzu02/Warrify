@@ -1,3 +1,4 @@
+import Button from '../Button';
 import './DashboardHero.css';
 
 type DashboardHeroProps = {
@@ -17,12 +18,12 @@ const DashboardHero = ({ activeCount, onSyncGmail }: DashboardHeroProps) => {
       </p>
     </div>
     <div className="hero-actions">
-      <button onClick={onSyncGmail} className="dashboard-btn primary">
+      <Button onClick={onSyncGmail} variant="primary" size="medium">
         Sync Gmail
-      </button>
-      <a href="#warranties" className="dashboard-btn ghost">
+      </Button>
+      <Button href="#warranties" variant="ghost" size="medium">
         View {activeCount} warranties
-      </a>
+      </Button>
     </div>
   </section>
   );

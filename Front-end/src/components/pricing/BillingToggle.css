@@ -1,0 +1,82 @@
+/* ============================================
+   BILLING TOGGLE
+   Monthly/Yearly switcher
+   ============================================ */
+
+.billing-toggle-container {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto var(--pricing-space-10, 40px);
+}
+
+.billing-toggle {
+  display: inline-flex;
+  background: var(--pricing-gray-100, #F3F4F6);
+  border-radius: var(--pricing-radius-full, 999px);
+  padding: 6px;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.billing-toggle-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pricing-space-2, 8px);
+  padding: 14px 36px;
+  border: none;
+  border-radius: var(--pricing-radius-full, 999px);
+  background: transparent;
+  color: var(--pricing-gray-500, #6B7280);
+  font-family: var(--pricing-font-family, 'Poppins', sans-serif);
+  font-size: var(--pricing-text-base, 1rem);
+  font-weight: var(--pricing-font-semibold, 600);
+  cursor: pointer;
+  transition: all var(--pricing-transition-base, 200ms);
+  white-space: nowrap;
+}
+
+.billing-toggle-btn:hover:not(.active) {
+  color: var(--pricing-gray-700, #374151);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.billing-toggle-btn.active {
+  background: var(--pricing-gradient-primary, linear-gradient(135deg, #2563EB 0%, #3B82F6 100%));
+  color: white;
+  box-shadow: var(--pricing-shadow-md, 0 4px 6px rgba(0, 0, 0, 0.07));
+}
+
+.billing-toggle-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: var(--pricing-radius-full, 999px);
+  font-size: var(--pricing-text-xs, 0.875rem);
+  font-weight: var(--pricing-font-bold, 700);
+  margin-left: var(--pricing-space-2, 8px);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  .billing-toggle {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .billing-toggle-btn {
+    flex: 1;
+    padding: 10px 16px;
+    font-size: var(--pricing-text-sm, 0.9375rem);
+  }
+
+  .billing-toggle-badge {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+  }
+}

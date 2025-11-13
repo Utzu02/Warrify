@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Button from '../Button';
 import './HomeCTA.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -11,7 +11,7 @@ function HomeCTA() {
     const containerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const descriptionRef = useRef<HTMLParagraphElement>(null);
-    const buttonRef = useRef<HTMLAnchorElement>(null);
+    const buttonRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -91,9 +91,11 @@ function HomeCTA() {
                 <p ref={descriptionRef} className="home-cta-description">
                     Whether you're a freelancer, a startup, or an established business, Warrify is the online tool designed to bring your team together, safeguard your guarantees, and transform how you collaborate.
                 </p>
-                <Link ref={buttonRef} to="/pricing" className="home-cta-btn-white">
-                    Explore Our Plans
-                </Link>
+                <div ref={buttonRef}>
+                    <Button to="/pricing" variant="primary" size="large">
+                        Explore Our Plans
+                    </Button>
+                </div>
             </div>
         </section>
     );

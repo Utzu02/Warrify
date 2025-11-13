@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Button from '../Button';
 import './AboutCTA.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -78,12 +78,12 @@ function AboutCTA() {
                 </p>
             </div>
             <div ref={buttonsRef} className="about-cta-actions">
-                <Link to="/contact" className="about-cta-btn about-cta-btn-primary">
+                <Button to="/contact" variant="primary" size="large">
                     Talk to us
-                </Link>
-                <Link to="/pricing" className="about-cta-btn about-cta-btn-secondary">
+                </Button>
+                <Button to="/pricing" variant="secondary" size="large">
                     Explore plans
-                </Link>
+                </Button>
             </div>
         </section>
     );

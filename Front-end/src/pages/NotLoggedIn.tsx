@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import gsap from 'gsap';
+import Button from '../components/Button';
 import './NotLoggedIn.css';
 
 const NotLoggedIn = () => {
@@ -66,12 +66,12 @@ const NotLoggedIn = () => {
           You need to be logged in to access this page. Please log in or create an account to continue.
         </p>
         <div ref={buttonsRef} className="not-logged-in-buttons">
-          <Link to="/login" className="not-logged-in-btn btn-primary">
+          <Button to="/login" variant="primary" size="large">
             Log In
-          </Link>
-          <Link to="/register" className="not-logged-in-btn btn-secondary">
+          </Button>
+          <Button to="/register" variant="secondary" size="large">
             Create Account
-          </Link>
+          </Button>
         </div>
       </div>
     </div>
