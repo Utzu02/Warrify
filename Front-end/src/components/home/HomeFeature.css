@@ -1,0 +1,216 @@
+/* ============================================
+   HOME FEATURE SECTIONS
+   ============================================ */
+.home-feature-section {
+  padding: 5rem 0;
+  background-color: #ffffff;
+}
+
+.home-feature-section.home-feature-alt {
+  background-color: #f8fafc;
+}
+
+.home-feature-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.home-feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.home-feature-grid-reversed {
+  grid-template-columns: 1fr 1fr;
+}
+
+.home-feature-grid-reversed .home-feature-visual {
+  order: 1;
+}
+
+.home-feature-grid-reversed .home-feature-content {
+  order: 2;
+}
+
+.home-feature-title {
+  font-weight: 700;
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  color: #020617;
+}
+
+.home-feature-description {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.home-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.home-feature-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #020617;
+  font-weight: 400;
+}
+
+.home-feature-check-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: transform 0.3s ease;
+}
+
+.home-feature-list-item:hover .home-feature-check-icon {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.home-feature-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-feature-visual-card {
+  width: 100%;
+  max-width: 540px;
+  padding: 2.5rem;
+  border-radius: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(15, 23, 42, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-feature-visual-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+}
+
+.home-feature-visual-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  transition: transform 0.3s ease;
+}
+
+.home-feature-visual-card:hover img {
+  transform: scale(1.02);
+}
+
+.home-feature-card-soft-blue {
+  background-color: #edf3ff;
+}
+
+.home-feature-card-soft-pink {
+  background-color: #ffeef6;
+}
+
+.home-feature-pill-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background-color: #f4e3ff;
+  color: #7c3aed;
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-feature-pill-label:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 1024px) {
+  .home-feature-section {
+    padding: 4rem 0;
+  }
+
+  .home-feature-container {
+    padding: 0 1.5rem;
+  }
+
+  .home-feature-grid,
+  .home-feature-grid-reversed {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .home-feature-grid-reversed .home-feature-visual,
+  .home-feature-grid-reversed .home-feature-content {
+    order: initial;
+  }
+
+  .home-feature-visual-card {
+    max-width: 100%;
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-feature-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .home-feature-container {
+    padding: 0;
+  }
+
+  .home-feature-grid {
+    gap: 2rem;
+  }
+
+  .home-feature-title {
+    font-size: clamp(1.75rem, 7vw, 2rem);
+  }
+
+  .home-feature-description {
+    font-size: 1rem;
+  }
+
+  .home-feature-visual-card {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+
+  .home-feature-pill-label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-feature-section {
+    padding: 2.5rem 0;
+  }
+
+  .home-feature-container {
+    padding: 0 1rem;
+  }
+
+  .home-feature-visual-card {
+    padding: 1rem;
+  }
+}

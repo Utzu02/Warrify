@@ -1,26 +1,132 @@
-import './Footer.css'
+import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import './Footer.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function Footer() {
+    const footerRef = useRef<HTMLElement>(null);
+    const brandRef = useRef<HTMLDivElement>(null);
+    const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
+    const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            // Footer container fade in
+            gsap.from(footerRef.current, {
+                opacity: 0,
+                y: 30,
+                duration: 0.8,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: footerRef.current,
+                    start: "top 90%",
+                    toggleActions: "play none none none"
+                }
+            });
+
+            // Brand section animation
+            gsap.from(brandRef.current, {
+                opacity: 0,
+                x: -30,
+                duration: 0.6,
+                delay: 0.2,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: brandRef.current,
+                    start: "top 90%",
+                    toggleActions: "play none none none"
+                }
+            });
+
+            // Footer sections cascade
+            sectionsRef.current.forEach((section, index) => {
+                if (section) {
+                    gsap.from(section, {
+                        opacity: 0,
+                        y: 20,
+                        duration: 0.5,
+                        delay: 0.3 + (index * 0.1),
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: section,
+                            start: "top 90%",
+                            toggleActions: "play none none none"
+                        }
+                    });
+                }
+            });
+
+            // Footer bottom slide up
+            gsap.from(bottomRef.current, {
+                opacity: 0,
+                y: 20,
+                duration: 0.6,
+                delay: 0.6,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: bottomRef.current,
+                    start: "top 95%",
+                    toggleActions: "play none none none"
+                }
+            });
+        });
+
+        return () => ctx.revert();
+    }, []);
+
     return (
-        <footer
-        >
-            <svg
-                viewBox="0 0 385 91"
-                preserveAspectRatio="xMidYMid meet"
-                style={{
-                    width: "100%",
-                    height: "auto",
-                }}
-            >
-                <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M0 6.72242L16.0417 3.91316C32.0833 1.10391 64.1667 -4.51459 96.25 6.72242C128.333 17.9594 160.417 46.052 192.5 51.6705C224.583 57.289 256.667 40.4334 288.75 32.0057C320.833 23.5779 352.917 23.5779 368.958 23.5779H385V91H368.958C352.917 91 320.833 91 288.75 91C256.667 91 224.583 91 192.5 91C160.417 91 128.333 91 96.25 91C64.1667 91 32.0833 91 16.0417 91H0V6.72242Z"
-                    fill="#000096"
-                />
-            </svg>
-            <div className="license">© Warrify 2025 All rights reserved</div>
+        <footer ref={footerRef} className="footer">
+            <div className="footer-container">
+                <div className="footer-content">
+                    {/* Brand Section */}
+                    <div ref={brandRef} className="footer-section footer-brand">
+                        <h3 className="footer-logo">Warrify</h3>
+                        <p className="footer-tagline">
+                            Modern warranty management for businesses and individuals.
+                        </p>
+                    </div>
+
+                    {/* Product Links */}
+                    <div ref={(el) => { sectionsRef.current[0] = el; }} className="footer-section">
+                        <h4 className="footer-heading">Product</h4>
+                        <ul className="footer-links">
+                            <li><Link to="/dashboard">Dashboard</Link></li>
+                            <li><Link to="/pricing">Pricing</Link></li>
+                            <li><Link to="/about">About Us</Link></li>
+                        </ul>
+                    </div>
+
+                    {/* Resources Links */}
+                    <div ref={(el) => { sectionsRef.current[1] = el; }} className="footer-section">
+                        <h4 className="footer-heading">Resources</h4>
+                        <ul className="footer-links">
+                            <li><Link to="/contact">Contact</Link></li>
+                            <li><Link to="/home">Home</Link></li>
+                        </ul>
+                    </div>
+
+                    {/* Legal Links */}
+                    <div ref={(el) => { sectionsRef.current[2] = el; }} className="footer-section">
+                        <h4 className="footer-heading">Legal</h4>
+                        <ul className="footer-links">
+                            <li><a href="#privacy">Privacy Policy</a></li>
+                            <li><a href="#terms">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                {/* Footer Bottom */}
+                <div ref={bottomRef} className="footer-bottom">
+                    <p className="footer-copyright">
+                        © 2025 Warrify. All rights reserved.
+                    </p>
+                </div>
+            </div>
         </footer>
-    )
+    );
 }
-export default Footer
+
+export default Footer;

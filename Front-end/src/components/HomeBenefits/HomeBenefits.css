@@ -53,6 +53,12 @@
   }
 
   @media (max-width: 768px) {
+    .garantii-benefits-home {
+      margin-top: 0;
+      padding: 0 1.25rem;
+      width: 100%;
+    }
+
     .flex-benefit-home {
       flex-direction: column;
       width: 100%;
@@ -60,13 +66,13 @@
     }
 
     .benefit-home-card {
-      width: 90%;
-      max-width: 500px;
+      width: 100%;
+      max-width: 100%;
       min-height: auto;
     }
 
     .title-benefit-home {
-      font-size: 2rem;
+      font-size: clamp(1.75rem, 7vw, 2rem);
       padding-bottom: 2vh;
       margin-bottom: 2vh;
     }

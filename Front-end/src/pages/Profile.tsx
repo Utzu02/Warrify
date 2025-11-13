@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import './styles/Profile.css';
+import './Profile.css';
 import { Link, useSearchParams } from 'react-router-dom';
 import { fetchUserProfile, fetchUserWarranties } from '../api/users';
 import { getGmailSettings, connectGmail, disconnectGmail, GmailSettings } from '../api/gmailSettings';
 import { useAuth } from '../contexts/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import GmailSettingsModal from '../components/GmailSettingsModal/GmailSettingsModal';
+import Footer from '../components/Footer/Footer';
 
 type ApiUser = {
   _id: string;
@@ -150,6 +151,7 @@ const Profile = () => {
   }
 
   return (
+    <>
     <div className="profile-page">
       {showGmailSuccess && (
         <div className="gmail-success-banner">
@@ -312,6 +314,8 @@ const Profile = () => {
         }}
       />
     </div>
+    <Footer />
+    </>
   );
 };
 

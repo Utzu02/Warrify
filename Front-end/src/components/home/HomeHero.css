@@ -1,0 +1,153 @@
+/* ============================================
+   HOME HERO SECTION
+   ============================================ */
+.home-hero-section {
+  background-color: #eaf3ff;
+  padding: 5rem 0;
+  margin-top: 0;
+}
+
+.home-hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-hero-title {
+  font-weight: 700;
+  font-size: clamp(2.5rem, 4vw, 3.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  color: #020617;
+  max-width: 900px;
+}
+
+.home-hero-highlight {
+  color: #2563ff;
+  display: inline-block;
+}
+
+.home-hero-subtitle {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #6b7280;
+  max-width: 720px;
+  margin: 0 auto 2rem;
+}
+
+.home-hero-cta-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-hero-pill-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background-color: #f4e3ff;
+  color: #7c3aed;
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.home-hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  border-radius: 999px;
+  background: #2563ff;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  box-shadow: 0 10px 25px rgba(37, 99, 255, 0.45);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.home-hero-btn-primary:hover {
+  background-color: #1d4fdc;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(37, 99, 255, 0.5);
+}
+
+.home-hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.8rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #020617;
+  font-weight: 500;
+  font-size: 1rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.home-hero-btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1);
+  background: #e2e8f0;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+  .home-hero-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .home-hero-container {
+    padding: 0;
+  }
+
+  .home-hero-title {
+    font-size: clamp(2rem, 8vw, 2.5rem);
+  }
+
+  .home-hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .home-hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .home-hero-btn-primary,
+  .home-hero-btn-secondary {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.85rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-hero-section {
+    padding: 2.5rem 0;
+  }
+
+  .home-hero-container {
+    padding: 0 1rem;
+  }
+}

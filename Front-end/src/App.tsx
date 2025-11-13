@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header/Header'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -10,6 +11,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
+import NotLoggedIn from './pages/NotLoggedIn';
 import Pricing from './pages/Pricing';
 import GmailStatus from './pages/GmailStatus';
 import { useAuth } from './contexts/AuthContext';
@@ -23,15 +25,33 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Navigate to='/home' />} />
         <Route path="/home" element={<Home />}/>
-        <Route path="/profile" element={<Profile />}/>
         <Route path="/register" element={<Register />}/>
         <Route path="/login" element={<Login />}/>
-        <Route path="/dashboard" element={<Dashboard isLoggedIn={isAuthenticated}/>}/>
         <Route path="/about" element={<About />}/>
         <Route path="/contact" element={<Contact />}/>
         <Route path="/pricing" element={<Pricing />}/>
-        <Route path="/gmail-status" element={<GmailStatus />}/>
+        <Route path="/not-logged-in" element={<NotLoggedIn />}/>
         <Route path="/not-found" element={<NotFound />}/>
+        
+        {/* Protected Routes */}
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }/>
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }/>
+        <Route path="/gmail-status" element={
+          <ProtectedRoute>
+            <GmailStatus />
+          </ProtectedRoute>
+        }/>
+        
+        {/* Catch-all route for 404 */}
+        <Route path="*" element={<NotFound />}/>
       </Routes>
     </>
   );

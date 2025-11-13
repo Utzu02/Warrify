@@ -1,0 +1,114 @@
+/* ============================================
+   ABOUT CTA SECTION
+   ============================================ */
+.about-cta-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.about-cta-content {
+    flex: 1;
+    min-width: 280px;
+}
+
+.about-cta-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    font-size: 0.8rem;
+    color: #6366f1;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.about-cta-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.about-cta-description {
+    color: #475569;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.about-cta-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.about-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.8rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.about-cta-btn-primary {
+    background: #2563ff;
+    color: #ffffff;
+    border: 2px solid #2563ff;
+    box-shadow: 0 8px 20px rgba(37, 99, 255, 0.3);
+}
+
+.about-cta-btn-primary:hover {
+    background: #1d4fdc;
+    border-color: #1d4fdc;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(37, 99, 255, 0.4);
+}
+
+.about-cta-btn-secondary {
+    background: #ffffff;
+    color: #2563ff;
+    border: 2px solid #2563ff;
+    box-shadow: 0 4px 12px rgba(37, 99, 255, 0.1);
+}
+
+.about-cta-btn-secondary:hover {
+    background: #f0f7ff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 255, 0.2);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .about-cta-card {
+        padding: 1.75rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .about-cta-title {
+        font-size: 1.5rem;
+    }
+
+    .about-cta-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .about-cta-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

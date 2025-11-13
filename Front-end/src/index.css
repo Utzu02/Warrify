@@ -12,6 +12,11 @@
   box-sizing: border-box;
 }
 
+/* Add smooth scrolling globally */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   overflow-x: hidden;
   font-family: 'Poppins', sans-serif;

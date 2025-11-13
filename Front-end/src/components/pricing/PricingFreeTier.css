@@ -1,0 +1,96 @@
+/* ============================================
+   PRICING FREE TIER SECTION
+   ============================================ */
+.pricing-free-tier {
+    background-color: rgba(241, 241, 241, 0.834);
+    border: 1px solid rgba(203, 201, 201, 0.653);
+    border-radius: 12px;
+    width: 70vw;
+    min-height: 22.5vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 4rem 0;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+.pricing-free-content {
+    flex: 1;
+}
+
+.pricing-free-title {
+    font-size: clamp(1.5rem, 3vw, 1.75rem);
+    font-weight: 600;
+    margin: 0 0 1.5rem 0;
+    color: #0f172a;
+}
+
+.pricing-free-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.pricing-free-item {
+    position: relative;
+    padding-left: 1.5rem;
+    color: #475569;
+    line-height: 1.6;
+}
+
+.pricing-free-item::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.pricing-free-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pricing-free-amount {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.pricing-free-button {
+    white-space: nowrap;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .pricing-free-tier {
+        width: 85vw;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem;
+    }
+
+    .pricing-free-title {
+        font-size: clamp(1.25rem, 5vw, 1.5rem);
+    }
+
+    .pricing-free-price {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pricing-free-amount {
+        font-size: 2rem;
+    }
+}

@@ -1,0 +1,29 @@
+/* ============================================
+   ABOUT PAGE - WRAPPER ONLY
+   ============================================ */
+.about-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    color: #0f172a;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .about-page {
+        padding: 2rem 1.25rem 4rem;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-page {
+        padding: 1.5rem 1rem 3rem;
+    }
+}

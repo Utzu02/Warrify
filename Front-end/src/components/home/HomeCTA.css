@@ -1,0 +1,105 @@
+/* ============================================
+   HOME CTA BAND
+   ============================================ */
+.home-cta-band {
+  background-color: #2563ff;
+  padding: 5rem 0;
+  text-align: center;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-cta-band::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+}
+
+.home-cta-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.home-cta-title {
+  font-weight: 700;
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+}
+
+.home-cta-description {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #e5e7eb;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+.home-cta-btn-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.25rem;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #2563ff;
+  font-weight: 600;
+  font-size: 1.05rem;
+  border: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-cta-btn-white:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+  .home-cta-band {
+    padding: 3rem 1.25rem;
+  }
+
+  .home-cta-container {
+    padding: 0;
+  }
+
+  .home-cta-title {
+    font-size: clamp(1.75rem, 7vw, 2rem);
+  }
+
+  .home-cta-description {
+    font-size: 1rem;
+  }
+
+  .home-cta-btn-white {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.9rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-cta-band {
+    padding: 2.5rem 0;
+  }
+
+  .home-cta-container {
+    padding: 0 1rem;
+  }
+}

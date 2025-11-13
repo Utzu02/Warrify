@@ -1,0 +1,50 @@
+/* ============================================
+   ABOUT VALUES SECTION
+   ============================================ */
+.about-values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.about-value-card {
+    padding: 1.8rem;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 15px 25px rgba(15, 23, 42, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 35px rgba(15, 23, 42, 0.12);
+}
+
+.about-value-title {
+    margin-bottom: 0.8rem;
+    font-size: 1.15rem;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.about-value-copy {
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .about-values-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .about-value-card {
+        padding: 1.5rem;
+    }
+}

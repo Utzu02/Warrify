@@ -1,0 +1,36 @@
+/* ============================================
+   HOME PAGE - BENEFITS SECTION ONLY
+   ============================================ */
+.home-benefits-section {
+  padding: 5rem 0;
+  background-color: #ffffff;
+}
+
+.home-benefits-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+  .home-benefits-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .home-benefits-container {
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-benefits-section {
+    padding: 2.5rem 0;
+  }
+
+  .home-benefits-container {
+    padding: 0 1rem;
+  }
+}

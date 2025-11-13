@@ -1,20 +1,73 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './PriceCalculator.css'
+
+gsap.registerPlugin(ScrollTrigger);
 
 const PRICE_PER_TB = 0.30;
 
 const PriceCalculator = () => {
   const [storage, setStorage] = useState<number>(100);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const columnRef = useRef<HTMLDivElement>(null);
+  const calculatorRef = useRef<HTMLDivElement>(null);
 
   const calculatePrice = () => {
     return storage * PRICE_PER_TB;
   };
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Title animation
+      gsap.from(titleRef.current, {
+        opacity: 0,
+        y: -20,
+        duration: 0.6,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: titleRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none"
+        }
+      });
+
+      // FlexiPro column from left
+      gsap.from(columnRef.current, {
+        opacity: 0,
+        x: -40,
+        duration: 0.7,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: columnRef.current,
+          start: "top 80%",
+          toggleActions: "play none none none"
+        }
+      });
+
+      // Calculator from right
+      gsap.from(calculatorRef.current, {
+        opacity: 0,
+        x: 40,
+        duration: 0.7,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: calculatorRef.current,
+          start: "top 80%",
+          toggleActions: "play none none none"
+        }
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <>
-      <h2 className='titlu-price'>Obtain customizable storage space and pay based on usage</h2>
-      <div className='container-price'>
-      <div className="pricing-column">
+      <h2 ref={titleRef} className='titlu-price'>Obtain customizable storage space and pay based on usage</h2>
+      <div ref={containerRef} className='container-price'>
+        <div ref={columnRef} className="pricing-column">
           <h2>FlexiPro</h2>
           <div className="price-box">
             <>
@@ -36,7 +89,7 @@ const PriceCalculator = () => {
 
           <button className="buy-button">Buy FlexiPro</button>
         </div>
-        <div className="price-calculator">
+        <div ref={calculatorRef} className="price-calculator">
           <h2>Estimated Price Calculator</h2>
 
           <div className="calculator-section">
@@ -63,9 +116,7 @@ const PriceCalculator = () => {
           </div>
         </div>
       </div>
-
     </>
-
   );
 };
 
