@@ -235,7 +235,7 @@
 }
 
 .login-link {
-  text-align: center;
+  margin-top: 1rem !important;
   color: #666;
   font-size: 0.95rem;
   margin: 0;
@@ -254,7 +254,7 @@
 
 @media (max-width: 640px) {
   .register {
-    min-height: calc(100vh - 93px);
+    min-height: calc(100dvh - 70px);
     padding: 1rem 0.5rem;
   }
 

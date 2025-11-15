@@ -72,12 +72,8 @@ const FlexiProSection = ({ onCtaClick }: FlexiProSectionProps) => {
             <h4 className="calculator-title">Estimated Price Calculator</h4>
             
             <div className="calculator-slider-container">
-              <label htmlFor="warranty-slider" className="calculator-label">
-                Number of Warranties
-              </label>
-              
               <div className="calculator-value">
-                {warrantyCount} warranties
+                Number of Warranties: {warrantyCount}
               </div>
 
               <input

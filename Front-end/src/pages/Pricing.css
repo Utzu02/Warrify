@@ -1,20 +1,12 @@
-/* ============================================
-   PRICING PAGE - WRAPPER ONLY
-   ============================================ */
 .mainPricing {
-    width: 90vw;
-    max-width: 1400px;
-    margin: 0 auto 3rem;
+    width: 100%;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     gap: 2rem;
 }
-
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
 @media (max-width: 768px) {
     .mainPricing {
         width: 95vw;

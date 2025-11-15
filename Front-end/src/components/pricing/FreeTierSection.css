@@ -5,6 +5,8 @@
 
 .free-tier-section {
   padding: var(--pricing-space-16, 64px) 0;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .free-tier-section-title {
@@ -21,7 +23,7 @@
 .free-tier-card {
   background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
   border-radius: var(--pricing-radius-xl, 20px);
-  padding: var(--pricing-space-12, 48px) var(--pricing-space-10, 40px);
+  padding: var(--pricing-space-12, 48px) var(--pricing-space-16, 40px);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
   transition: all var(--pricing-transition-slow, 300ms);
   display: flex;

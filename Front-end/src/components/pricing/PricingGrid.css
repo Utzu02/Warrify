@@ -13,6 +13,10 @@
     line-height: 1.2;
 }
 
+.pricing-grid-section {
+    max-width: 1200px;
+    margin: 0 auto;
+}
 .pricing-grid {
     display: grid;
     grid-template-columns: 1fr;
