@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveGmailOptions } from '../api/gmail';
 import { BASE_URL } from '../config';
-import Button from '../components/Button';
+import Button from '../components/button';
 import './GmailConfig.css';
 
 const MIN_RESULTS = 1;

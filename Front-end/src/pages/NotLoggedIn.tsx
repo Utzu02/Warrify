@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
-import Button from '../components/Button';
+import Button from '../components/button';
 import './NotLoggedIn.css';
 
 const NotLoggedIn = () => {

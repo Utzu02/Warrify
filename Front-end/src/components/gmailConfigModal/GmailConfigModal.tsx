@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getGmailSettings } from '../../api/gmailSettings';
 import { saveGmailOptions } from '../../api/gmail';
 import { BASE_URL } from '../../config';
-import Button from '../Button';
+import Button from '../button';
 import './GmailConfigModal.css';
 
 interface GmailConfigModalProps {

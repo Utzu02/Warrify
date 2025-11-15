@@ -1,9 +1,9 @@
-import GridContainer from "../components/GridContainer/GridContainer";
+import GridContainer from "../components/gridContainer/GridContainer";
 import DashboardHero from "../components/dashboard/DashboardHero";
 import DashboardTools from "../components/dashboard/DashboardTools";
 import DashboardTable from "../components/dashboard/DashboardTable";
-import GmailConfigModal from "../components/GmailConfigModal/GmailConfigModal";
-import Footer from "../components/Footer/Footer";
+import GmailConfigModal from "../components/gmailConfigModal/GmailConfigModal";
+import Footer from "../components/footer/Footer";
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useWarranties } from "../hooks/useWarranties";

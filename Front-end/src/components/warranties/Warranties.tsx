@@ -1,7 +1,7 @@
 import './Warranties.css';
 import { useMemo, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import ModalWarranty from '../ModalWarranty/ModalWarranty';
+import ModalWarranty from '../modalWarranty/ModalWarranty';
 import type { Warranty } from '../../types/dashboard';
 import { BASE_URL } from '../../config';
 import * as XLSX from 'xlsx';

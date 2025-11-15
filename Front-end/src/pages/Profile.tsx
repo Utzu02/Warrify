@@ -4,9 +4,9 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { fetchUserProfile, fetchUserWarranties } from '../api/users';
 import { getGmailSettings, connectGmail, disconnectGmail, GmailSettings } from '../api/gmailSettings';
 import { useAuth } from '../contexts/AuthContext';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
-import GmailSettingsModal from '../components/GmailSettingsModal/GmailSettingsModal';
-import Footer from '../components/Footer/Footer';
+import LoadingSpinner from '../components/loadingSpinner/LoadingSpinner';
+import GmailSettingsModal from '../components/gmailSettingsModal/GmailSettingsModal';
+import Footer from '../components/footer/Footer';
 
 type ApiUser = {
   _id: string;

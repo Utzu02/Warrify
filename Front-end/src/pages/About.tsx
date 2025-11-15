@@ -1,5 +1,5 @@
 import './About.css';
-import Footer from "../components/Footer/Footer";
+import Footer from "../components/footer/Footer";
 import AboutHero from "../components/about/AboutHero";
 import AboutValues from "../components/about/AboutValues";
 import AboutTimeline from "../components/about/AboutTimeline";

@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { BASE_URL } from '../config';
 import { getGmailSettings } from '../api/gmailSettings';
 import { useGmailScan } from '../hooks/useGmailScan';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
+import LoadingSpinner from '../components/loadingSpinner/LoadingSpinner';
 import './GmailStatus.css';
 
 interface Attachment {

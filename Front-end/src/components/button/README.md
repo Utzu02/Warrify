@@ -5,7 +5,7 @@ A standardized, reusable button component for the Warrify application. All butto
 ## Usage
 
 ```tsx
-import Button from '../components/Button';
+import Button from '../components/button';
 
 // Primary button
 <Button variant="primary" size="medium">

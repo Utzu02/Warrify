@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-import Button from '../Button';
+import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
+import Button from '../button';
 import './LoginForm.css';
 import gsap from 'gsap';
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import Button from '../Button';
+import Button from '../button';
 import './HomeHero.css';
 
 function HomeHero() {

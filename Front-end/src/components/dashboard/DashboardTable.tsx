@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import Warranties from '../Warranties/Warranties';
-import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import Warranties from '../warranties/Warranties';
+import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
 import type { Warranty } from '../../types/dashboard';
 import './DashboardTable.css';
 

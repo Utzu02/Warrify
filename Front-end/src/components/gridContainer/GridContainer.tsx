@@ -1,9 +1,9 @@
 import './GridContainer.css';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import GmailButton from '../GmailLogin/GmailLogin';
-import GmailConfigModal from '../GmailConfigModal/GmailConfigModal';
-import FileImport from '../ImportFile/ImportFile';
+import GmailButton from '../gmailLogin/GmailLogin';
+import GmailConfigModal from '../gmailConfigModal/GmailConfigModal';
+import FileImport from '../importFile/ImportFile';
 import { fetchScanInfo } from '../../api/users';
 
 type GridContainerProps = {

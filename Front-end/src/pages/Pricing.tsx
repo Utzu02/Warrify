@@ -6,7 +6,7 @@ import BillingToggle from '../components/pricing/BillingToggle';
 import PricingGrid from '../components/pricing/PricingGrid';
 import FreeTierSection from '../components/pricing/FreeTierSection';
 import FlexiProSection from '../components/pricing/FlexiProSection';
-import Footer from "../components/Footer/Footer";
+import Footer from "../components/footer/Footer";
 import { standardPlans, getPrice } from '../components/pricing/pricingData';
 import type { BillingPeriod } from '../components/pricing/BillingToggle';
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Button from '../Button';
+import Button from '../button';
 import PlanFeatureList from './PlanFeatureList';
 import { freeTierPlan } from './pricingData';
 import './FreeTierSection.css';

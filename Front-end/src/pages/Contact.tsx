@@ -1,7 +1,7 @@
 import './ContactPage.css';
 import ContactHero from '../components/contact/ContactHero';
 import ContactForm from '../components/contact/ContactForm';
-import Footer from '../components/Footer/Footer';
+import Footer from '../components/footer/Footer';
 
 function Contact() {
   return (
