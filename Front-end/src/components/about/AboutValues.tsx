@@ -41,17 +41,30 @@ function AboutValues({ values }: AboutValuesProps) {
     }, [values]);
 
     return (
-        <section className="about-values-grid">
-            {values.map((value, index) => (
-                <div 
-                    key={value.title} 
-                    className="about-value-card"
-                    ref={(el) => { cardsRef.current[index] = el; }}
-                >
-                    <h4 className="about-value-title">{value.title}</h4>
-                    <p className="about-value-copy">{value.copy}</p>
+        <section className="about-values">
+            <div className="about-values-header">
+                <div>
+                    <p className="about-section-eyebrow">Our principles</p>
+                    <h2 className="about-values-title">Values that keep teams calm</h2>
                 </div>
-            ))}
+            </div>
+            <div className="about-values-grid">
+                {values.map((value, index) => (
+                    <div
+                        key={value.title}
+                        className="about-value-card"
+                        ref={(el) => { cardsRef.current[index] = el; }}
+                    >
+                        <span className="about-value-index">
+                            {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <div>
+                            <h4 className="about-value-title">{value.title}</h4>
+                            <p className="about-value-copy">{value.copy}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </section>
     );
 }

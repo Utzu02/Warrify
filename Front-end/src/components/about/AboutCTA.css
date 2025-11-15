@@ -2,90 +2,78 @@
    ABOUT CTA SECTION
    ============================================ */
 .about-cta-card {
-    background: #fff;
-    border-radius: 24px;
-    padding: 2.5rem;
-    box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
-    border: 1px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--pricing-radius-2xl);
+    padding: var(--pricing-space-12);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
-    margin: 2rem 0;
+    gap: var(--pricing-space-8);
+    background: var(--pricing-gradient-primary);
+    color: #ffffff;
+    box-shadow: 0 30px 70px rgba(37, 99, 235, 0.35);
+}
+
+.about-cta-card::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    right: -120px;
+    top: -120px;
+    filter: blur(10px);
 }
 
 .about-cta-content {
     flex: 1;
     min-width: 280px;
+    position: relative;
+    z-index: 1;
 }
 
 .about-cta-eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.2rem;
-    font-size: 0.8rem;
-    color: #6366f1;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .about-cta-title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #0f172a;
-    font-weight: 700;
+    font-size: var(--pricing-text-4xl);
+    margin: 0 0 var(--pricing-space-3);
+    color: #ffffff;
 }
 
 .about-cta-description {
-    color: #475569;
+    color: rgba(255, 255, 255, 0.9);
     line-height: 1.7;
     margin: 0;
+    max-width: 52ch;
 }
 
 .about-cta-actions {
     display: flex;
-    gap: 1rem;
+    gap: var(--pricing-space-4);
     flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
 }
 
-.about-cta-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.85rem 1.8rem;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 1rem;
-    text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-    cursor: pointer;
+.about-cta-actions .btn {
+    border-radius: var(--pricing-radius-full);
+    box-shadow: var(--pricing-shadow-md);
 }
 
-.about-cta-btn-primary {
-    background: #2563ff;
+.about-cta-actions .btn.btn-secondary {
+    background: rgba(255, 255, 255, 0.15);
     color: #ffffff;
-    border: 2px solid #2563ff;
-    box-shadow: 0 8px 20px rgba(37, 99, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-.about-cta-btn-primary:hover {
-    background: #1d4fdc;
-    border-color: #1d4fdc;
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(37, 99, 255, 0.4);
-}
-
-.about-cta-btn-secondary {
-    background: #ffffff;
-    color: #2563ff;
-    border: 2px solid #2563ff;
-    box-shadow: 0 4px 12px rgba(37, 99, 255, 0.1);
-}
-
-.about-cta-btn-secondary:hover {
-    background: #f0f7ff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(37, 99, 255, 0.2);
+.about-cta-actions .btn.btn-secondary:hover:not(.btn-disabled) {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
 }
 
 /* ============================================
@@ -93,13 +81,13 @@
    ============================================ */
 @media (max-width: 768px) {
     .about-cta-card {
-        padding: 1.75rem;
+        padding: var(--pricing-space-8);
         flex-direction: column;
         align-items: flex-start;
     }
 
     .about-cta-title {
-        font-size: 1.5rem;
+        font-size: var(--pricing-text-3xl);
     }
 
     .about-cta-actions {
@@ -107,8 +95,14 @@
         flex-direction: column;
     }
 
-    .about-cta-btn {
+    .about-cta-actions .btn {
         width: 100%;
         justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-cta-card {
+        padding: var(--pricing-space-6);
     }
 }

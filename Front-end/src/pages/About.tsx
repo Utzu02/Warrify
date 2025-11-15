@@ -31,10 +31,12 @@ function About() {
   return (
     <>
       <div className="about-page">
-        <AboutHero />
-        <AboutValues values={values} />
-        <AboutTimeline milestones={milestones} />
-        <AboutCTA />
+        <div className="about-page__inner">
+          <AboutHero />
+          <AboutValues values={values} />
+          <AboutTimeline milestones={milestones} />
+          <AboutCTA />
+        </div>
       </div>
       <Footer />
     </>

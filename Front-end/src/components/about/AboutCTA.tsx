@@ -70,7 +70,9 @@ function AboutCTA() {
     return (
         <section ref={sectionRef} className="about-cta-card">
             <div className="about-cta-content">
-                <p ref={eyebrowRef} className="about-cta-eyebrow">Join the movement</p>
+                <p ref={eyebrowRef} className="about-section-eyebrow about-cta-eyebrow">
+                    Join the movement
+                </p>
                 <h2 ref={titleRef} className="about-cta-title">Ready to modernize warranties?</h2>
                 <p ref={descriptionRef} className="about-cta-description">
                     Our team guides every onboarding, migrates historical data, and trains your staff. Start with a friendly discovery call—

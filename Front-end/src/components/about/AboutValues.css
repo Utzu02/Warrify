@@ -1,50 +1,105 @@
 /* ============================================
    ABOUT VALUES SECTION
    ============================================ */
+.about-values {
+    padding: var(--pricing-space-10);
+    border-radius: var(--pricing-radius-2xl);
+    border: 1px solid var(--pricing-gray-200);
+    background: var(--pricing-bg-primary);
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: var(--pricing-space-8);
+}
+
+.about-values-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--pricing-space-6);
+    flex-wrap: wrap;
+}
+
+.about-values-title {
+    font-size: var(--pricing-text-4xl);
+    color: var(--pricing-gray-900);
+    margin: 0;
+}
+
+.about-values-subtitle {
+    flex: 1;
+    min-width: 250px;
+    margin: 0;
+    color: var(--pricing-gray-600);
+    line-height: 1.6;
+}
+
 .about-values-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-    margin: 2rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--pricing-space-6);
 }
 
 .about-value-card {
-    padding: 1.8rem;
-    border-radius: 18px;
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 15px 25px rgba(15, 23, 42, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    gap: var(--pricing-space-4);
+    padding: var(--pricing-space-6);
+    border-radius: var(--pricing-radius-xl);
+    border: 1px solid var(--pricing-gray-200);
+    background: var(--pricing-gray-50);
+    box-shadow: var(--pricing-shadow-lg);
+    transition: transform var(--pricing-transition-base), box-shadow var(--pricing-transition-base);
 }
 
 .about-value-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 35px rgba(15, 23, 42, 0.12);
+    transform: translateY(-6px);
+    box-shadow: var(--pricing-shadow-hover);
+}
+
+.about-value-index {
+    font-weight: var(--pricing-font-semibold);
+    color: var(--pricing-primary-blue);
+    font-size: var(--pricing-text-lg);
+    padding: 0.5rem;
+    border-radius: var(--pricing-radius-md);
+    background: rgba(37, 99, 235, 0.08);
+    align-self: flex-start;
+    min-width: 48px;
+    text-align: center;
 }
 
 .about-value-title {
-    margin-bottom: 0.8rem;
-    font-size: 1.15rem;
-    color: #0f172a;
-    font-weight: 600;
+    margin: 0 0 var(--pricing-space-2);
+    font-size: var(--pricing-text-xl);
+    color: var(--pricing-gray-900);
 }
 
 .about-value-copy {
-    color: #475569;
-    line-height: 1.6;
+    color: var(--pricing-gray-600);
     margin: 0;
+    line-height: 1.6;
 }
 
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */
 @media (max-width: 768px) {
-    .about-values-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    .about-values {
+        padding: var(--pricing-space-8);
     }
 
-    .about-value-card {
-        padding: 1.5rem;
+    .about-values-title {
+        font-size: var(--pricing-text-3xl);
+    }
+
+    .about-values-grid {
+        grid-template-columns: 1fr;
+        gap: var(--pricing-space-4);
+    }
+}
+
+@media (max-width: 480px) {
+    .about-values {
+        padding: var(--pricing-space-6);
     }
 }

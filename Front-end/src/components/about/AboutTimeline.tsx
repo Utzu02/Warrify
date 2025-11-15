@@ -71,23 +71,28 @@ function AboutTimeline({ milestones }: AboutTimelineProps) {
     }, [milestones]);
 
     return (
-        <section ref={sectionRef} className="about-timeline-card">
-            <h2 ref={titleRef} className="about-timeline-title">Our journey</h2>
-            <div className="about-timeline">
-                {milestones.map((milestone, index) => (
-                    <div 
-                        key={milestone.year} 
-                        className="about-timeline-item"
-                        ref={(el) => { itemsRef.current[index] = el; }}
-                    >
-                        <div className="about-timeline-dot" />
-                        <div className="about-timeline-content">
-                            <span className="about-timeline-year">{milestone.year}</span>
-                            <h5 className="about-timeline-item-title">{milestone.title}</h5>
-                            <p className="about-timeline-item-copy">{milestone.copy}</p>
+        <section ref={sectionRef} className="about-timeline-section">
+            <div className="about-timeline-card">
+                <div>
+                    <p className="about-section-eyebrow">Milestones</p>
+                    <h2 ref={titleRef} className="about-timeline-title">Our journey</h2>
+                </div>
+                <div className="about-timeline-list">
+                    {milestones.map((milestone, index) => (
+                        <div
+                            key={milestone.year}
+                            className="about-timeline-item"
+                            ref={(el) => { itemsRef.current[index] = el; }}
+                        >
+                            <div className="about-timeline-dot" />
+                            <div className="about-timeline-content">
+                                <span className="about-timeline-year">{milestone.year}</span>
+                                <h5 className="about-timeline-item-title">{milestone.title}</h5>
+                                <p className="about-timeline-item-copy">{milestone.copy}</p>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </section>
     );
