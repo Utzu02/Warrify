@@ -12,7 +12,6 @@ interface Feature {
 }
 
 interface Plan {
-  icon: string;
   title: string;
   description: string;
   price: string | number;

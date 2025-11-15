@@ -153,6 +153,9 @@
    RESPONSIVE DESIGN
    ============================================ */
 @media (max-width: 768px) {
+    .about-hero-title {
+        font-size: 1.875rem;
+    }
     .about-hero {
         padding: var(--pricing-space-8);
     }

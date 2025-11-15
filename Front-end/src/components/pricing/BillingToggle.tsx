@@ -7,10 +7,9 @@ export type BillingPeriod = 'monthly' | 'yearly';
 interface BillingToggleProps {
   billingPeriod: BillingPeriod;
   onToggle: (period: BillingPeriod) => void;
-  discount?: string;
 }
 
-const BillingToggle = ({ billingPeriod, onToggle, discount = "Save 20%" }: BillingToggleProps) => {
+const BillingToggle = ({ billingPeriod, onToggle }: BillingToggleProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

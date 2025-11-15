@@ -14,7 +14,6 @@ interface Feature {
 }
 
 interface PlanCardProps {
-  icon: string;
   title: string;
   description: string;
   price: string | number;
@@ -28,7 +27,6 @@ interface PlanCardProps {
 }
 
 const PlanCard = ({
-  icon,
   title,
   description,
   price,

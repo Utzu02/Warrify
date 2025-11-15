@@ -7,12 +7,6 @@ const ImportManualButton: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [validationResult, setValidationResult] = useState<{
-    isValid: boolean;
-    confidence: number;
-    reason: string;
-  } | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -24,8 +18,6 @@ const ImportManualButton: React.FC = () => {
     }
 
     console.log('📄 File selected:', file.name, 'Size:', file.size, 'bytes');
-    setSelectedFile(file);
-    setValidationResult(null);
 
     // Show immediate feedback
     setIsValidating(true);
@@ -35,7 +27,6 @@ const ImportManualButton: React.FC = () => {
       console.log('🔍 Starting validation for:', file.name);
       const result = await validateWarrantyPdf(file);
       console.log('✅ Validation result:', result);
-      setValidationResult(result);
 
       if (result.isValid) {
         console.log(`✓ Valid warranty (${result.confidence}% confidence). Auto-uploading...`);
@@ -89,7 +80,6 @@ const ImportManualButton: React.FC = () => {
       alert('❌ Upload failed. Please try again.');
     } finally {
       setIsUploading(false);
-      setSelectedFile(null);
     }
   };
 

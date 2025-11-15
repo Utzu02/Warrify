@@ -1,29 +1,25 @@
-import { useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import './ContactHero.css';
 
 type ContactHeroProps = {
-  eyebrow: string;
-  title: string;
+  title: ReactNode;
   description: string;
 };
 
-const ContactHero = ({ eyebrow, title, description }: ContactHeroProps) => {
-  const eyebrowRef = useRef<HTMLParagraphElement>(null);
+const ContactHero = ({ title, description }: ContactHeroProps) => {
+  const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Eyebrow fade in
-      gsap.from(eyebrowRef.current, {
+      gsap.from(sectionRef.current, {
         opacity: 0,
-        y: -20,
-        duration: 0.6,
+        duration: 0.8,
         ease: "power2.out"
       });
 
-      // Title slide down
       gsap.from(titleRef.current, {
         opacity: 0,
         y: -30,
@@ -32,12 +28,11 @@ const ContactHero = ({ eyebrow, title, description }: ContactHeroProps) => {
         ease: "power2.out"
       });
 
-      // Description fade up
       gsap.from(descriptionRef.current, {
         opacity: 0,
         y: 20,
         duration: 0.8,
-        delay: 0.4,
+        delay: 0.3,
         ease: "power2.out"
       });
     });
@@ -46,8 +41,7 @@ const ContactHero = ({ eyebrow, title, description }: ContactHeroProps) => {
   }, []);
 
   return (
-    <section className="contact-hero">
-      <p ref={eyebrowRef} className="contact-hero__eyebrow">{eyebrow}</p>
+    <section ref={sectionRef} className="contact-hero">
       <h1 ref={titleRef} className="contact-hero__title">{title}</h1>
       <p ref={descriptionRef} className="contact-hero__description">{description}</p>
     </section>

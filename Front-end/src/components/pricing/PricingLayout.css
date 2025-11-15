@@ -4,9 +4,8 @@
    ============================================ */
 
 .pricing-layout {
-    width: 100%;
+    width: 95%;
     min-height: 100vh;
-    background: var(--pricing-bg-primary);
     font-family: var(--pricing-font-family);
     padding-top: var(--header-height, 80px);
 }

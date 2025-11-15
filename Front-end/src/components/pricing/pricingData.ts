@@ -9,7 +9,6 @@ export interface Feature {
 }
 
 export interface PricingPlan {
-  icon: string;
   title: string;
   description: string;
   monthlyPrice: number;
@@ -23,7 +22,6 @@ export interface PricingPlan {
 // Standard Plans (shown in main grid)
 export const standardPlans: PricingPlan[] = [
   {
-    icon: '🏢',
     title: 'Enterprise',
     description: 'For individuals who need robust tracking.',
     monthlyPrice: 20,
@@ -40,7 +38,6 @@ export const standardPlans: PricingPlan[] = [
     isPopular: false
   },
   {
-    icon: '🎁',
     title: 'Pro',
     description: 'Ideal for small to medium enterprises.',
     monthlyPrice: 30,
@@ -57,7 +54,6 @@ export const standardPlans: PricingPlan[] = [
     isPopular: true
   },
   {
-    icon: '�',
     title: 'Premium',
     description: 'Built for larger enterprises.',
     monthlyPrice: 50,
@@ -77,7 +73,6 @@ export const standardPlans: PricingPlan[] = [
 
 // Free Tier Plan (shown separately)
 export const freeTierPlan = {
-  icon: '🎁',
   title: 'Free Subscription',
   description: 'Experience the core benefits of Warrify without any commitment. Perfect for personal use.',
   price: 0,
@@ -91,7 +86,6 @@ export const freeTierPlan = {
 
 // FlexiPro Plan (shown with calculator)
 export const flexiProPlan = {
-  icon: '�',
   title: 'FlexiPro',
   description: 'Dynamic plan for growing needs, pay as you expand.',
   basePrice: 50,
