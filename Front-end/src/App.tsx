@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -18,10 +18,13 @@ import { useAuth } from './contexts/AuthContext';
 
 function AppContent() {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
+  const hideHeaderRoutes = ['/login', '/register', '/not-logged-in'];
+  const shouldRenderHeader = !hideHeaderRoutes.includes(location.pathname);
 
   return (
     <>
-      <Header isLoggedIn={isAuthenticated}/>
+      {shouldRenderHeader && <Header isLoggedIn={isAuthenticated}/>}
       <Routes>
         <Route path="/" element={<Navigate to='/home' />} />
         <Route path="/home" element={<Home />}/>

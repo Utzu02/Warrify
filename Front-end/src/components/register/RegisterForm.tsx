@@ -99,6 +99,15 @@ const RegisterForm = () => {
     <div className="register">
       <div className="register-container">
         <form onSubmit={handleSubmit} className="register-form" ref={formRef}>
+          <button
+            type="button"
+            className="auth-card-back"
+            onClick={() => navigate('/home')}
+            aria-label="Go back"
+          >
+            <span aria-hidden="true">←</span>
+            Back
+          </button>
           <h2>Create your account</h2>
 
           <div className="form-group">

@@ -3,7 +3,7 @@
    ============================================ */
 .contact-page {
   position: relative;
-  width: 100%;
+  width: calc(100vw - 15px);
   min-height: 100vh;
   padding: var(--pricing-space-16) var(--pricing-space-4);
   background:
@@ -113,6 +113,7 @@
 
 @media (max-width: 768px) {
   .contact-page {
+    width: 100vw;
     padding: var(--pricing-space-12) var(--pricing-space-3);
   }
 

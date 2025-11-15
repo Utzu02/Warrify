@@ -2,11 +2,12 @@
    NOT LOGGED IN PAGE
    ============================================ */
 .not-logged-in-page {
-    min-height: calc(100vh - 80px);
+    height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    margin-top: -80px;
     background: linear-gradient(135deg, #1e66f5 0%, #667eea 50%, #b794f6 100%);
     position: relative;
     overflow: hidden;
@@ -139,13 +140,8 @@
    ============================================ */
 @media (max-width: 768px) {
     .not-logged-in-page {
-        min-height: calc(100vh - 70px);
         padding: 1rem;
-    }
-
-    .not-logged-in-page::before,
-    .not-logged-in-page::after {
-        display: none;
+        margin-top: -70px;
     }
 
     .not-logged-in-content {
@@ -164,4 +160,26 @@
     .not-logged-in-btn {
         width: 100%;
     }
+}
+.not-logged-in-content .auth-card-back {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    background: transparent;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    margin-bottom: 1rem;
+}
+
+.not-logged-in-content .auth-card-back:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    transform: translateX(-2px);
 }

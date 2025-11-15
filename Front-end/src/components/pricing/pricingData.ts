@@ -25,7 +25,7 @@ export const standardPlans: PricingPlan[] = [
     title: 'Enterprise',
     description: 'For individuals who need robust tracking.',
     monthlyPrice: 20,
-    yearlyPrice: 16, // 20% discount
+    yearlyPrice: 200, // 20% discount
     features: [
       { text: 'Management offers 120 yearly guarantees', included: true },
       { text: 'Grouping guarantees into categories', included: true },
@@ -41,7 +41,7 @@ export const standardPlans: PricingPlan[] = [
     title: 'Pro',
     description: 'Ideal for small to medium enterprises.',
     monthlyPrice: 30,
-    yearlyPrice: 24, // 20% discount
+    yearlyPrice: 300, // 20% discount
     features: [
       { text: 'Management offers 250 yearly guarantees', included: true },
       { text: 'Extra push notifications for expiry', included: true },
@@ -57,7 +57,7 @@ export const standardPlans: PricingPlan[] = [
     title: 'Premium',
     description: 'Built for larger enterprises.',
     monthlyPrice: 50,
-    yearlyPrice: 40, // 20% discount
+    yearlyPrice: 500, // 20% discount
     features: [
       { text: 'Management offers 500+ yearly guarantees', included: true },
       { text: 'Advanced warranty reports & analytics', included: true },

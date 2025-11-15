@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import Button from '../components/Button';
 import './NotLoggedIn.css';
 
 const NotLoggedIn = () => {
+  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -56,6 +58,15 @@ const NotLoggedIn = () => {
   return (
     <div ref={containerRef} className="not-logged-in-page">
       <div className="not-logged-in-content">
+        <button
+          type="button"
+          className="auth-card-back"
+          onClick={() => navigate('/home')}
+          aria-label="Go back"
+        >
+          <span aria-hidden="true">←</span>
+          Back
+        </button>
         <div ref={iconRef} className="not-logged-in-icon">
           🔒
         </div>

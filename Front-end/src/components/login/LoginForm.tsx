@@ -78,6 +78,15 @@ const LoginForm = () => {
     <div className="login">
       <div className="login-container">
         <form onSubmit={handleSubmit} className="login-form" ref={formRef}>
+          <button
+            type="button"
+            className="auth-card-back"
+            onClick={() => navigate('/home')}
+            aria-label="Go back"
+          >
+            <span aria-hidden="true">←</span>
+            Back
+          </button>
           <h2>Sign in to your account</h2>
 
           <div className="form-group">
