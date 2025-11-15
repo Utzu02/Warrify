@@ -45,12 +45,12 @@ const ContactStats = ({ stats }: ContactStatsProps) => {
     <section className="contact-stats">
       {stats.map((stat, index) => (
         <div 
-          className="contact-stats__card" 
+          className="contact-stats-card" 
           key={stat.title}
           ref={(el) => { cardsRef.current[index] = el; }}
         >
-          <span className="contact-stats__value">{stat.value}</span>
-          <span className="contact-stats__label">{stat.title}</span>
+          <span className="contact-stats-value">{stat.value}</span>
+          <span className="contact-stats-label">{stat.title}</span>
         </div>
       ))}
     </section>

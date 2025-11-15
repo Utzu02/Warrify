@@ -96,7 +96,7 @@ const LoginForm = () => {
               </svg>
               <input
                 type="text"
-                id="emailOrUsername"
+                id="email-or-username"
                 placeholder="Email or Username"
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}

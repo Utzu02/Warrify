@@ -207,16 +207,16 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
                   />
                 </div>
               </li>
-              <li className="warr-element-prdName" title={warranty.filename || warranty.productName}>
+              <li className="warr-element-product-name" title={warranty.filename || warranty.productName}>
                 {warranty.filename || warranty.productName}
               </li>
               <li className="warr-element-com" title={warranty.provider || 'Unknown'}>
                 {warranty.provider || 'Unknown'}
               </li>
-              <li className="warr-element-dataCump" title={`Purchased: ${formatDate(warranty.purchaseDate)}`}>
+              <li className="warr-element-purchase-date" title={`Purchased: ${formatDate(warranty.purchaseDate)}`}>
                 {formatDate(warranty.purchaseDate)}
               </li>
-              <li className="warr-element-dataExp" title={`Expires: ${formatDate(warranty.expirationDate)}`}>
+              <li className="warr-element-expiration-date" title={`Expires: ${formatDate(warranty.expirationDate)}`}>
                 {formatDate(warranty.expirationDate)}
               </li>
               <li className={`warr-element-expired ${expired ? 'expired' : 'valid'}`} title={expired ? 'This warranty has expired' : 'This warranty is active'}>
@@ -277,7 +277,7 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
             <p><strong>File name:</strong> {selectedWarranty.filename}</p>
           </div>
           <div className='modal-previewdownload'>
-            <button className='button buttoninvert modal-war-2' onClick={handleViewPdf} disabled={!previewUrl}>
+            <button className='button button-invert modal-war-2' onClick={handleViewPdf} disabled={!previewUrl}>
               View PDF
             </button>
             {downloadUrl ? (

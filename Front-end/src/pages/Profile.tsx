@@ -238,7 +238,7 @@ const Profile = () => {
                 </button>
               </div>
             ) : (
-              <button onClick={connectGmail} className="button buttoninvert">
+              <button onClick={connectGmail} className="button button-invert">
                 Connect Gmail
               </button>
             )}
@@ -284,7 +284,7 @@ const Profile = () => {
         <div className="card">
           <header className="section-header">
             <h2>Subscription</h2>
-            <Link to="/pricing" className="button buttoninvert">
+            <Link to="/pricing" className="button button-invert">
               Manage plan
             </Link>
           </header>

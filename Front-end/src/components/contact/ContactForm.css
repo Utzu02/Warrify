@@ -10,11 +10,11 @@
   border: 1px solid var(--pricing-gray-200);
 }
 
-.contact-form-card__heading {
+.contact-form-card-heading {
   margin-bottom: var(--pricing-space-4);
 }
 
-.contact-form-card__badge {
+.contact-form-card-badge {
   display: inline-block;
   padding: 0.2rem 0.75rem;
   border-radius: var(--pricing-radius-full);
@@ -27,26 +27,26 @@
   margin-bottom: 0.5rem;
 }
 
-.contact-form-card__title {
+.contact-form-card-title {
   font-size: var(--pricing-text-3xl);
   margin: 0 0 var(--pricing-space-2);
   color: var(--pricing-gray-900);
 }
 
-.contact-form-card__description {
+.contact-form-card-description {
   color: var(--pricing-gray-600);
   line-height: 1.6;
   margin: 0;
 }
 
-.contact-form-card__grid {
+.contact-form-card-grid {
   margin-top: var(--pricing-space-6);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: var(--pricing-space-4);
 }
 
-.contact-form-card__grid label {
+.contact-form-card-grid label {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -55,8 +55,8 @@
   font-size: var(--pricing-text-sm);
 }
 
-.contact-form-card__grid input,
-.contact-form-card__grid textarea {
+.contact-form-card-grid input,
+.contact-form-card-grid textarea {
   border: 1px solid var(--pricing-gray-200);
   border-radius: var(--pricing-radius-lg);
   padding: 0.95rem 1rem;
@@ -67,24 +67,24 @@
   box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);
 }
 
-.contact-form-card__grid input:focus,
-.contact-form-card__grid textarea:focus {
+.contact-form-card-grid input:focus,
+.contact-form-card-grid textarea:focus {
   outline: none;
   border-color: var(--pricing-primary-blue);
   background: #fff;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-.contact-form-card__grid textarea {
+.contact-form-card-grid textarea {
   resize: vertical;
   width: 100%;
 }
 
-.contact-form-card__full-width {
+.contact-form-card-full-width {
   grid-column: 1 / -1;
 }
 
-.contact-form-card__full-width .btn {
+.contact-form-card-full-width .btn {
   border-radius: var(--pricing-radius-full);
 }
 
@@ -93,11 +93,11 @@
     padding: var(--pricing-space-8);
   }
 
-  .contact-form-card__title {
+  .contact-form-card-title {
     font-size: var(--pricing-text-2xl);
   }
 
-  .contact-form-card__grid {
+  .contact-form-card-grid {
     grid-template-columns: 1fr;
   }
 }

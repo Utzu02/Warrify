@@ -134,7 +134,7 @@ const GmailConfigModal = ({ isOpen, onClose }: GmailConfigModalProps) => {
 
         <form onSubmit={handleSubmit} className="gmail-modal-form">
           <div className="form-group">
-            <label htmlFor="maxResults">
+            <label htmlFor="max-results">
               Number of documents to scan
               <span 
                 className="tooltip-icon" 
@@ -144,7 +144,7 @@ const GmailConfigModal = ({ isOpen, onClose }: GmailConfigModalProps) => {
               </span>
             </label>
             <input
-              id="maxResults"
+              id="max-results"
               type="number"
               min={MIN_RESULTS}
               max={MAX_RESULTS}
@@ -156,18 +156,18 @@ const GmailConfigModal = ({ isOpen, onClose }: GmailConfigModalProps) => {
 
           <div className="date-row">
             <div className="form-group">
-              <label htmlFor="startDate">Start date (optional)</label>
+              <label htmlFor="start-date">Start date (optional)</label>
               <input
-                id="startDate"
+                id="start-date"
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
               />
             </div>
             <div className="form-group">
-              <label htmlFor="endDate">End date (optional)</label>
+              <label htmlFor="end-date">End date (optional)</label>
               <input
-                id="endDate"
+                id="end-date"
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}

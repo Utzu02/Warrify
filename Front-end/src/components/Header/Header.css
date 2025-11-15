@@ -15,7 +15,7 @@
   --hover-bg: #f8fafc;
 }
 
-.mobileShow {
+.site-header-mobile-item {
   display: none;
 }
 
@@ -54,28 +54,28 @@
   width: 100%;
 }
 
-.leftSide {
+.site-header-left {
   display: flex;
   align-items: center;
   gap: 1.5rem;
   flex: 0 0 auto;
 }
 
-.leftSide .logoheader {
+.site-header-left .logoheader {
   margin-right: 0;
 }
 
-.leftSide .primary-nav {
+.site-header-left .primary-nav {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 }
 
-.rightSide {
+.site-header-right {
   flex: 0 0 auto;
 }
 
-.rightSide .textSectiuni {
+.site-header-right .site-header-nav-list {
   gap: 1.25rem;
 }
 
@@ -107,7 +107,7 @@
   transition: color 0.25s ease;
 }
 
-.listSectiuni {
+.site-header-nav-link {
   cursor: pointer;
   display: flex;
   position: relative;
@@ -118,11 +118,11 @@
   white-space: nowrap;
 }
 
-.listSectiuni:hover {
+.site-header-nav-link:hover {
   color: var(--text-secondary);
 }
 
-.listSectiuni::after {
+.site-header-nav-link::after {
   content: '';
   position: absolute;
   bottom: 10px;
@@ -133,11 +133,11 @@
   border-radius: 999px;
 }
 
-.listSectiuni:hover::after {
+.site-header-nav-link:hover::after {
   background-color: var(--primary-light);
 }
 
-.listSectiuni.active::after {
+.site-header-nav-link.active::after {
   background-color: var(--primary-color);
 }
 
@@ -148,7 +148,7 @@
   height: 90px;
 }
 
-.leftSide img {
+.site-header-left img {
   height: 90px;
   margin: 0;
 }
@@ -174,13 +174,13 @@
   color: #1557d9;
 }
 
-.buttoninvert {
+.button-invert {
   color: #fff;
   background-color: #1e66f5;
   border-color: #1e66f5;
 }
 
-.buttoninvert:hover {
+.button-invert:hover {
   background-color: #1557d9;
   color: #fff;
   transform: translateY(-2px);
@@ -228,7 +228,7 @@
     height: 63px;
   }
 
-  .leftSide img {
+  .site-header-left img {
     height: 63px;
     margin: 0;
   }
@@ -248,7 +248,7 @@
     position: fixed;
   }
 
-  .leftSide {
+  .site-header-left {
     width: 100%;
     justify-content: space-between;
     align-items: center;
@@ -290,7 +290,7 @@
     transform: translateY(-6.5px) rotate(-45deg);
   }
 
-  .mobileShow {
+  .site-header-mobile-item {
     display: block;
   }
 
@@ -352,7 +352,7 @@
     display: block !important;
   }
 
-  .listSectiuni {
+  .site-header-nav-link {
     width: 100% !important;
     height: auto !important;
     padding: 1rem !important;
@@ -367,16 +367,16 @@
     position: static !important;
   }
 
-  .listSectiuni::after {
+  .site-header-nav-link::after {
     display: none !important;
   }
 
-  .listSectiuni:hover {
+  .site-header-nav-link:hover {
     background: var(--hover-bg);
     color: var(--text-primary);
   }
 
-  .rightSide {
+  .site-header-right {
     width: 100%;
   }
 

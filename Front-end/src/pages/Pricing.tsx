@@ -37,7 +37,7 @@ function Pricing() {
 
     return (
         <>
-            <div className="mainPricing">
+            <div className="main-pricing">
                 <PricingLayout>
                     <PricingHero />
                     

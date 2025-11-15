@@ -7,11 +7,11 @@ function Contact() {
   return (
     <>
       <div className="contact-page">
-        <div className="contact-page__inner">
+        <div className="contact-page-inner">
           <ContactHero
             title={
               <>
-                Connect with <span className="contact-hero__highlight">Warrify</span> in minutes.
+                Connect with <span className="contact-hero-highlight">Warrify</span> in minutes.
               </>
             }
             description="Reach out for support, onboarding, or custom integrations. Our team replies fast and makes sure every conversation ends with clarity."

@@ -14,7 +14,7 @@
   color: var(--pricing-gray-900);
 }
 
-.contact-page__inner {
+.contact-page-inner {
   position: relative;
   z-index: 1;
   width: min(1200px, 100%);
@@ -45,7 +45,7 @@
   box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
 }
 
-.contact-info-card__eyebrow {
+.contact-info-card-eyebrow {
   font-size: var(--pricing-text-xs);
   text-transform: uppercase;
   letter-spacing: 0.2rem;
@@ -117,7 +117,7 @@
     padding: var(--pricing-space-12) var(--pricing-space-3);
   }
 
-  .contact-page__inner {
+  .contact-page-inner {
     gap: var(--pricing-space-10);
   }
 }

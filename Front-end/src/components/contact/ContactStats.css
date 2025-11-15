@@ -7,7 +7,7 @@
   gap: var(--pricing-space-4);
 }
 
-.contact-stats__card {
+.contact-stats-card {
   padding: var(--pricing-space-4);
   border-radius: var(--pricing-radius-xl);
   background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.05));
@@ -16,14 +16,14 @@
   text-align: left;
 }
 
-.contact-stats__value {
+.contact-stats-value {
   display: block;
   font-size: var(--pricing-text-3xl);
   font-weight: var(--pricing-font-bold);
   color: var(--pricing-gray-900);
 }
 
-.contact-stats__label {
+.contact-stats-label {
   color: var(--pricing-gray-600);
   font-size: var(--pricing-text-sm);
 }

@@ -42,8 +42,8 @@ const ContactHero = ({ title, description }: ContactHeroProps) => {
 
   return (
     <section ref={sectionRef} className="contact-hero">
-      <h1 ref={titleRef} className="contact-hero__title">{title}</h1>
-      <p ref={descriptionRef} className="contact-hero__description">{description}</p>
+      <h1 ref={titleRef} className="contact-hero-title">{title}</h1>
+      <p ref={descriptionRef} className="contact-hero-description">{description}</p>
     </section>
   );
 };

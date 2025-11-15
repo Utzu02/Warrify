@@ -76,7 +76,7 @@ const Header = ({ isLoggedIn }: HeaderProps) => {
 
   return (
     <header className={`header ${menuOpen ? 'header--open' : ''} ${!isHeaderVisible ? 'header--hidden' : ''}`}>
-      <div className="leftSide">
+      <div className="site-header-left">
         <div className="hamburger-header">
           <Link to="/home" className="logo-link">
             <img src={pozalogo} alt="Warrify logo" />
@@ -87,45 +87,45 @@ const Header = ({ isLoggedIn }: HeaderProps) => {
             <span />
           </button>
         </div>
-        <ul className="textSectiuni primary-nav">
+        <ul className="site-header-nav-list primary-nav">
           <li>
-            <Link to="/home" className={`listSectiuni ${location === '/home' && 'active'}`}>Home</Link>
+            <Link to="/home" className={`site-header-nav-link ${location === '/home' && 'active'}`}>Home</Link>
           </li>
           <li>
-            <Link to="/dashboard" className={`listSectiuni ${location === '/dashboard' && 'active'}`}>Dashboard</Link>
+            <Link to="/dashboard" className={`site-header-nav-link ${location === '/dashboard' && 'active'}`}>Dashboard</Link>
           </li>
           <li>
-            <Link to="/pricing" className={`listSectiuni ${location === '/pricing' && 'active'}`}>Pricing</Link>
+            <Link to="/pricing" className={`site-header-nav-link ${location === '/pricing' && 'active'}`}>Pricing</Link>
           </li>
           <li>
-            <Link to="/about" className={`listSectiuni ${location === '/about' && 'active'}`}>About Us</Link>
+            <Link to="/about" className={`site-header-nav-link ${location === '/about' && 'active'}`}>About Us</Link>
           </li>
           <li>
-            <Link to="/contact" className={`listSectiuni ${location === '/contact' && 'active'}`}>Contact</Link>
+            <Link to="/contact" className={`site-header-nav-link ${location === '/contact' && 'active'}`}>Contact</Link>
           </li>
         </ul>
       </div>
-      <div className="rightSide">
-        <ul className="textSectiuni secondary-nav">
-          <li className='mobileShow'>
-            <Link to="/home" className={`listSectiuni ${location === '/home' && 'active'}`}>Home</Link>
+      <div className="site-header-right">
+        <ul className="site-header-nav-list secondary-nav">
+          <li className='site-header-mobile-item'>
+            <Link to="/home" className={`site-header-nav-link ${location === '/home' && 'active'}`}>Home</Link>
           </li>
-          <li className='mobileShow'>
-            <Link to="/dashboard" className={`listSectiuni ${location === '/dashboard' && 'active'}`}>Dashboard</Link>
+          <li className='site-header-mobile-item'>
+            <Link to="/dashboard" className={`site-header-nav-link ${location === '/dashboard' && 'active'}`}>Dashboard</Link>
           </li>
-          <li className='mobileShow'>
-            <Link to="/pricing" className={`listSectiuni ${location === '/pricing' && 'active'}`}>Pricing</Link>
+          <li className='site-header-mobile-item'>
+            <Link to="/pricing" className={`site-header-nav-link ${location === '/pricing' && 'active'}`}>Pricing</Link>
           </li>
-          <li className='mobileShow'>
-            <Link to="/about" className={`listSectiuni ${location === '/about' && 'active'}`}>About Us</Link>
+          <li className='site-header-mobile-item'>
+            <Link to="/about" className={`site-header-nav-link ${location === '/about' && 'active'}`}>About Us</Link>
           </li>
-          <li className='mobileShow'>
-            <Link to="/contact" className={`listSectiuni ${location === '/contact' && 'active'}`}>Contact</Link>
+          <li className='site-header-mobile-item'>
+            <Link to="/contact" className={`site-header-nav-link ${location === '/contact' && 'active'}`}>Contact</Link>
           </li>
           {isLoggedIn ? (
             <>
               <li>
-                <button onClick={logOut} className="button buttoninvert">
+                <button onClick={logOut} className="button button-invert">
                   Logout
                 </button>
               </li>

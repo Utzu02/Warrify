@@ -184,7 +184,7 @@ const RegisterForm = () => {
               </svg>
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
-                id="confirmPassword"
+                id="confirm-password"
                 placeholder="Confirm password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

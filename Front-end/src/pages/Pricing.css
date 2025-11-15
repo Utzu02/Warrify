@@ -1,4 +1,4 @@
-.mainPricing {
+.main-pricing {
     width: calc(100vw - 15px);
     width: 100%;
     margin: 0 auto;
@@ -14,7 +14,7 @@
 }
 
 @media (max-width: 768px) {
-    .mainPricing {
+    .main-pricing {
         width: 100vw;
     }
 }

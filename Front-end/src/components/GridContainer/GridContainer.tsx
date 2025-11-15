@@ -116,7 +116,7 @@ function GridContainer({
         <div className="item-2-row-1 flex">
           <div className="big-number">{managedDisplay}</div>
           <div className="item-1-text">Managed warranties</div>
-          <button onClick={() => setShowImportModal(true)} className="button buttoninvert grid">
+          <button onClick={() => setShowImportModal(true)} className="button button-invert grid">
             Import
           </button>
         </div>

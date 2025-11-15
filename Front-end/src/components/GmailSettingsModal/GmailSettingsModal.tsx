@@ -67,7 +67,7 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
           </p>
 
           <div className="form-group">
-            <label htmlFor="modal-maxResults">
+            <label htmlFor="modal-max-results">
               Number of documents
               <span className="tooltip" title="Maximum number of emails with PDF attachments to scan (1-100)">
                 ⓘ
@@ -75,7 +75,7 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
             </label>
             <input
               type="number"
-              id="modal-maxResults"
+              id="modal-max-results"
               min="1"
               max="100"
               value={maxResults}
@@ -90,10 +90,10 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
           </div>
 
           <div className="form-group">
-            <label htmlFor="modal-startDate">Start Date (optional)</label>
+            <label htmlFor="modal-start-date">Start Date (optional)</label>
             <input
               type="date"
-              id="modal-startDate"
+              id="modal-start-date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               disabled={loading}
@@ -101,10 +101,10 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
           </div>
 
           <div className="form-group">
-            <label htmlFor="modal-endDate">End Date (optional)</label>
+            <label htmlFor="modal-end-date">End Date (optional)</label>
             <input
               type="date"
-              id="modal-endDate"
+              id="modal-end-date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               disabled={loading}

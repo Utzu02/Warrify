@@ -86,7 +86,7 @@ const GmailStatus = () => {
         {!loading && error && (
           <div className="status-error">
             <p>{error}</p>
-            <button className="button buttoninvert" onClick={handleRetry}>
+            <button className="button button-invert" onClick={handleRetry}>
               Connect Gmail again
             </button>
           </div>
@@ -115,7 +115,7 @@ const GmailStatus = () => {
           <button className="button" onClick={handleRetry}>
             Re-run Gmail scan
           </button>
-          <Link to="/dashboard" className="button buttoninvert">
+          <Link to="/dashboard" className="button button-invert">
             Back to dashboard
           </Link>
         </div>

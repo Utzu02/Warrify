@@ -15,7 +15,7 @@
     color: var(--pricing-gray-900);
 }
 
-.about-page__inner {
+.about-page-inner {
     position: relative;
     z-index: 1;
     width: min(1200px, 100%);
@@ -53,7 +53,7 @@
         width: 100vw;
     }
 
-    .about-page__inner {
+    .about-page-inner {
         gap: var(--pricing-space-10);
     }
 }

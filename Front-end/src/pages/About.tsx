@@ -31,7 +31,7 @@ function About() {
   return (
     <>
       <div className="about-page">
-        <div className="about-page__inner">
+        <div className="about-page-inner">
           <AboutHero />
           <AboutValues values={values} />
           <AboutTimeline milestones={milestones} />

@@ -80,14 +80,14 @@ const ContactForm = () => {
 
   return (
     <div ref={cardRef} className="contact-form-card">
-      <div ref={headingRef} className="contact-form-card__heading">
-        <span className="contact-form-card__badge">Message</span>
-        <h3 className="contact-form-card__title">Send us a note</h3>
-        <p className="contact-form-card__description">
+      <div ref={headingRef} className="contact-form-card-heading">
+        <span className="contact-form-card-badge">Message</span>
+        <h3 className="contact-form-card-title">Send us a note</h3>
+        <p className="contact-form-card-description">
           Tell us a little about your request and we'll connect you with the right specialist.
         </p>
       </div>
-      <form ref={formRef} className="contact-form-card__grid">
+      <form ref={formRef} className="contact-form-card-grid">
         <label ref={(el) => { inputsRef.current[0] = el; }}>
           Full name
           <input type="text" placeholder="Alex Popescu" required />
@@ -104,11 +104,11 @@ const ContactForm = () => {
           Phone number
           <input type="tel" placeholder="+40 7xx xxx xxx" />
         </label>
-        <label ref={(el) => { inputsRef.current[4] = el; }} className="contact-form-card__full-width">
+        <label ref={(el) => { inputsRef.current[4] = el; }} className="contact-form-card-full-width">
           How can we help?
           <textarea rows={5} placeholder="Share details about your workflow, timeline, or question." />
         </label>
-        <div ref={buttonRef} className="contact-form-card__full-width">
+        <div ref={buttonRef} className="contact-form-card-full-width">
           <Button type="submit" variant="primary" size="large" fullWidth>
             Send message
           </Button>

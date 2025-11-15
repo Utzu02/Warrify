@@ -11,7 +11,7 @@
   gap: var(--pricing-space-4);
 }
 
-.contact-hero__eyebrow {
+.contact-hero-eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.2rem;
   font-size: var(--pricing-text-xs);
@@ -19,7 +19,7 @@
   font-weight: var(--pricing-font-semibold);
 }
 
-.contact-hero__title {
+.contact-hero-title {
   font-size: 2.5rem;
   margin: 0;
   color: var(--pricing-gray-900);
@@ -28,11 +28,11 @@
   font-weight: var(--pricing-font-bold);
 }
 
-.contact-hero__highlight {
+.contact-hero-highlight {
   color: var(--pricing-primary-blue);
 }
 
-.contact-hero__description {
+.contact-hero-description {
   color: var(--pricing-gray-600);
   line-height: 1.7;
   font-size: var(--pricing-text-lg);
@@ -40,7 +40,7 @@
   max-width: 52ch;
 }
 
-.contact-hero__actions {
+.contact-hero-actions {
   margin-top: var(--pricing-space-2);
   display: flex;
   justify-content: center;
@@ -48,24 +48,24 @@
   flex-wrap: wrap;
 }
 
-.contact-hero__actions .btn {
+.contact-hero-actions .btn {
   border-radius: var(--pricing-radius-full);
 }
 
-.contact-hero__actions .btn.btn-secondary {
+.contact-hero-actions .btn.btn-secondary {
   background: var(--pricing-gray-50);
   border: 1px solid var(--pricing-gray-200);
 }
 
 @media (max-width: 640px) {
-  .contact-hero__title {
+  .contact-hero-title {
     font-size: 1.875rem;
   }
-  .contact-hero__actions {
+  .contact-hero-actions {
     flex-direction: column;
   }
 
-  .contact-hero__actions .btn {
+  .contact-hero-actions .btn {
     width: 100%;
     justify-content: center;
   }
