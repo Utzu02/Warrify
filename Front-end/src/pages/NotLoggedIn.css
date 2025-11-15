@@ -95,7 +95,7 @@
     flex-wrap: wrap;
 }
 
-.not-logged-in-btn {
+.not-logged-in-buttons .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -108,28 +108,27 @@
     cursor: pointer;
     min-width: 140px;
 }
-
-.btn-primary {
+.not-logged-in-buttons .btn-primary {
     background: #2563ff;
     color: #ffffff;
     border: none;
     box-shadow: 0 8px 20px rgba(37, 99, 255, 0.3);
 }
 
-.btn-primary:hover {
+.not-logged-in-buttons .btn-primary:hover {
     background: #1d4fdc;
     transform: translateY(-2px);
     box-shadow: 0 12px 28px rgba(37, 99, 255, 0.4);
 }
 
-.btn-secondary {
+.not-logged-in-buttons .btn-secondary {
     background: #ffffff;
     color: #2563ff;
     border: 2px solid #2563ff;
     box-shadow: 0 4px 12px rgba(37, 99, 255, 0.1);
 }
 
-.btn-secondary:hover {
+.not-logged-in-buttons .btn-secondary:hover {
     background: #f0f7ff;
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(37, 99, 255, 0.2);
@@ -157,7 +156,7 @@
         gap: 0.75rem;
     }
 
-    .not-logged-in-btn {
+    .not-logged-in-buttons .btn {
         width: 100%;
     }
 }

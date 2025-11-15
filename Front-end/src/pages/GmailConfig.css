@@ -51,25 +51,25 @@
   font-size: 1rem;
 }
 
-.date-row {
+.gmail-config-form .date-row {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
   width: 100%;
 }
 
-.date-row label {
+.gmail-config-form .date-row label {
   flex: 1;
 }
 
-.form-error {
+.gmail-config-form .form-error {
   color: #c62828;
   background: rgba(198, 40, 40, 0.08);
   border-radius: 10px;
   padding: 0.75rem 1rem;
 }
 
-.form-actions {
+.gmail-config-form .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
@@ -81,7 +81,7 @@
     padding: 1.5rem;
   }
 
-  .form-actions {
+  .gmail-config-form .form-actions {
     flex-direction: column-reverse;
   }
   .gmail-config-page {

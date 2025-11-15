@@ -196,23 +196,6 @@
   display: none;
 }
 
-/* SVG logo styles */
-.w-letter {
-  fill: #2d6ae2;
-}
-
-.cross-line {
-  stroke: #ff6b35;
-  stroke-width: 8;
-}
-
-.text {
-  font-family: 'Poppins', sans-serif;
-  font-size: 48px;
-  font-weight: bold;
-  fill: #2d6ae2;
-}
-
 @media (max-width: 1024px) {
   .header {
     padding: 0.5rem 2rem;
