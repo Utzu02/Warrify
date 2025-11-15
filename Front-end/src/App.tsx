@@ -1,5 +1,5 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header/Header'
@@ -16,47 +16,53 @@ import Pricing from './pages/Pricing';
 import GmailStatus from './pages/GmailStatus';
 import { useAuth } from './contexts/AuthContext';
 
+const HeaderLayout = ({ isAuthenticated }: { isAuthenticated: boolean }) => (
+  <>
+    <Header isLoggedIn={isAuthenticated} />
+    <Outlet />
+  </>
+);
+
+const PlainLayout = () => <Outlet />;
+
 function AppContent() {
   const { isAuthenticated } = useAuth();
-  const location = useLocation();
-  const hideHeaderRoutes = ['/login', '/register', '/not-logged-in'];
-  const shouldRenderHeader = !hideHeaderRoutes.includes(location.pathname);
 
   return (
-    <>
-      {shouldRenderHeader && <Header isLoggedIn={isAuthenticated}/>}
       <Routes>
-        <Route path="/" element={<Navigate to='/home' />} />
-        <Route path="/home" element={<Home />}/>
-        <Route path="/register" element={<Register />}/>
-        <Route path="/login" element={<Login />}/>
-        <Route path="/about" element={<About />}/>
-        <Route path="/contact" element={<Contact />}/>
-        <Route path="/pricing" element={<Pricing />}/>
-        <Route path="/not-logged-in" element={<NotLoggedIn />}/>
-        <Route path="/not-found" element={<NotFound />}/>
-        
-        {/* Protected Routes */}
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }/>
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }/>
-        <Route path="/gmail-status" element={
-          <ProtectedRoute>
-            <GmailStatus />
-          </ProtectedRoute>
-        }/>
-        
-        {/* Catch-all route for 404 */}
-        <Route path="*" element={<NotFound />}/>
+        <Route element={<HeaderLayout isAuthenticated={isAuthenticated} />}>
+          <Route path="/" element={<Navigate to='/home' />} />
+          <Route path="/home" element={<Home />}/>
+          <Route path="/about" element={<About />}/>
+          <Route path="/contact" element={<Contact />}/>
+          <Route path="/pricing" element={<Pricing />}/>
+          
+          {/* Protected Routes */}
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }/>
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }/>
+          <Route path="/gmail-status" element={
+            <ProtectedRoute>
+              <GmailStatus />
+            </ProtectedRoute>
+          }/>
+        </Route>
+
+        <Route element={<PlainLayout />}>
+          <Route path="/register" element={<Register />}/>
+          <Route path="/login" element={<Login />}/>
+          <Route path="/not-logged-in" element={<NotLoggedIn />}/>
+          <Route path="/not-found" element={<NotFound />}/>
+          <Route path="*" element={<NotFound />}/>
+        </Route>
       </Routes>
-    </>
   );
 }
 

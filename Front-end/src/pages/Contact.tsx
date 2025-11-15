@@ -3,24 +3,6 @@ import ContactHero from '../components/contact/ContactHero';
 import ContactForm from '../components/contact/ContactForm';
 import Footer from '../components/Footer/Footer';
 
-const contactChannels = [
-  {
-    label: 'Sales & onboarding',
-    detail: 'Book a guided tour and learn how Warrify fits your workflow.',
-    meta: 'sales@warrify.com'
-  },
-  {
-    label: 'Customer success',
-    detail: 'Need help with a rollout? We reply in less than one business day.',
-    meta: 'success@warrify.com'
-  },
-  {
-    label: 'Technical support',
-    detail: 'Priority support for enterprise automation or Gmail sync.',
-    meta: '+40 720 000 000'
-  }
-];
-
 function Contact() {
   return (
     <>

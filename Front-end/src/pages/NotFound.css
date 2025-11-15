@@ -1,0 +1,138 @@
+/* ============================================
+   NOT FOUND PAGE
+   ============================================ */
+.notfound-page {
+    margin-top: -80px;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #1e66f5 0%, #667eea 50%, #b794f6 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.notfound-page::before,
+.notfound-page::after {
+    content: '';
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    filter: blur(0.5px);
+    animation: notfound-float 18s ease-in-out infinite;
+}
+
+.notfound-page::before {
+    top: -110px;
+    left: -90px;
+}
+
+.notfound-page::after {
+    bottom: -100px;
+    right: -80px;
+    animation-direction: reverse;
+}
+
+@keyframes notfound-float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(50px, 40px) scale(1.1); }
+}
+
+.notfound-card {
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 2.5rem;
+    width: min(520px, 100%);
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.notfound-card .auth-card-back {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.95rem;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    background: transparent;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.notfound-card .auth-card-back:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    transform: translateX(-2px);
+}
+
+.notfound-icon {
+    font-size: 3.5rem;
+    margin: 0 auto 0.5rem;
+    animation: notfound-icon 3s ease-in-out infinite;
+}
+
+@keyframes notfound-icon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.notfound-card h1 {
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    color: #0f172a;
+    margin: 0;
+    font-weight: 700;
+}
+
+.notfound-card p {
+    color: #475569;
+    line-height: 1.7;
+    margin: 0 auto 0.5rem;
+}
+
+.notfound-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.notfound-actions .btn {
+    border-radius: 999px;
+    min-width: 160px;
+}
+
+@media (max-width: 768px) {
+    .notfound-page {
+        margin-top: -70px;
+        padding: 1.5rem;
+    }
+
+    .notfound-page::before,
+    .notfound-page::after {
+        display: none;
+    }
+
+    .notfound-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .notfound-actions {
+        flex-direction: column;
+    }
+
+    .notfound-actions .btn {
+        width: 100%;
+    }
+}

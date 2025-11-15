@@ -1,71 +1,83 @@
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
-import './AllStyles.css';
+import Button from '../components/Button';
+import './NotFound.css';
 
 const NotFound = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const cardRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
-  const linkRef = useRef<HTMLAnchorElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Container fade in
-      gsap.from(containerRef.current, {
+      gsap.from(cardRef.current, {
         opacity: 0,
-        scale: 0.9,
-        duration: 0.6,
-        ease: "back.out(1.3)"
+        y: 30,
+        duration: 0.7,
+        ease: 'power2.out'
       });
 
-      // Title bounce in
       gsap.from(titleRef.current, {
         opacity: 0,
-        y: -50,
-        duration: 0.7,
+        y: -25,
+        duration: 0.6,
         delay: 0.2,
-        ease: "bounce.out"
+        ease: 'power2.out'
       });
 
-      // Text fade in
       gsap.from(textRef.current, {
         opacity: 0,
         y: 20,
         duration: 0.6,
-        delay: 0.4,
-        ease: "power2.out"
+        delay: 0.35,
+        ease: 'power2.out'
       });
 
-      // Link slide up with pulse
-      gsap.from(linkRef.current, {
+      gsap.from(actionsRef.current, {
         opacity: 0,
-        y: 30,
+        y: 25,
         duration: 0.6,
-        delay: 0.6,
-        ease: "power2.out"
-      });
-
-      // Continuous subtle pulse on link
-      gsap.to(linkRef.current, {
-        scale: 1.05,
-        duration: 1.5,
-        delay: 1.2,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
+        delay: 0.5,
+        ease: 'power2.out'
       });
     });
 
     return () => ctx.revert();
   }, []);
-    
+
   return (
-    <div ref={containerRef} className="notfound">
-      <h1 ref={titleRef}>404 - Page Not Found</h1>
-      <p ref={textRef}>The page you are looking for does not exist.</p>
-      <Link ref={linkRef} to="/" className='notfoundtext'>Go Back to Homepage</Link>
-    </div>
+    <section className="notfound-page">
+      <div ref={cardRef} className="notfound-card">
+        <button
+          type="button"
+          className="auth-card-back"
+          onClick={() => navigate(-1)}
+          aria-label="Go back"
+        >
+          <span aria-hidden="true">←</span>
+          Back
+        </button>
+
+        <div className="notfound-icon">🧭</div>
+        <h1 ref={titleRef}>Lost in the grid</h1>
+        <p ref={textRef}>
+          We couldn’t find the page you’re looking for. The link might be outdated or
+          the page could have moved.
+        </p>
+
+        <div ref={actionsRef} className="notfound-actions">
+          <Button to="/home" variant="primary" size="large">
+            Go home
+          </Button>
+          <Button to="/contact" variant="secondary" size="large">
+            Contact support
+          </Button>
+        </div>
+      </div>
+    </section>
   );
 };
 
