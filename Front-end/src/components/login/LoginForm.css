@@ -112,6 +112,24 @@
   box-shadow: 0 0 0 3px rgba(30, 102, 245, 0.1);
 }
 
+.input-wrapper input:-webkit-autofill,
+.input-wrapper input:-webkit-autofill:hover,
+.input-wrapper input:-webkit-autofill:focus,
+.input-wrapper input:-webkit-autofill:active {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+
+  background-color: transparent !important;
+  -webkit-box-shadow: 0 0 0 1000px #f5f5f5 inset !important; /* culoarea wrapper-ului */
+  box-shadow: 0 0 0 1000px #f5f5f5 inset !important;
+}
+
+.input-wrapper:focus-within input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #ebebeb inset !important; /* match cu focus-ul wrapper-ului */
+  box-shadow: 0 0 0 1000px #ebebeb inset !important;
+}
+
+
 .input-icon {
   width: 20px;
   height: 20px;
