@@ -62,7 +62,6 @@ function GridContainer({
   const managedDisplay = isLoadingCounts ? '—' : managedCount.toString();
   const expiringDisplay = isLoadingCounts ? '—' : expiringSoonCount.toString();
   const remainingDisplay = isLoadingCounts ? '—' : Math.max(remainingCount, 0).toString();
-  const hasDanger = !isLoadingCounts && expiringSoonCount > 0;
 
   const fetchLastScan = useCallback(async () => {
     if (!user) {
@@ -100,36 +99,25 @@ function GridContainer({
           <div className="item-1-text">{lastCheckInfo.label}</div>
         </div>
       </div>
-      <div className="grid-item grid-item-2">
-        <div className="item-2-row-1 flex">
+      <div className="grid-item grid-item-1 flex">
+        <div className="item-1">
           <div className="big-number">{managedDisplay}</div>
           <div className="item-1-text">Managed warranties</div>
-          <Button variant="primary" className="grid" onClick={() => setShowImportModal(true)}>
+          <Button variant="primary" size="medium" className="grid-button" onClick={() => setShowImportModal(true)}>
             Import
           </Button>
         </div>
       </div>
-      <div className="grid-item grid-item-2">
-        <div className="item-2-row-1 flex">
+      <div className="grid-item grid-item-1 flex">
+        <div className="item-1">
           <div className="big-number">{remainingDisplay}</div>
           <div className="item-1-text">Remaining warranties</div>
         </div>
       </div>
-      <div className="grid-item grid-item-3">
-        <div className={`item-2-row-2 flex ${hasDanger ? 'pericol' : ''}`}>
+      <div className="grid-item pericol grid-item-1">
+        <div className='item-1'>
           <div className={`big-number`}>{expiringDisplay}</div>
           <div className="item-1-text">Warranties with less than 7 days before expiring</div>
-          {hasDanger && (
-            <svg fill="#FF0000" className="danger-symbol" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30.334 30.334">
-              <g>
-                <rect width="100%" height="100%" fill="white" />
-                <path
-                  d="M15.167,0C6.805,0,0.001,6.804,0.001,15.167c0,8.362,6.804,15.167,15.166,15.167c8.361,0,15.166-6.805,15.166-15.167
-                               C30.333,6.804,23.528,0,15.167,0z M17.167,25.667h-4v-4.5h4V25.667z M17.167,19.542h-4V5.167h4V19.542z"
-                />
-              </g>
-            </svg>
-          )}
         </div>
       </div>
       <ImportOptionsModal

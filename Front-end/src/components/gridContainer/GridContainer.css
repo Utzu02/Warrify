@@ -59,6 +59,7 @@
 .grid-item-1 {
   display: flex;
   flex-direction: column;
+  position: relative;
   justify-content: center;
   padding: 1.5rem;
 }
@@ -71,10 +72,6 @@
   margin-left: 0;
   font-size: 1.25rem;
   font-weight: 600;
-}
-
-.item-1 {
-  margin-left: 1rem;
 }
 
 .item-2-row-1 {
@@ -135,38 +132,42 @@
   box-shadow: 0 4px 12px rgba(255, 84, 0, 0.3);
 }
 
-.button.grid {
+.grid-button {
+  width: fit-content;
   position: absolute;
-  right: 10%;
-    border-radius: 10px;
-    top: 1rem;
+  top: 10%;
+  right: 5%;
 }
 
 @media (max-width: 1024px) {
-    .grid-container {
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
+  .grid-container {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
 }
 
 @media (max-width: 768px) {
-    .grid-container {
-        margin-top: 0;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-    
-    .grid-item-2, .grid-item-1 {
-        padding: .5rem;
-    }
+  .item-1 {
+    margin-left: 2rem;
+  }
 
-    .button.grid {
-        position: static;
-        align-self: flex-start;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-        width: fit-content;
-    }
+  .grid-button {
+    width: fit-content;
+    position: absolute;
+    top: 20%;
+    right: 5%;
+  }
 
-    .modal-content {
-        width: 90vw;
-    }
+  .grid-container {
+    margin-top: 0;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .grid-item-2,
+  .grid-item-1 {
+    padding: .5rem;
+  }
+
+  .modal-content {
+    width: 90vw;
+  }
 }
