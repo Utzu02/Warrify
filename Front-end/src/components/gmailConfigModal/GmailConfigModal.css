@@ -172,7 +172,12 @@
 .gmail-modal-form .action-buttons {
   display: flex;
   gap: 0.75rem;
-  justify-content: flex-end;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.gmail-modal-form .action-buttons .btn {
+  flex: 1;
 }
 
 @media (max-width: 640px) {
@@ -192,6 +197,7 @@
 
   .gmail-modal-form .action-buttons {
     flex-direction: column-reverse;
+    width: 100%;
   }
 
   .gmail-modal-form .action-buttons .btn {

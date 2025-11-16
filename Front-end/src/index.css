@@ -25,6 +25,18 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
+input,
+textarea,
+select,
+button {
+  font-family: 'Poppins', sans-serif;
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-family: 'Poppins', sans-serif;
+}
+
 @media (max-width: 768px) {
   #root {
     padding-top: 70px;

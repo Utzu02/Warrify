@@ -2,22 +2,17 @@
    HOME CTA BAND
    ============================================ */
 .home-cta-band {
-  background-color: #2563ff;
+  background: linear-gradient(
+    135deg,
+    #020617 0%,   /* almost black navy */
+    #0f172a 35%,  /* deep slate/navy */
+    #1e40af 100%  /* rich blue */
+  );
   padding: 5rem 0;
   text-align: center;
   color: #ffffff;
   position: relative;
   overflow: hidden;
-}
-
-.home-cta-band::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
 }
 
 .home-cta-container {

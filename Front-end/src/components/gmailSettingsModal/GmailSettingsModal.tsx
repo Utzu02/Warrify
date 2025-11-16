@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { GmailSettings, updateGmailSettings } from '../../api/gmailSettings';
-import './GmailSettingsModal.css';
+import Button from '../button';
+import '../gmailConfigModal/GmailConfigModal.css';
 
 interface GmailSettingsModalProps {
   isOpen: boolean;
@@ -49,27 +50,39 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
     }
   };
 
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await handleSave();
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="gmail-settings-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>Gmail Scan Preferences</h2>
-          <button className="close-button" onClick={onClose} aria-label="Close">
-            ×
-          </button>
-        </div>
+    <div className="gmail-modal-backdrop" onClick={handleBackdropClick}>
+      <div className="gmail-modal-content">
+        <button className="gmail-modal-close" onClick={onClose} aria-label="Close modal">
+          ×
+        </button>
 
-        <div className="modal-body">
-          <p className="modal-description">
-            Configure your default settings for scanning Gmail for warranty documents.
-          </p>
+        <h2>Gmail scan preferences</h2>
+        <p className="gmail-modal-description">
+          Configure your default settings for scanning Gmail for warranty documents.
+        </p>
 
+        <form className="gmail-modal-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="modal-max-results">
               Number of documents
-              <span className="tooltip" title="Maximum number of emails with PDF attachments to scan (1-100)">
+              <span
+                className="tooltip-icon"
+                title="Maximum number of emails with PDF attachments to scan (1-100)"
+              >
                 ⓘ
               </span>
             </label>
@@ -87,51 +100,58 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
               }}
               disabled={loading}
             />
+            <span className="form-hint">Choose up to 100 documents per scan.</span>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="modal-start-date">Start Date (optional)</label>
-            <input
-              type="date"
-              id="modal-start-date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              disabled={loading}
-            />
-          </div>
+          <div className="date-row">
+            <div className="form-group">
+              <label htmlFor="modal-start-date">Start date (optional)</label>
+              <input
+                type="date"
+                id="modal-start-date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                disabled={loading}
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="modal-end-date">End Date (optional)</label>
-            <input
-              type="date"
-              id="modal-end-date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              disabled={loading}
-            />
+            <div className="form-group">
+              <label htmlFor="modal-end-date">End date (optional)</label>
+              <input
+                type="date"
+                id="modal-end-date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                disabled={loading}
+              />
+            </div>
           </div>
 
           {error && <div className="form-error">{error}</div>}
-        </div>
 
-        <div className="modal-footer">
-          <button 
-            type="button" 
-            className="button button-ghost" 
-            onClick={onClose}
-            disabled={loading}
-          >
-            Cancel
-          </button>
-          <button 
-            type="button" 
-            className="button button-primary"
-            onClick={handleSave}
-            disabled={loading}
-          >
-            {loading ? 'Saving...' : 'Save preferences'}
-          </button>
-        </div>
+          <div className="form-actions">
+            <div className="action-buttons">
+              <Button
+                type="button"
+                variant="ghost"
+                size="medium"
+                onClick={onClose}
+                disabled={loading}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                size="medium"
+                disabled={loading}
+                loading={loading}
+              >
+                {loading ? 'Saving...' : 'Save preferences'}
+              </Button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   );

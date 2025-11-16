@@ -67,9 +67,6 @@ const NotLoggedIn = () => {
           <span aria-hidden="true">←</span>
           Back
         </button>
-        <div ref={iconRef} className="not-logged-in-icon">
-          🔒
-        </div>
         <h1 ref={titleRef} className="not-logged-in-title">
           Authentication Required
         </h1>

@@ -60,8 +60,6 @@ const NotFound = () => {
           <span aria-hidden="true">←</span>
           Back
         </button>
-
-        <div className="notfound-icon">🧭</div>
         <h1 ref={titleRef}>Lost in the grid</h1>
         <p ref={textRef}>
           We couldn’t find the page you’re looking for. The link might be outdated or
