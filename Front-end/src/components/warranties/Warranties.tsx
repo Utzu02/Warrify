@@ -167,105 +167,105 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
         </button>
       </div>
       
-      {/* Table header with Select All checkbox */}
-      <ul className="warr-header">
-        <li className="checkbox-cell">
-          <div className="checkbox-wrapper" title={allSelected ? 'Deselect all warranties' : 'Select all warranties'}>
-            <input
-              type="checkbox"
-              checked={allSelected}
-              onChange={(e) => handleSelectAll(e.target.checked)}
-              aria-label="Select all warranties"
-            />
-          </div>
-        </li>
-        <li>Date/Time</li>
-        <li>Provider</li>
-        <li>Purchased</li>
-        <li>Expires</li>
-        <li>Is Expired</li>
-        <li className="actions-header">Actions</li>
-      </ul>
-      
-      {/* Warranty rows */}
-      {itemsToRender.map((warranty) => {
-        const expired = isExpired(warranty);
-        
-        return (
-          <div
-            key={warranty.id}
-            className={`warr-entry ${selectedIds.has(warranty.id) ? 'selected' : ''}`}
-          >
-            <ul className="warr-line">
-              <li className="checkbox-cell" onClick={(e) => e.stopPropagation()}>
-                <div className="checkbox-wrapper" title={`Select ${warranty.productName || warranty.filename}`}>
+      <div className="warr-table-wrapper">
+        <table className="warr-table">
+          <thead>
+            <tr>
+              <th className="checkbox-cell">
+                <div className="checkbox-wrapper" title={allSelected ? 'Deselect all warranties' : 'Select all warranties'}>
                   <input
                     type="checkbox"
-                    checked={selectedIds.has(warranty.id)}
-                    onChange={(e) => handleToggleSelect(warranty.id, e as any)}
-                    aria-label={`Select ${warranty.productName || warranty.filename}`}
+                    checked={allSelected}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                    aria-label="Select all warranties"
                   />
                 </div>
-              </li>
-              <li className="warr-element-product-name" title={warranty.filename || warranty.productName}>
-                {warranty.filename || warranty.productName}
-              </li>
-              <li className="warr-element-com" title={warranty.provider || 'Unknown'}>
-                {warranty.provider || 'Unknown'}
-              </li>
-              <li className="warr-element-purchase-date" title={`Purchased: ${formatDate(warranty.purchaseDate)}`}>
-                {formatDate(warranty.purchaseDate)}
-              </li>
-              <li className="warr-element-expiration-date" title={`Expires: ${formatDate(warranty.expirationDate)}`}>
-                {formatDate(warranty.expirationDate)}
-              </li>
-              <li className={`warr-element-expired ${expired ? 'expired' : 'valid'}`} title={expired ? 'This warranty has expired' : 'This warranty is active'}>
-                {expired ? 'Yes' : 'No'}
-              </li>
-              <li className="action-cell">
-                <button
-                  onClick={() => setSelectedWarranty(warranty)}
-                  className="action-btn action-btn-view"
-                  aria-label="View warranty details"
-                  title="View warranty details"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                </button>
-                <button
-                  onClick={() => setWarrantyToDelete(warranty)}
-                  className="action-btn action-btn-delete"
-                  aria-label="Delete warranty"
-                  title="Delete warranty"
-                  disabled={deletingId === warranty.id}
-                >
-                  {deletingId === warranty.id ? (
-                    <svg className="spinner" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="12" y1="2" x2="12" y2="6"></line>
-                      <line x1="12" y1="18" x2="12" y2="22"></line>
-                      <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-                      <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-                      <line x1="2" y1="12" x2="6" y2="12"></line>
-                      <line x1="18" y1="12" x2="22" y2="12"></line>
-                      <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
-                      <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
-                    </svg>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                      <line x1="10" y1="11" x2="10" y2="17"></line>
-                      <line x1="14" y1="11" x2="14" y2="17"></line>
-                    </svg>
-                  )}
-                </button>
-              </li>
-            </ul>
-          </div>
-        );
-      })}
+              </th>
+              <th>Date/Time</th>
+              <th>Provider</th>
+              <th>Purchased</th>
+              <th>Expires</th>
+              <th>Is Expired</th>
+              <th className="actions-header">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {itemsToRender.map((warranty) => {
+              const expired = isExpired(warranty);
+              
+              return (
+                <tr key={warranty.id} className={selectedIds.has(warranty.id) ? 'selected' : undefined}>
+                  <td className="checkbox-cell">
+                    <div className="checkbox-wrapper" title={`Select ${warranty.productName || warranty.filename}`}>
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(warranty.id)}
+                        onChange={(e) => handleToggleSelect(warranty.id, e as any)}
+                        aria-label={`Select ${warranty.productName || warranty.filename}`}
+                      />
+                    </div>
+                  </td>
+                  <td className="warr-element-product-name" title={warranty.filename || warranty.productName}>
+                    {warranty.filename || warranty.productName}
+                  </td>
+                  <td className="warr-element-com" title={warranty.provider || 'Unknown'}>
+                    {warranty.provider || 'Unknown'}
+                  </td>
+                  <td className="warr-element-purchase-date" title={`Purchased: ${formatDate(warranty.purchaseDate)}`}>
+                    {formatDate(warranty.purchaseDate)}
+                  </td>
+                  <td className="warr-element-expiration-date" title={`Expires: ${formatDate(warranty.expirationDate)}`}>
+                    {formatDate(warranty.expirationDate)}
+                  </td>
+                  <td className={`warr-element-expired ${expired ? 'expired' : 'valid'}`} title={expired ? 'This warranty has expired' : 'This warranty is active'}>
+                    {expired ? 'Yes' : 'No'}
+                  </td>
+                  <td className="action-cell">
+                    <button
+                      onClick={() => setSelectedWarranty(warranty)}
+                      className="action-btn action-btn-view"
+                      aria-label="View warranty details"
+                      title="View warranty details"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => setWarrantyToDelete(warranty)}
+                      className="action-btn action-btn-delete"
+                      aria-label="Delete warranty"
+                      title="Delete warranty"
+                      disabled={deletingId === warranty.id}
+                    >
+                      {deletingId === warranty.id ? (
+                        <svg className="spinner" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="12" y1="2" x2="12" y2="6"></line>
+                          <line x1="12" y1="18" x2="12" y2="22"></line>
+                          <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                          <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                          <line x1="2" y1="12" x2="6" y2="12"></line>
+                          <line x1="18" y1="12" x2="22" y2="12"></line>
+                          <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                          <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                        </svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6"></polyline>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                          <line x1="10" y1="11" x2="10" y2="17"></line>
+                          <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                      )}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
       
       {selectedWarranty && (
         <ModalWarranty onClose={() => setSelectedWarranty(null)}>

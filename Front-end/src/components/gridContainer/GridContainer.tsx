@@ -1,10 +1,8 @@
 import './GridContainer.css';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import GmailButton from '../gmailLogin/GmailLogin';
-import GmailConfigModal from '../gmailConfigModal/GmailConfigModal';
-import FileImport from '../importFile/ImportFile';
 import { fetchScanInfo } from '../../api/users';
+import ImportOptionsModal from '../importOptionsModal/ImportOptionsModal';
 
 type GridContainerProps = {
   managedCount?: number;
@@ -57,8 +55,7 @@ function GridContainer({
 }: GridContainerProps) {
   const { user } = useAuth();
   const [showImportModal, setShowImportModal] = useState(false);
-  const [showGmailConfigModal, setShowGmailConfigModal] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [toast, setToast] = useState<{ title: string; message: string; variant: 'success' | 'error' } | null>(null);
   const [lastCheckInfo, setLastCheckInfo] = useState<RelativeTime>(DEFAULT_RELATIVE_TIME);
   const managedDisplay = isLoadingCounts ? '—' : managedCount.toString();
   const expiringDisplay = isLoadingCounts ? '—' : expiringSoonCount.toString();
@@ -88,21 +85,28 @@ function GridContainer({
     };
   }, [fetchLastScan]);
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      setShowImportModal(false);
-    }
-  };
-
   useEffect(() => {
-    if (showImportModal) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
+    if (!toast) return;
+    const hideId = window.setTimeout(() => setToast(null), 3500);
+    const refreshId = toast.variant === 'success'
+      ? window.setTimeout(() => window.location.reload(), 4000)
+      : undefined;
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      window.clearTimeout(hideId);
+      if (refreshId) {
+        window.clearTimeout(refreshId);
+      }
     };
-  }, [showImportModal]);
+  }, [toast]);
+
+  const handleUploadSuccess = () => {
+    setShowImportModal(false);
+    setToast({
+      title: 'Upload complete',
+      message: 'File uploaded successfully!',
+      variant: 'success'
+    });
+  };
 
   return (
     <div className="grid-container">
@@ -144,29 +148,19 @@ function GridContainer({
           )}
         </div>
       </div>
-      {showImportModal && (
-        <div className="modal-overlay">
-          <div className="modal-content" ref={modalRef}>
-            <div className="modal-header">
-              <h2>Import Warranties</h2>
-              <button onClick={() => setShowImportModal(false)} className="modal-close">
-                &times;
-              </button>
-            </div>
-            <div className="modal-body">
-              <GmailButton onClick={() => {
-                setShowImportModal(false);
-                setShowGmailConfigModal(true);
-              }} />
-              <FileImport />
-            </div>
+      <ImportOptionsModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        onUploadSuccess={handleUploadSuccess}
+      />
+      {toast && (
+        <div className="grid-toast-container">
+          <div className={`grid-toast grid-toast-${toast.variant}`}>
+            <div className="grid-toast-title">{toast.title}</div>
+            <p>{toast.message}</p>
           </div>
         </div>
       )}
-      <GmailConfigModal 
-        isOpen={showGmailConfigModal} 
-        onClose={() => setShowGmailConfigModal(false)} 
-      />
     </div>
   );
 }

@@ -97,16 +97,14 @@
 }
 
 /* Checkbox Styling */
+/* Checkbox column */
 .checkbox-cell {
-  width: 60px !important;
-  flex: 0 0 60px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 56px;
+  text-align: center;
 }
 
 .checkbox-wrapper {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -120,30 +118,23 @@
   border-radius: 4px;
 }
 
-/* Actions Cell */
+/* Actions column */
 .action-cell {
-  width: 120px !important;
-  flex: 0 0 120px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.actions-header {
-  width: 120px !important;
-  flex: 0 0 120px !important;
+  width: 140px;
   text-align: center;
 }
 
+.actions-header {
+  width: 140px;
+  text-align: center;
+}
 
-/* Action Buttons */
 .action-btn {
   background: transparent;
   border: none;
   padding: 0.5rem;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
@@ -195,42 +186,90 @@
   }
 }
 
-/* Table Header */
-.warr-header,
-.warr-entry {
+.warr-table-wrapper {
   width: 100%;
-  padding: 0.9rem 1.5rem;
+  overflow-x: auto;
 }
 
-.warr-header {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 600;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border-color);
+.warr-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  font-size: 0.95rem;
+}
+
+.warr-table thead th {
   background: var(--hover-bg);
-  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-transform: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
 }
 
-.warr-entry {
+.warr-table thead th:first-child {
+  border-top-left-radius: 0;
+}
+
+.warr-table thead th:last-child {
+  border-top-right-radius: 0;
+}
+
+.warr-table tbody tr {
   border-bottom: 1px solid var(--border-color-light);
   transition: background 0.15s ease;
-  cursor: pointer;
 }
 
-.warr-entry:hover {
+.warr-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.warr-table tbody tr:hover {
   background: var(--hover-bg);
 }
 
-.warr-entry.selected {
+.warr-table tbody tr.selected {
   background: #eff6ff;
-  border-left: 3px solid #3b82f6;
 }
 
-/* Expired Status Text */
+.warr-table tbody td {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.warr-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.warr-element-product-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.warr-element-com {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.warr-element-purchase-date,
+.warr-element-expiration-date,
+.warr-element-expired {
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
 .warr-element-expired {
   font-weight: 600;
-  font-size: 0.875rem;
 }
 
 .warr-element-expired.expired {
@@ -241,70 +280,11 @@
   color: #16a34a;
 }
 
-.warr-entry {
-  border-bottom: 1px solid var(--border-color-light);
-  transition: background 0.2s ease;
-}
-
-.warr-entry:last-child {
-  border-bottom: none;
-}
-
-.warr-entry:hover {
-  background: var(--hover-bg);
-}
-
-.warr-line {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-.warr-line li,
-.warr-header li {
-  flex: 1;
-  list-style: none;
-  color: var(--text-primary);
+.warr-table tbody td.action-cell {
   display: flex;
   align-items: center;
-}
-
-.warr-header li {
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-.warr-line li:first-child,
-.warr-header li:first-child {
-  flex: 0 0 60px; /* Checkbox column */
-}
-
-.warr-line li:last-child,
-.warr-header li:last-child {
-  flex: 0 0 120px; /* Actions column */
-}
-
-.warr-line li:nth-child(4),
-.warr-header li:nth-child(4) {
-  flex: 0 0 110px; /* Purchased column */
-}
-
-.warr-line li:nth-child(5),
-.warr-header li:nth-child(5) {
-  flex: 0 0 110px; /* Expires column */
-}
-
-.warr-line li:nth-child(6),
-.warr-header li:nth-child(6) {
-  flex: 0 0 120px; /* Status column */
-}
-
-.warr-line li small {
-  display: block;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 @media (max-width: 768px) {
@@ -313,38 +293,13 @@
     box-shadow: var(--shadow-sm);
   }
 
-  .warr-header {
-    display: none;
+  .warr-table-wrapper {
+    overflow-x: auto;
   }
 
-  .warr-entry {
-    padding: 1rem 1.25rem;
+  .warr-table {
+    min-width: 720px;
   }
-
-  .warr-line {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .warr-line li {
-    width: 100%;
-    font-weight: 600;
-  }
-
-  .warr-line li::before {
-    display: block;
-    font-size: 0.75rem;
-    letter-spacing: 0.1rem;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 0.15rem;
-    font-weight: 500;
-  }
-
-  .warr-line li:nth-child(1)::before { content: 'Product'; }
-  .warr-line li:nth-child(2)::before { content: 'Purchased'; }
-  .warr-line li:nth-child(3)::before { content: 'Expires'; }
-  .warr-line li:nth-child(4)::before { content: 'Provider'; }
 }
 
 /* Delete Confirmation Modal */

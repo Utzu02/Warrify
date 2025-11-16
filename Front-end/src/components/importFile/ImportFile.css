@@ -1,10 +1,12 @@
 .import-manual-container {
-    text-align: center;
+    text-align: left;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
     display: flex;
     gap: 0.75rem;
-    margin: 1.5rem auto;
+    margin: 1.5rem 0;
+    width: 100%;
   }
   
   .file-input {
@@ -25,13 +27,97 @@
     font-size: 16px;
   }
   
-  .import-manual-button:hover {
+.import-manual-button:hover {
     background-color: #ff5400;
   }
 
   .file-hint {
     font-size: 0.9rem;
     color: #6b7280;
+  }
+
+  .import-feedback {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .import-feedback-card {
+    border-radius: 18px;
+    padding: 1.25rem;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+  }
+
+  .import-feedback-card.warning {
+    background: #fff7ed;
+    border-color: #fed7aa;
+  }
+
+  .import-feedback-card.error {
+    background: #fef2f2;
+    border-color: #fecaca;
+  }
+
+  .import-feedback-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .import-feedback-title {
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .import-feedback-close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #94a3b8;
+  }
+
+  .import-feedback-detail {
+    margin: 0.35rem 0;
+    color: #475569;
+    font-size: 0.95rem;
+  }
+
+  .import-feedback-question {
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .import-feedback-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .import-feedback-actions.single {
+    justify-content: flex-end;
+  }
+
+  .import-feedback-btn {
+    padding: 0.65rem 1rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .import-feedback-btn.primary {
+    background: #6366f1;
+    color: #fff;
+  }
+
+  .import-feedback-btn.secondary {
+    background: #e2e8f0;
+    color: #0f172a;
   }
 
   @media (max-width: 768px) {
@@ -44,5 +130,13 @@
     .import-manual-container {
       flex-direction: column;
       gap: 0.35rem;
+    }
+
+    .import-feedback-actions {
+      flex-direction: column;
+    }
+
+    .import-feedback-actions .import-feedback-btn {
+      width: 100%;
     }
   }
