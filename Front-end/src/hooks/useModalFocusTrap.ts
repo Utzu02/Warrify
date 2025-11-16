@@ -12,7 +12,7 @@ const FOCUSABLE_SELECTORS = [
 const useModalFocusTrap = (
   isOpen: boolean,
   onClose: () => void,
-  modalRef: RefObject<HTMLElement>
+  modalRef: RefObject<HTMLElement | null>
 ) => {
   useEffect(() => {
     if (!isOpen) return;

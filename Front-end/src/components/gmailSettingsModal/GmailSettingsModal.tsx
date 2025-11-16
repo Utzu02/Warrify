@@ -17,6 +17,7 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
   const [endDate, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [dateError, setDateError] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialSettings && isOpen) {
@@ -24,8 +25,25 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
       setStartDate(initialSettings.defaultSettings.startDate || '');
       setEndDate(initialSettings.defaultSettings.endDate || '');
       setError(null);
+      setDateError(null);
     }
   }, [initialSettings, isOpen]);
+
+  const getTodayString = () => {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const validateDates = (s: string, e: string) => {
+    const today = getTodayString();
+    if (s && s > today) return 'Start date cannot be later than today.';
+    if (e && e > today) return 'End date cannot be later than today.';
+    if (s && e && s > e) return 'Start date cannot be after end date.';
+    return null;
+  };
 
   const handleSave = async () => {
     setLoading(true);
@@ -53,6 +71,12 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const validation = validateDates(startDate, endDate);
+    if (validation) {
+      setDateError(validation);
+      return;
+    }
+
     await handleSave();
   };
 
@@ -100,8 +124,12 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
                 type="date"
                 id="modal-start-date"
                 value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                onChange={(e) => {
+                  setStartDate(e.target.value);
+                  setDateError(validateDates(e.target.value, endDate));
+                }}
                 disabled={loading}
+                max={getTodayString()}
               />
             </div>
 
@@ -111,11 +139,17 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
                 type="date"
                 id="modal-end-date"
                 value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                onChange={(e) => {
+                  setEndDate(e.target.value);
+                  setDateError(validateDates(startDate, e.target.value));
+                }}
                 disabled={loading}
+                max={getTodayString()}
               />
             </div>
           </div>
+
+          {dateError && <div className="form-error">{dateError}</div>}
 
           {error && <div className="form-error">{error}</div>}
 
@@ -134,7 +168,7 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
                 type="submit"
                 variant="primary"
                 size="medium"
-                disabled={loading}
+                disabled={loading || Boolean(dateError)}
                 loading={loading}
               >
                 {loading ? 'Saving...' : 'Save preferences'}
