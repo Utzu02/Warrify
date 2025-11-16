@@ -32,7 +32,7 @@ Warrify
    - `/auth/google` begins the OAuth flow.
    - `backend/crud/gmailCrud.js` uses Google APIs to list messages, downloads PDF attachments, runs `pdf-parse` plus a DeepSeek prompt to confirm the document, then saves metadata + binary data in `WarrantyDocument`.
    - `/gmail-status` polls `/api/emails` to display progress and provide download links.
-3. Manual uploads hit `/api/warranties2` and are stored in the `Warranty` collection via `multer`.
+3. Manual uploads hit `/api/warranties/upload` and are stored in the `Warranty` collection via `multer`.
 4. Dashboard/profile pages query `/api/users/:id/warranties` and `/api/users/:id/scan-info` to show cards, filters, and stats.
 
 ## Tech Stack
@@ -98,7 +98,7 @@ Warrify
 | `GET /api/users/:id` | Retrieve a user document (requires `x-user-id`). | `backend/crud/userCrud.js` |
 | `GET /api/users/:id/warranties` | List deduplicated warranties saved during Gmail scans. | `backend/crud/warrantyDocumentCrud.js` |
 | `GET /api/users/:id/scan-info` | Fetch the `lastScanAt` timestamp. | `backend/crud/warrantyDocumentCrud.js` |
-| `POST /api/warranties2` | Upload a PDF manually (multipart form field `pdf`). | `backend/crud/warrantyFileCrud.js` |
+| `POST /api/warranties/upload` | Upload a PDF manually (multipart form field `pdf`). | `backend/crud/warrantyFileCrud.js` |
 | `POST /api/gmail/options` | Store Gmail scan preferences in the session. | `backend/crud/gmailCrud.js` |
 | `GET /api/emails` | Trigger the Gmail scan based on stored options. | `backend/crud/gmailCrud.js` |
 | `GET /api/emails/:messageId/attachments/:attachmentId` | Download a Gmail attachment vetted as a warranty. | `backend/crud/gmailCrud.js` |

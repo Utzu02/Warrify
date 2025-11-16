@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   terms: { type: Boolean, required: true },
+  isAdmin: { type: Boolean, default: false },
   lastScanAt: { type: Date },
   account_created_at: { type: Date, default: Date.now },
   

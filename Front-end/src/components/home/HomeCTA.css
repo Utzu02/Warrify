@@ -4,9 +4,9 @@
 .home-cta-band {
   background: linear-gradient(
     135deg,
-    #020617 0%,   /* almost black navy */
-    #0f172a 35%,  /* deep slate/navy */
-    #1e40af 100%  /* rich blue */
+    #0f2b6b 0%,   /* deep but still blue */
+    #123b8f 40%,  /* mid navy */
+    #2563ff 100%  /* ties into main brand blue */
   );
   padding: 5rem 0;
   text-align: center;

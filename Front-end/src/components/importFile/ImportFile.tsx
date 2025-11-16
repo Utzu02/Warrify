@@ -3,6 +3,9 @@ import './ImportFile.css';
 import { uploadWarrantyPdf, validateWarrantyPdf } from '../../api/warranties';
 import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
 
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+const MAX_FILE_SIZE_MB = 10;
+
 const ImportManualButton: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isValidating, setIsValidating] = useState(false);
@@ -14,6 +17,12 @@ const ImportManualButton: React.FC = () => {
 
     if (file.type !== 'application/pdf') {
       alert('Please select a valid PDF file.');
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      alert(`File is too large. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`);
+      event.target.value = '';
       return;
     }
 
@@ -117,6 +126,7 @@ const ImportManualButton: React.FC = () => {
       <button className="import-manual-button" onClick={handleButtonClick}>
         Import manual
       </button>
+      <span className="file-hint">PDF only • Max {MAX_FILE_SIZE_MB}MB</span>
     </div>
   );
 };

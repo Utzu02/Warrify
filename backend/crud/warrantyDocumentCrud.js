@@ -91,3 +91,27 @@ export const downloadWarrantyFile = async (req, res) => {
     return res.status(500).json({ error: 'Failed to download warranty' });
   }
 };
+
+export const deleteWarrantyDocument = async (req, res) => {
+  try {
+    const { warrantyId } = req.params;
+
+    if (!isValidObjectId(warrantyId)) {
+      return res.status(400).json({ error: 'Invalid identifiers' });
+    }
+
+    const deleted = await WarrantyDocument.findOneAndDelete({
+      _id: warrantyId,
+      userId: req.userId
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('delete warranty error', error);
+    return res.status(500).json({ error: 'Failed to delete warranty' });
+  }
+};

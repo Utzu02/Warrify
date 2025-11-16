@@ -3,6 +3,7 @@
     justify-content: center;
     align-items: center;
     display: flex;
+    gap: 0.75rem;
     margin: 1.5rem auto;
   }
   
@@ -28,10 +29,20 @@
     background-color: #ff5400;
   }
 
+  .file-hint {
+    font-size: 0.9rem;
+    color: #6b7280;
+  }
+
   @media (max-width: 768px) {
     .import-manual-button {
       padding: 8px 16px;
       font-size: 14px;
       max-width: 160px;
+    }
+
+    .import-manual-container {
+      flex-direction: column;
+      gap: 0.35rem;
     }
   }

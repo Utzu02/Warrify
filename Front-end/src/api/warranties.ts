@@ -22,7 +22,7 @@ export const validateWarrantyPdf = (file: File): Promise<ValidationResult> => {
 export const uploadWarrantyPdf = (file: File) => {
   const formData = new FormData();
   formData.append('pdf', file);
-  return apiFetch<{ message: string }>('/api/warranties2', {
+  return apiFetch<{ message: string }>('/api/warranties/upload', {
     method: 'POST',
     body: formData
   });

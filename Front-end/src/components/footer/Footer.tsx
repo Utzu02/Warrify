@@ -14,64 +14,49 @@ function Footer() {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Footer container fade in
-            gsap.from(footerRef.current, {
-                opacity: 0,
-                y: 30,
-                duration: 0.8,
-                ease: "power2.out",
+            if (!footerRef.current) {
+                return;
+            }
+
+            const timeline = gsap.timeline({
+                defaults: { ease: 'power2.out' },
                 scrollTrigger: {
                     trigger: footerRef.current,
-                    start: "top 90%",
-                    toggleActions: "play none none none"
+                    start: 'top 90%',
+                    once: true
                 }
             });
 
-            // Brand section animation
-            gsap.from(brandRef.current, {
-                opacity: 0,
-                x: -30,
-                duration: 0.6,
-                delay: 0.2,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: brandRef.current,
-                    start: "top 90%",
-                    toggleActions: "play none none none"
-                }
-            });
+            timeline.fromTo(
+                footerRef.current,
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 0.8, clearProps: 'transform' }
+            );
 
-            // Footer sections cascade
+            timeline.fromTo(
+                brandRef.current,
+                { opacity: 0, x: -30 },
+                { opacity: 1, x: 0, duration: 0.6, clearProps: 'transform' },
+                '-=0.4'
+            );
+
             sectionsRef.current.forEach((section, index) => {
                 if (section) {
-                    gsap.from(section, {
-                        opacity: 0,
-                        y: 20,
-                        duration: 0.5,
-                        delay: 0.3 + (index * 0.1),
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: section,
-                            start: "top 90%",
-                            toggleActions: "play none none none"
-                        }
-                    });
+                    timeline.fromTo(
+                        section,
+                        { opacity: 0, y: 20 },
+                        { opacity: 1, y: 0, duration: 0.4, clearProps: 'transform' },
+                        index === 0 ? '-=0.3' : '<15%'
+                    );
                 }
             });
 
-            // Footer bottom slide up
-            gsap.from(bottomRef.current, {
-                opacity: 0,
-                y: 20,
-                duration: 0.6,
-                delay: 0.6,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: bottomRef.current,
-                    start: "top 95%",
-                    toggleActions: "play none none none"
-                }
-            });
+            timeline.fromTo(
+                bottomRef.current,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.5, clearProps: 'transform' },
+                '-=0.2'
+            );
         });
 
         return () => ctx.revert();

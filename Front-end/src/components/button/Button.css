@@ -61,7 +61,7 @@
   color: #ffffff;
   background-size: 125% 125%;
   background-position: 0% 50%;
-  border: none;
+  border: 2px solid rgba(226, 232, 240, 0.9);
 }
 
 .btn-primary:hover:not(.btn-disabled) {

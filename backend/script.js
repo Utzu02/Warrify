@@ -7,7 +7,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-import warrantiesRoutes2 from './routes/warrantyRoutes2.js';
+import warrantiesRoutes from './routes/warrantyRoutes.js';
 import pdfValidationRoutes from './routes/pdfValidationRoutes.js';
 import dotenv from 'dotenv';
 import googleRoutes from './routes/googleRoutes.js'
@@ -115,8 +115,8 @@ app.use(async (req, res, next) => {
 app.use('/api', userRoutes);
 app.use('/api', authRoutes);
 app.use('/',googleRoutes);
-app.use('/api', warrantiesRoutes2);
 app.use('/api', warrantyDocumentRoutes);
+app.use('/api', warrantiesRoutes);
 app.use('/api', pdfValidationRoutes);
 
 // Connect to MongoDB on startup

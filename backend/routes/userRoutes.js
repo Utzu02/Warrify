@@ -10,14 +10,15 @@ import {
   disconnectGmail
 } from '../crud/userCrud.js';
 import { userMiddleware } from '../middleware/userMiddleware.js';
+import { adminMiddleware } from '../middleware/adminMiddleware.js';
+import { ensureSelfOrAdmin } from '../middleware/ownershipMiddleware.js';
 
 const router = express.Router();
 
-router.post('/users', userMiddleware, createUser);
-router.get('/users', userMiddleware, listUsers);
-router.get('/users/:id', userMiddleware, getUser);
-router.patch('/users/:id', userMiddleware, updateUser);
-router.delete('/users/:id', userMiddleware, deleteUser);
+router.get('/users', userMiddleware, adminMiddleware, listUsers);
+router.get('/users/:id', userMiddleware, ensureSelfOrAdmin, getUser);
+router.patch('/users/:id', userMiddleware, ensureSelfOrAdmin, updateUser);
+router.delete('/users/:id', userMiddleware, ensureSelfOrAdmin, deleteUser);
 
 // Gmail settings routes
 router.get('/gmail/settings', userMiddleware, getGmailSettings);
