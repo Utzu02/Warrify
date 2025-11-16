@@ -15,7 +15,8 @@ export interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
   className?: string;
   to?: string; // For Link behavior
-  href?: string; // For external links
+  href?: string; // For anchor / external links
+  target?: React.HTMLAttributeAnchorTarget;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -32,6 +33,7 @@ const Button: React.FC<ButtonProps> = ({
   className = '',
   to,
   href,
+  target,
 }) => {
   const baseClasses = [
     'btn',
@@ -69,8 +71,10 @@ const Button: React.FC<ButtonProps> = ({
 
   // If it's an external link
   if (href && !disabled && !loading) {
+    const anchorTarget = target ?? '_self';
+    const rel = anchorTarget === '_blank' ? 'noopener noreferrer' : undefined;
     return (
-      <a href={href} className={baseClasses} target="_blank" rel="noopener noreferrer">
+      <a href={href} className={baseClasses} target={anchorTarget} rel={rel}>
         {content}
       </a>
     );

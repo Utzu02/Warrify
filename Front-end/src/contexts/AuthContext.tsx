@@ -50,12 +50,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  // Save user to sessionStorage when it changes
+  // Persist auth user so dashboard reloads keep state; sessionStorage preferred but keep localStorage in sync
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     if (user) {
-      sessionStorage.setItem('user', JSON.stringify(user));
+      const serializedUser = JSON.stringify(user);
+      sessionStorage.setItem('user', serializedUser);
+      localStorage.setItem('user', serializedUser);
     } else {
       sessionStorage.removeItem('user');
       localStorage.removeItem('user'); // Clean up old storage
