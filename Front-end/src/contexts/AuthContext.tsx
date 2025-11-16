@@ -19,31 +19,41 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const getStoredUser = (): User | null => {
+  if (typeof window === 'undefined') return null;
+
+  const storedUser = sessionStorage.getItem('user') ?? localStorage.getItem('user');
+  if (!storedUser) return null;
+
+  try {
+    return JSON.parse(storedUser);
+  } catch (error) {
+    console.error('Failed to parse stored user:', error);
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => getStoredUser());
   const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize - check if user is logged in
   useEffect(() => {
-    const initAuth = async () => {
-      try {
-        // Try to get user from sessionStorage first (for page refresh)
-        const storedUser = sessionStorage.getItem('user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-      } catch (error) {
-        console.error('Failed to initialize auth:', error);
-      } finally {
-        setIsLoading(false);
+    try {
+      const storedUser = getStoredUser();
+      if (storedUser) {
+        setUser((prev) => prev ?? storedUser);
       }
-    };
-
-    initAuth();
+    } catch (error) {
+      console.error('Failed to initialize auth:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   // Save user to sessionStorage when it changes
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     if (user) {
       sessionStorage.setItem('user', JSON.stringify(user));
     } else {

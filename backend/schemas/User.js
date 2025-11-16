@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema({
   gmail: {
     isConnected: { type: Boolean, default: false },
     connectedAt: { type: Date },
+    tokens: {
+      accessToken: { type: String },
+      refreshToken: { type: String },
+      expiryDate: { type: Date }
+    },
     defaultSettings: {
       maxResults: { type: Number, default: 10, min: 1, max: 100 },
       startDate: { type: String, default: null }, // ISO date string or null

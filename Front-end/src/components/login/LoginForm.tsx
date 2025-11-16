@@ -61,7 +61,7 @@ const LoginForm = () => {
       setEmailOrUsername('');
       setPassword('');
       setErrors({});
-      navigate('/dashboard');
+      navigate('/profile', { state: { fromLogin: true } });
     } catch (error) {
       console.error('Error during login:', error);
       alert('An error occurred. Please try again.');

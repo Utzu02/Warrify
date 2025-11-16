@@ -154,8 +154,12 @@ const Profile = () => {
     <>
     <div className="profile-page">
       {showGmailSuccess && (
-        <div className="gmail-success-banner">
-          ✅ Gmail connected successfully! Your default settings are ready to use.
+        <div className="gmail-success-toast" role="status" aria-live="polite">
+          <div className="toast-icon" aria-hidden="true">✅</div>
+          <div className="toast-copy">
+            <strong>You are connected</strong>
+            <span>Gmail is linked successfully. You can sync warranties anytime.</span>
+          </div>
         </div>
       )}
       

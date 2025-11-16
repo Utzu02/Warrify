@@ -5,7 +5,7 @@ import { createHash } from 'crypto';
 import WarrantyDocument from '../schemas/WarrantyDocument.js';
 import { extractPDFAttachments, getHeader, evaluateWarrantyScore, parseDateString, formatGmailDate, clamp } from '../utils/gmailUtils.js';
 import { sanitizeFilename } from '../utils/fileUtils.js';
-import { findUserById, setLastScanAt } from './userCrud.js';
+import { findUserById, setLastScanAt, saveGmailTokens } from './userCrud.js';
 
 dotenv.config();
 
@@ -25,6 +25,106 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 const warrantyCache = new Map();
+const ACCESS_TOKEN_EXPIRY_BUFFER_MS = 60 * 1000;
+const DEFAULT_TOKEN_TTL_MS = 55 * 60 * 1000;
+
+const deriveExpiryDate = (value) => {
+  if (!value) {
+    return new Date(Date.now() + DEFAULT_TOKEN_TTL_MS);
+  }
+
+  if (value instanceof Date) {
+    return value;
+  }
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return new Date(Date.now() + DEFAULT_TOKEN_TTL_MS);
+  }
+
+  return parsed;
+};
+
+const extractAccessTokenFromRequest = (req) => {
+  const authHeader = req.headers?.authorization;
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.replace('Bearer ', '').trim();
+    if (token) {
+      return token;
+    }
+  }
+
+  if (req.cookies?.googleToken) {
+    return req.cookies.googleToken;
+  }
+
+  if (req.session?.accessToken) {
+    return req.session.accessToken;
+  }
+
+  return null;
+};
+
+const hasFreshStoredToken = (tokens) => {
+  if (!tokens?.accessToken || !tokens?.expiryDate) {
+    return false;
+  }
+
+  const expiry = new Date(tokens.expiryDate).getTime();
+  return expiry - ACCESS_TOKEN_EXPIRY_BUFFER_MS > Date.now();
+};
+
+const refreshStoredAccessToken = async (user) => {
+  const refreshToken = user?.gmail?.tokens?.refreshToken;
+  if (!refreshToken) {
+    return null;
+  }
+
+  try {
+    const { credentials } = await oauth2Client.refreshToken(refreshToken);
+    const newAccessToken = credentials?.access_token;
+    if (!newAccessToken) {
+      return null;
+    }
+
+    const expiryDate = deriveExpiryDate(credentials.expiry_date);
+    const updates = {
+      accessToken: newAccessToken,
+      expiryDate
+    };
+
+    if (credentials.refresh_token) {
+      updates.refreshToken = credentials.refresh_token;
+    }
+
+    await saveGmailTokens(user._id, updates);
+    return newAccessToken;
+  } catch (error) {
+    console.error('Failed to refresh Google access token:', error);
+    return null;
+  }
+};
+
+const getStoredAccessToken = async (user) => {
+  if (!user?.gmail?.tokens) {
+    return null;
+  }
+
+  if (hasFreshStoredToken(user.gmail.tokens)) {
+    return user.gmail.tokens.accessToken;
+  }
+
+  return refreshStoredAccessToken(user);
+};
+
+const ensureGoogleAccessToken = async (req, user) => {
+  const storedToken = await getStoredAccessToken(user);
+  if (storedToken) {
+    return storedToken;
+  }
+
+  return extractAccessTokenFromRequest(req);
+};
 
 export const authRedirect = (req, res) => {
   // Store userId in session to retrieve after OAuth callback
@@ -51,26 +151,32 @@ export const authCallback = async (req, res) => {
       maxAge: 60 * 60 * 1000 // 1 hour (Google tokens typically expire in 1 hour)
     });
 
-    // Get userId from session (stored in authRedirect)
+    // Persist tokens for the authenticated user
     const userId = req.session.pendingAuthUserId;
     if (userId) {
       try {
-        const User = (await import('../schemas/User.js')).default;
-        await User.findByIdAndUpdate(userId, {
-          'gmail.isConnected': true,
-          'gmail.connectedAt': new Date()
-        });
-        // Clear the pending userId from session
+        await saveGmailTokens(
+          userId,
+          {
+            accessToken: tokens.access_token,
+            refreshToken: tokens.refresh_token,
+            expiryDate: deriveExpiryDate(tokens.expiry_date)
+          },
+          {
+            markConnected: true
+          }
+        );
         delete req.session.pendingAuthUserId;
       } catch (err) {
         console.error('Failed to update user Gmail status:', err);
       }
     }
     
-    // Redirect to Gmail status page to start scanning
+    // Redirect back to profile page with success flag
+    const redirectPath = '/profile?gmail=connected';
     const redirectUrl = process.env.FRONTEND_URL
-      ? `${process.env.FRONTEND_URL}/gmail-status`
-      : `/gmail-status`;
+      ? `${process.env.FRONTEND_URL}${redirectPath}`
+      : redirectPath;
     res.redirect(redirectUrl);
   } catch (error) {
     console.error('Google auth error:', error);
@@ -90,22 +196,6 @@ export const saveGmailOptionsHandler = (req, res) => {
 
 export const fetchEmails = async (req, res) => {
   try {
-    // Get token from Authorization header OR from httpOnly cookie
-    const authHeader = req.headers.authorization;
-    let accessToken = authHeader?.replace('Bearer ', '');
-    
-    // If not in header, try to get from cookie
-    if (!accessToken) {
-      accessToken = req.cookies?.googleToken;
-    }
-    
-    if (!accessToken) {
-      return res
-        .status(401)
-        .json({ error: 'Missing Google access token. Please connect your Gmail account again.' });
-    }
-
-    // Use userId from JWT middleware (set by userMiddleware)
     const userId = req.userId;
     if (!userId) {
       return res.status(400).json({ error: 'Missing or invalid user identifier' });
@@ -114,6 +204,13 @@ export const fetchEmails = async (req, res) => {
     const user = await findUserById(userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
+    }
+
+    const accessToken = await ensureGoogleAccessToken(req, user);
+    if (!accessToken) {
+      return res
+        .status(401)
+        .json({ error: 'Missing Google access token. Please connect your Gmail account again.' });
     }
     
     const io = req.app.get('io');
@@ -183,7 +280,17 @@ export const fetchEmails = async (req, res) => {
 
 export const downloadAttachment = async (req, res) => {
   try {
-    const accessToken = req.session.accessToken;
+    const userId = req.userId;
+    if (!userId) {
+      return res.status(400).json({ error: 'Missing or invalid user identifier' });
+    }
+
+    const user = await findUserById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const accessToken = await ensureGoogleAccessToken(req, user);
     if (!accessToken) {
       return res
         .status(401)

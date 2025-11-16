@@ -75,6 +75,84 @@ export const findUserById = (id) => User.findById(id);
 export const setLastScanAt = async (id, date = new Date()) =>
   User.findByIdAndUpdate(id, { lastScanAt: date }, { new: true, select: 'lastScanAt' });
 
+const normalizeDate = (value) => {
+  if (!value) return undefined;
+  if (value instanceof Date) return value;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+};
+
+const buildGmailTokenUpdates = (tokens = {}) => {
+  const updates = {};
+  if (tokens.accessToken) {
+    updates['gmail.tokens.accessToken'] = tokens.accessToken;
+  }
+  if (tokens.refreshToken) {
+    updates['gmail.tokens.refreshToken'] = tokens.refreshToken;
+  }
+  if (tokens.expiryDate) {
+    const normalized = normalizeDate(tokens.expiryDate);
+    if (normalized) {
+      updates['gmail.tokens.expiryDate'] = normalized;
+    }
+  }
+  return updates;
+};
+
+export const saveGmailTokens = (userId, tokens = {}, options = {}) => {
+  const updates = buildGmailTokenUpdates(tokens);
+
+  if (options.markConnected) {
+    updates['gmail.isConnected'] = true;
+    updates['gmail.connectedAt'] = options.connectedAt || new Date();
+  }
+
+  if (!Object.keys(updates).length) {
+    return User.findById(userId).select('gmail');
+  }
+
+  return User.findByIdAndUpdate(
+    userId,
+    { $set: updates },
+    { new: true, select: 'gmail' }
+  );
+};
+
+export const clearGmailTokens = (userId) =>
+  User.findByIdAndUpdate(
+    userId,
+    {
+      $unset: {
+        'gmail.tokens.accessToken': '',
+        'gmail.tokens.refreshToken': '',
+        'gmail.tokens.expiryDate': ''
+      },
+      $set: {
+        'gmail.isConnected': false,
+        'gmail.connectedAt': null
+      }
+    },
+    { new: true, select: 'gmail' }
+  );
+
+const hasUsableGmailTokens = (gmail) => {
+  const tokens = gmail?.tokens;
+  if (!tokens) {
+    return false;
+  }
+
+  if (tokens.refreshToken) {
+    return true;
+  }
+
+  if (tokens.accessToken && tokens.expiryDate) {
+    const expiry = new Date(tokens.expiryDate).getTime();
+    return expiry > Date.now();
+  }
+
+  return false;
+};
+
 // Gmail settings management
 export const updateGmailSettings = async (req, res) => {
   try {
@@ -121,9 +199,11 @@ export const getGmailSettings = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    const connected = hasUsableGmailTokens(user.gmail);
+
     res.json({
-      isConnected: user.gmail?.isConnected || false,
-      connectedAt: user.gmail?.connectedAt || null,
+      isConnected: connected,
+      connectedAt: connected ? user.gmail?.connectedAt || null : null,
       defaultSettings: user.gmail?.defaultSettings || {
         maxResults: 10,
         startDate: null,
@@ -141,11 +221,7 @@ export const getGmailSettings = async (req, res) => {
 export const disconnectGmail = async (req, res) => {
   try {
     const userId = req.userId; // From JWT middleware
-    
-    await User.findByIdAndUpdate(userId, {
-      'gmail.isConnected': false,
-      'gmail.connectedAt': null
-    });
+    await clearGmailTokens(userId);
 
     // Clear the Google token cookie
     res.clearCookie('googleToken', {

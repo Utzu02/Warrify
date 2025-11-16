@@ -57,19 +57,21 @@
    ============================================ */
 
 .btn-primary {
-  background: #1e66f5;
+  background: linear-gradient(135deg, #1e66f5 0%, #3b82f6 40%, #22c1c3 100%);
   color: #ffffff;
+  background-size: 125% 125%;
+  background-position: 0% 50%;
   border: none;
 }
 
 .btn-primary:hover:not(.btn-disabled) {
-  background: #1557d9;
+  background-position: 100% 50%;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(30, 102, 245, 0.3);
 }
 
 .btn-primary:active:not(.btn-disabled) {
-  transform: translateY(0);
+  background-position: 50% 50%;
   box-shadow: 0 4px 12px rgba(30, 102, 245, 0.2);
 }
 
