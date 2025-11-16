@@ -9,6 +9,7 @@ type GridContainerProps = {
   expiringSoonCount?: number;
   remainingCount?: number;
   isLoadingCounts?: boolean;
+  onManualUploadComplete?: () => void;
 };
 
 type RelativeTime = {
@@ -51,7 +52,8 @@ function GridContainer({
   managedCount = 0,
   expiringSoonCount = 0,
   remainingCount = 0,
-  isLoadingCounts = false
+  isLoadingCounts = false,
+  onManualUploadComplete
 }: GridContainerProps) {
   const { user } = useAuth();
   const [showImportModal, setShowImportModal] = useState(false);
@@ -86,7 +88,7 @@ function GridContainer({
 
   const handleUploadSuccess = () => {
     setShowImportModal(false);
-    window.setTimeout(() => window.location.reload(), 4000);
+    onManualUploadComplete?.();
   };
 
   return (

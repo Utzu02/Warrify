@@ -7,11 +7,12 @@ import './DashboardTable.css';
 type DashboardTableProps = {
   warranties: Warranty[];
   isLoading?: boolean;
+  onRefresh?: () => void;
 };
 
 const MAX_VISIBLE = 15; // Load 15 warranties at a time
 
-const DashboardTable = ({ warranties, isLoading = false }: DashboardTableProps) => {
+const DashboardTable = ({ warranties, isLoading = false, onRefresh }: DashboardTableProps) => {
   const [visibleCount, setVisibleCount] = useState(MAX_VISIBLE);
 
   const canShowMore = useMemo(() => warranties.length > visibleCount, [warranties.length, visibleCount]);
@@ -29,7 +30,7 @@ const DashboardTable = ({ warranties, isLoading = false }: DashboardTableProps) 
         </div>
       ) : (
         <>
-          <Warranties warranties={warranties} limit={visibleCount} />
+          <Warranties warranties={warranties} limit={visibleCount} onRefresh={onRefresh} />
           {canShowMore && (
             <div className="table-footer">
               <button className="view-more-btn" onClick={handleShowMore}>

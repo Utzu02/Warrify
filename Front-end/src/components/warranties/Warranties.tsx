@@ -1,6 +1,5 @@
 import './Warranties.css';
 import { useMemo, useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import ModalWarranty from '../modalWarranty/ModalWarranty';
 import type { Warranty } from '../../types/dashboard';
@@ -11,6 +10,7 @@ import { apiFetch } from '../../api/client';
 interface WarrantiesProps {
   warranties: Warranty[];
   limit?: number;
+  onRefresh?: () => void;
 }
 
 const formatDate = (value: string | null) => {
@@ -28,19 +28,17 @@ const formatDate = (value: string | null) => {
   };
 
 const useDownloadUrl = (warrantyId?: string) => {
-  const { user } = useAuth();
-  
   return useMemo(() => {
-    if (!warrantyId || !user) {
+    if (!warrantyId) {
       return { downloadUrl: null, previewUrl: null };
     }
-    const downloadUrl = `${BASE_URL}/api/warranties/${warrantyId}/download?userId=${user.id}`;
-    const previewUrl = `${BASE_URL}/api/warranties/${warrantyId}/download?userId=${user.id}&preview=true`;
+    const downloadUrl = `${BASE_URL}/api/warranties/${warrantyId}/download`;
+    const previewUrl = `${downloadUrl}?preview=true`;
     return { downloadUrl, previewUrl };
-  }, [warrantyId, user]);
+  }, [warrantyId]);
 };
 
-function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) {
+function Warranties({ warranties, limit = warranties.length, onRefresh }: WarrantiesProps) {
   const [selectedWarranty, setSelectedWarranty] = useState<Warranty | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -129,19 +127,13 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
         title: 'Warranty deleted',
         message: 'The warranty has been removed.'
       });
-
-      // Remove from selected if it was selected
       setSelectedIds(prev => {
         const newSet = new Set(prev);
         newSet.delete(warrantyId);
         return newSet;
       });
-      
-      // Close the modal
       setWarrantyToDelete(null);
-      
-      // Refresh the page or update parent state
-      window.location.reload();
+      onRefresh?.();
     } catch (error) {
       console.error('Failed to delete warranty:', error);
       showToast({

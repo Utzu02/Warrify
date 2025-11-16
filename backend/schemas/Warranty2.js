@@ -7,6 +7,7 @@ const manualWarrantySchema = new mongoose.Schema({
   name: String, // Original file name
   data: Buffer, // Binary data of the PDF
   contentType: String, // MIME type of the file
+  size: { type: Number, default: 0 }
 }, { timestamps: true });
 
 const ManualWarranty = mongoose.model('ManualWarranty', manualWarrantySchema);

@@ -12,7 +12,7 @@ import "./Dashboard.css";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { warranties, loading: loadingWarranties, error: warrantyError } = useWarranties(user?.id);
+  const { warranties, loading: loadingWarranties, error: warrantyError, refetch } = useWarranties(user?.id);
   const [showGmailConfigModal, setShowGmailConfigModal] = useState(false);
   const [sortOption, setSortOption] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -115,6 +115,7 @@ const Dashboard = () => {
         expiringSoonCount={expiringSoonCount}
         remainingCount={remainingCount}
         isLoadingCounts={loadingWarranties}
+        onManualUploadComplete={refetch}
       />
       <DashboardTools
         searchQuery={searchQuery}
@@ -131,6 +132,7 @@ const Dashboard = () => {
       <DashboardTable 
         warranties={filteredWarranties} 
         isLoading={loadingWarranties} 
+        onRefresh={refetch}
       />
       {warrantyError && <p className="error-state">{warrantyError}</p>}
       <GmailConfigModal 

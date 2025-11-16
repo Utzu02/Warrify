@@ -20,6 +20,7 @@ export const useWarranties = (userId?: string): UseWarrantiesResult => {
     const controller = new AbortController();
 
     const loadWarranties = async () => {
+      setLoading(true);
       try {
         if (!userId) {
           setError('Please log in to view your warranties.');

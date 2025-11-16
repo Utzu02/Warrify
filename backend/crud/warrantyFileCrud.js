@@ -6,7 +6,8 @@ const serializeWarranty = (doc) => ({
   id: doc._id,
   name: doc.name,
   contentType: doc.contentType,
-  uploadedAt: doc.createdAt
+  uploadedAt: doc.createdAt,
+  size: doc.size
 });
 
 export const uploadWarrantyFile = async (req, res) => {
@@ -19,7 +20,8 @@ export const uploadWarrantyFile = async (req, res) => {
       userId: req.userId,
       name: req.file.originalname,
       data: req.file.buffer,
-      contentType: req.file.mimetype
+      contentType: req.file.mimetype,
+      size: req.file.size
     });
 
     await warranty.save();

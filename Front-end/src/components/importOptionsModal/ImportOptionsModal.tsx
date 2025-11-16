@@ -7,7 +7,7 @@ import './ImportOptionsModal.css';
 interface ImportOptionsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUploadSuccess: () => void;
+  onUploadSuccess?: () => void;
 }
 
 const ImportOptionsModal = ({ isOpen, onClose, onUploadSuccess }: ImportOptionsModalProps) => {
@@ -24,7 +24,7 @@ const ImportOptionsModal = ({ isOpen, onClose, onUploadSuccess }: ImportOptionsM
 
   const handleUploadSuccess = () => {
     onClose();
-    onUploadSuccess();
+    onUploadSuccess?.();
   };
 
   return (
