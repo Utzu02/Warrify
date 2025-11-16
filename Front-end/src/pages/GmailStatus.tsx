@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Button from '../components/button';
 import { useAuth } from '../contexts/AuthContext';
 import { BASE_URL } from '../config';
 import { getGmailSettings } from '../api/gmailSettings';
@@ -86,9 +86,9 @@ const GmailStatus = () => {
         {!loading && error && (
           <div className="status-error">
             <p>{error}</p>
-            <button className="button button-invert" onClick={handleRetry}>
+            <Button variant="secondary" onClick={handleRetry}>
               Connect Gmail again
-            </button>
+            </Button>
           </div>
         )}
 
@@ -112,12 +112,12 @@ const GmailStatus = () => {
         )}
 
         <div className="status-actions">
-          <button className="button" onClick={handleRetry}>
+          <Button variant="primary" onClick={handleRetry}>
             Re-run Gmail scan
-          </button>
-          <Link to="/dashboard" className="button button-invert">
+          </Button>
+          <Button to="/dashboard" variant="secondary">
             Back to dashboard
-          </Link>
+          </Button>
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { fetchScanInfo } from '../../api/users';
 import ImportOptionsModal from '../importOptionsModal/ImportOptionsModal';
+import Button from '../button';
 
 type GridContainerProps = {
   managedCount?: number;
@@ -103,9 +104,9 @@ function GridContainer({
         <div className="item-2-row-1 flex">
           <div className="big-number">{managedDisplay}</div>
           <div className="item-1-text">Managed warranties</div>
-          <button onClick={() => setShowImportModal(true)} className="button button-invert grid">
+          <Button variant="secondary" className="grid" onClick={() => setShowImportModal(true)}>
             Import
-          </button>
+          </Button>
         </div>
       </div>
       <div className="grid-item grid-item-2">

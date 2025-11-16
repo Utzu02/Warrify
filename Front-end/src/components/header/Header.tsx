@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import pozalogo from '../../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import Button from '../button';
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -125,27 +126,27 @@ const Header = ({ isLoggedIn }: HeaderProps) => {
           {isLoggedIn ? (
             <>
               <li>
-                <button onClick={logOut} className="button button-invert">
+                <Button variant="secondary" onClick={logOut}>
                   Logout
-                </button>
+                </Button>
               </li>
               <li>
-                <Link to="/profile" className="button">
+                <Button to="/profile" variant="primary">
                   Profile
-                </Link>
+                </Button>
               </li>
             </>
           ) : (
             <>
               <li>
-                <Link to="/login" className="button">
+                <Button to="/login" variant="primary">
                   Login
-                </Link>
+                </Button>
               </li>
               <li>
-                <Link to="/register" className="button">
+                <Button to="/register" variant="secondary">
                   Register
-                </Link>
+                </Button>
               </li>
             </>
           )}

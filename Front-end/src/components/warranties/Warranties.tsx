@@ -7,6 +7,7 @@ import type { Warranty } from '../../types/dashboard';
 import { BASE_URL } from '../../config';
 import * as XLSX from 'xlsx';
 import { apiFetch } from '../../api/client';
+import Button from '../button';
 
 interface WarrantiesProps {
   warranties: Warranty[];
@@ -290,17 +291,17 @@ function Warranties({ warranties, limit = warranties.length, onRefresh }: Warran
             <p><strong>File name:</strong> {selectedWarranty.filename}</p>
           </div>
           <div className='modal-previewdownload'>
-            <button className='button button-invert' onClick={handleViewPdf} disabled={!previewUrl}>
+            <Button variant='secondary' onClick={handleViewPdf} disabled={!previewUrl}>
               View PDF
-            </button>
+            </Button>
             {downloadUrl ? (
-              <a className='button' href={downloadUrl} target="_blank" rel="noopener noreferrer">
+              <Button href={downloadUrl} target="_blank" variant='primary'>
                 Download PDF
-              </a>
+              </Button>
             ) : (
-              <button className='button' disabled>
+              <Button variant='primary' disabled>
                 Download unavailable
-              </button>
+              </Button>
             )}
           </div>
         </ModalWarranty>
