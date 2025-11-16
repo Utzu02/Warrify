@@ -1,75 +1,64 @@
-/* CSS Variables */
-:root {
-  --modal-overlay-bg: rgba(0, 0, 0, 0.5);
-  --modal-bg: white;
-  --modal-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  --modal-radius: 12px;
-  --modal-max-width: 600px;
-  --modal-max-height: 80vh;
+.warranty-modal {
+  max-width: 520px;
+  padding: 2.25rem;
 }
 
-/* Modal.css */
-.modal-war-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--modal-overlay-bg);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  padding: 1rem;
-}
-
-.modal-war-content {
-  background: var(--modal-bg);
-  padding: 2rem;
-  border-radius: var(--modal-radius);
-  width: 100%;
-  max-width: var(--modal-max-width);
-  max-height: var(--modal-max-height);
-  box-shadow: var(--modal-shadow);
-  position: relative;
-  overflow-y: auto;
-}
-
-.modal-war-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
+.warranty-modal h2 {
+  margin: 0 0 1.25rem;
   font-size: 1.5rem;
-  cursor: pointer;
-  color: #64748b;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: background 0.2s ease;
-}
-
-.modal-war-close:hover {
-  background: #f1f5f9;
   color: #0f172a;
 }
 
+.modal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-details p {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #475569;
+  font-size: 0.95rem;
+  border-bottom: 1px dashed #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.modal-details p:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.modal-details p strong {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.modal-previewdownload {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.modal-previewdownload .button {
+  flex: 1;
+  min-width: 140px;
+  justify-content: center;
+}
+
 @media (max-width: 640px) {
-  .modal-war-overlay {
-    padding: 0.5rem;
+  .warranty-modal {
+    padding: 2rem 1.5rem;
   }
 
-  .modal-war-content {
-    padding: 1.5rem;
-    max-height: 90vh;
+  .modal-previewdownload {
+    flex-direction: column;
   }
 
-  .modal-war-close {
-    top: 0.75rem;
-    right: 0.75rem;
+  .modal-previewdownload .button {
+    width: 100%;
   }
 }

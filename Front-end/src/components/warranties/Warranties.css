@@ -19,7 +19,6 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   overflow: hidden;
-  margin-top: 2rem;
 }
 
 /* Header Section */
@@ -29,6 +28,7 @@
   align-items: center;
   padding: 1.5rem 2rem;
   border-bottom: 1px solid var(--border-color-light);
+  padding-top: 0;
   background: #ffffff;
 }
 
@@ -280,11 +280,12 @@
   color: #16a34a;
 }
 
-.warr-table tbody td.action-cell {
-  display: flex;
+.action-buttons {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
