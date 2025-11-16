@@ -104,7 +104,7 @@ function GridContainer({
         <div className="item-2-row-1 flex">
           <div className="big-number">{managedDisplay}</div>
           <div className="item-1-text">Managed warranties</div>
-          <Button variant="secondary" className="grid" onClick={() => setShowImportModal(true)}>
+          <Button variant="primary" className="grid" onClick={() => setShowImportModal(true)}>
             Import
           </Button>
         </div>

@@ -95,7 +95,7 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
               Number of documents
               <span
                 className="tooltip-icon"
-                title="Maximum number of emails with PDF attachments to scan (1-100)"
+                title="Maximum number of emails with PDF attachments to scan (1-250)"
               >
                 ⓘ
               </span>
@@ -104,17 +104,17 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
               type="number"
               id="modal-max-results"
               min="1"
-              max="100"
+              max="250"
               value={maxResults}
               onChange={(e) => {
                 const value = parseInt(e.target.value);
-                if (value >= 1 && value <= 100) {
+                if (value >= 1 && value <= 250) {
                   setMaxResults(value);
                 }
               }}
               disabled={loading}
             />
-            <span className="form-hint">Choose up to 100 documents per scan.</span>
+            <span className="form-hint">Choose up to 250 documents per scan.</span>
           </div>
 
           <div className="date-row">

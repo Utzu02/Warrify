@@ -18,6 +18,7 @@ function PricingHero({
                 opacity: 0,
                 y: -30,
                 duration: 0.8,
+                delay: 0.2,
                 ease: "power2.out"
             });
             

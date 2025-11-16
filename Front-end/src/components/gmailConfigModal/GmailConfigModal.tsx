@@ -14,7 +14,7 @@ interface GmailConfigModalProps {
 }
 
 const MIN_RESULTS = 1;
-const MAX_RESULTS = 100;
+const MAX_RESULTS = 250;
 
 const GmailConfigModal = ({ isOpen, onClose }: GmailConfigModalProps) => {
   const { user } = useAuth();

@@ -93,7 +93,7 @@ const Profile = () => {
 
         setUserData(userPayload as ApiUser);
         setGmailSettings(gmailPayload);
-        
+
         const items: WarrantySummary[] = (warrantiesPayload.items as WarrantySummary[]) || [];
         const total = items.length;
         const now = Date.now();
@@ -184,46 +184,14 @@ const Profile = () => {
     <>
       <div className="profile-page">
         <div className="profile-page__inner">
-          <section className="profile-card profile-hero">
-            <div className="profile-hero__content">
-              <p className="profile-eyebrow">Your dashboard</p>
-              <h1>
-                Welcome back, <span className="profile-hero__highlight">{heroName}</span>
-              </h1>
-              <p className="profile-hero__copy">
-                Manage your workspace details, automations, and subscription from one calm, structured view.
-              </p>
-              <div className="profile-hero__actions">
-                <Button to="/dashboard" variant="primary" size="large">
-                  Open dashboard
-                </Button>
-                <Button to="/pricing" variant="secondary" size="large">
-                  Explore plans
-                </Button>
-              </div>
-              <div className={`profile-alert profile-alert--${heroAlertVariant}`}>
-                <span className="profile-alert__icon" aria-hidden="true">
-                  {heroAlertVariant === 'error' ? '⚠' : heroAlertVariant === 'success' ? '✓' : 'ℹ'}
-                </span>
-                <span>{heroAlertMessage}</span>
-              </div>
-            </div>
-            <div className="profile-hero__panel">
-              <div className="profile-avatar profile-avatar--xl">{avatarInitial}</div>
-              <div className="profile-hero__panel-details">
-                <div>
-                  <p className="profile-hero__label">Email</p>
-                  <p className="profile-hero__value">{userData?.email || '—'}</p>
-                </div>
-                <div>
-                  <p className="profile-hero__label">Member since</p>
-                  <p className="profile-hero__value">{memberSince}</p>
-                </div>
-              </div>
-              <div className="profile-plan-badge">{subscriptionType} plan</div>
-              <p className="profile-plan-meta">{subscriptionStatus} subscription</p>
-            </div>
-          </section>
+          <div className='profile-page-title'>
+            <h1>
+              Welcome back, <span className="profile-hero__highlight">{heroName}</span>
+            </h1>
+            <p className="profile-hero__copy">
+              Manage your workspace details, automations, and subscription from one calm, structured view.
+            </p>
+          </div>
 
           <section className="profile-stats-grid">
             {quickStats.map((stat, index) => (
@@ -250,7 +218,7 @@ const Profile = () => {
                 <p className="profile-stat-hint">{stat.hint}</p>
               </article>
             ))}
-            <article className="profile-stat-card profile-stat-card--cta">
+            <article className="profile-stat-card">
               <div className="profile-stat-icon profile-stat-icon--hero" aria-hidden="true">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <circle cx="12" cy="12" r="9" />

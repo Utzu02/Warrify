@@ -9,22 +9,6 @@
   margin-bottom: 1.5rem;
 }
 
-.import-options-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: #eef2ff;
-  color: #4c1d95;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.import-options-icon svg {
-  width: 32px;
-  height: 32px;
-}
-
 .import-option-card {
   border: 1px solid #e2e8f0;
   border-radius: 18px;

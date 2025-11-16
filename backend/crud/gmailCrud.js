@@ -11,7 +11,7 @@ dotenv.config();
 
 const MAX_CONCURRENT_REQUESTS = 3;
 const REQUEST_TIMEOUT = 30000;
-const MAX_SCAN_RESULTS = 100;
+const MAX_SCAN_RESULTS = 250;
 export const DEFAULT_SCAN_OPTIONS = {
   maxResults: 10,
   startDate: null,

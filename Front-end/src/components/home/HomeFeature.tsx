@@ -73,7 +73,7 @@ function HomeFeature({
         ease: "power2.out",
         scrollTrigger: {
           trigger: visualRef.current,
-          start: "top 80%",
+          start: "top 90%",
           toggleActions: "play none none none"
         }
       });

@@ -161,7 +161,7 @@ export const updateGmailSettings = async (req, res) => {
 
     const updates = {};
     if (maxResults !== undefined) {
-      updates['gmail.defaultSettings.maxResults'] = Math.max(1, Math.min(100, maxResults));
+      updates['gmail.defaultSettings.maxResults'] = Math.max(1, Math.min(250, maxResults));
     }
     if (startDate !== undefined) {
       updates['gmail.defaultSettings.startDate'] = startDate;

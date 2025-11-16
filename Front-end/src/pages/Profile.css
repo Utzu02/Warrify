@@ -43,10 +43,10 @@
   margin-bottom: var(--pricing-space-2);
 }
 
-.profile-hero h1 {
-  font-size: clamp(2.25rem, 4vw, 3.25rem);
-  line-height: 1.1;
+h1 {
+  font-size: 2.5rem;
   margin-bottom: var(--pricing-space-3);
+  text-align: center;
 }
 
 .profile-hero__highlight {
@@ -217,9 +217,9 @@
 }
 
 .profile-stat-icon--hero {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: #F9FAFB;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .profile-stat-card--cta {
@@ -298,7 +298,8 @@
 }
 
 .profile-subscription-highlight {
-  background: linear-gradient(120deg, rgba(37, 99, 235, 0.12), rgba(236, 72, 153, 0.08));
+  background: #F9FAFB;
+  border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: var(--pricing-radius-2xl);
   padding: var(--pricing-space-5);
   margin-bottom: var(--pricing-space-5);
@@ -377,6 +378,17 @@
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 }
 
+.profile-page-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-page-title p {
+  text-align: center;
+}
+
 @media (min-width: 900px) {
   .profile-gmail-card {
     grid-column: span 2;
@@ -390,6 +402,10 @@
 }
 
 @media (max-width: 768px) {
+  h1 {
+    font-size: 1.875rem;
+    margin-top: 16px;
+  }
   .profile-page {
     width: 100vw;
     padding: var(--pricing-space-12) var(--pricing-space-3) var(--pricing-space-12);
