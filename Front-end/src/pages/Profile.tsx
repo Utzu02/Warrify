@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { fetchUserProfile, fetchUserWarranties } from '../api/users';
 import { getGmailSettings, connectGmail, disconnectGmail, GmailSettings } from '../api/gmailSettings';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import LoadingSpinner from '../components/loadingSpinner/LoadingSpinner';
 import GmailSettingsModal from '../components/gmailSettingsModal/GmailSettingsModal';
 import Footer from '../components/footer/Footer';
@@ -53,19 +54,20 @@ const Profile = () => {
   const [gmailSettings, setGmailSettings] = useState<GmailSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showGmailSuccess, setShowGmailSuccess] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const { showToast } = useToast();
 
   // Check if redirected from Gmail OAuth
   useEffect(() => {
     if (searchParams.get('gmail') === 'connected') {
-      setShowGmailSuccess(true);
-      // Clear the URL parameter
+      showToast({
+        variant: 'success',
+        title: 'You are connected',
+        message: 'Gmail is linked successfully. You can sync warranties anytime.'
+      });
       window.history.replaceState({}, document.title, window.location.pathname);
-      // Hide success message after 5 seconds
-      setTimeout(() => setShowGmailSuccess(false), 5000);
     }
-  }, [searchParams]);
+  }, [searchParams, showToast]);
 
   useEffect(() => {
     // Get user from AuthContext
@@ -153,16 +155,6 @@ const Profile = () => {
   return (
     <>
     <div className="profile-page">
-      {showGmailSuccess && (
-        <div className="gmail-success-toast" role="status" aria-live="polite">
-          <div className="toast-icon" aria-hidden="true">✅</div>
-          <div className="toast-copy">
-            <strong>You are connected</strong>
-            <span>Gmail is linked successfully. You can sync warranties anytime.</span>
-          </div>
-        </div>
-      )}
-      
       <section className="profile-hero card">
         <div>
           <p className="eyebrow">Account</p>
@@ -232,8 +224,17 @@ const Profile = () => {
                     try {
                       await disconnectGmail();
                       setGmailSettings(prev => prev ? { ...prev, isConnected: false, connectedAt: null } : null);
+                      showToast({
+                        variant: 'info',
+                        title: 'Disconnected',
+                        message: 'Gmail has been disconnected from your account.'
+                      });
                     } catch (error) {
-                      alert('Failed to disconnect Gmail');
+                      showToast({
+                        variant: 'error',
+                        title: 'Disconnect failed',
+                        message: error instanceof Error ? error.message : 'Failed to disconnect Gmail.'
+                      });
                     }
                   }}
                   className="ghost-button"
@@ -313,8 +314,11 @@ const Profile = () => {
         initialSettings={gmailSettings}
         onSave={(updatedSettings) => {
           setGmailSettings(updatedSettings);
-          setShowGmailSuccess(true);
-          setTimeout(() => setShowGmailSuccess(false), 3000);
+          showToast({
+            variant: 'success',
+            title: 'Settings saved',
+            message: 'Gmail preferences updated successfully.'
+          });
         }}
       />
     </div>

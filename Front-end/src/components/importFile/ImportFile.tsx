@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import './ImportFile.css';
 import { uploadWarrantyPdf, validateWarrantyPdf } from '../../api/warranties';
 import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
+import { useToast } from '../../contexts/ToastContext';
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 const MAX_FILE_SIZE_MB = 10;
@@ -30,18 +31,27 @@ const ImportManualButton: React.FC<ImportManualButtonProps> = ({ onUploadSuccess
   // Store AI validation warnings so we can show a Gmail-style modal instead of native dialogs.
   const [validationWarning, setValidationWarning] = useState<ValidationWarningState | null>(null);
   const [uploadError, setUploadError] = useState<UploadErrorState | null>(null);
+  const { showToast } = useToast();
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     if (file.type !== 'application/pdf') {
-      alert('Please select a valid PDF file.');
+      showToast({
+        variant: 'warning',
+        title: 'Invalid file',
+        message: 'Please select a PDF warranty document.'
+      });
       return;
     }
 
     if (file.size > MAX_FILE_SIZE_BYTES) {
-      alert(`File is too large. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`);
+      showToast({
+        variant: 'warning',
+        title: 'File too large',
+        message: `Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`
+      });
       event.target.value = '';
       return;
     }
@@ -95,12 +105,22 @@ const ImportManualButton: React.FC<ImportManualButtonProps> = ({ onUploadSuccess
       console.log('Uploading file:', file.name);
       await uploadWarrantyPdf(file);
       setUploadError(null);
+      showToast({
+        variant: 'success',
+        title: 'Upload complete',
+        message: 'File uploaded successfully!'
+      });
       onUploadSuccess?.();
     } catch (error) {
       console.error('Error uploading file:', error);
       setUploadError({
         description: 'Upload failed. Please try again.',
         reason: error instanceof Error ? error.message : undefined
+      });
+      showToast({
+        variant: 'error',
+        title: 'Upload failed',
+        message: error instanceof Error ? error.message : 'Unexpected error during upload.'
       });
     } finally {
       setIsUploading(false);

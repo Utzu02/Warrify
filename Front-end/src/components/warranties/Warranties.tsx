@@ -1,6 +1,7 @@
 import './Warranties.css';
 import { useMemo, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
 import ModalWarranty from '../modalWarranty/ModalWarranty';
 import type { Warranty } from '../../types/dashboard';
 import { BASE_URL } from '../../config';
@@ -46,6 +47,7 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
   const [warrantyToDelete, setWarrantyToDelete] = useState<Warranty | null>(null);
   const itemsToRender = warranties.slice(0, limit);
   const { downloadUrl, previewUrl } = useDownloadUrl(selectedWarranty?.id);
+  const { showToast } = useToast();
 
   // Select/Deselect all
   const handleSelectAll = (checked: boolean) => {
@@ -74,7 +76,11 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
     const selectedWarranties = warranties.filter(w => selectedIds.has(w.id));
     
     if (selectedWarranties.length === 0) {
-      alert('Please select at least one warranty to export');
+      showToast({
+        variant: 'warning',
+        title: 'No warranties selected',
+        message: 'Please select at least one warranty to export.'
+      });
       return;
     }
 
@@ -117,7 +123,13 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
       await apiFetch(`/api/warranties/${warrantyId}`, {
         method: 'DELETE'
       });
-      
+
+      showToast({
+        variant: 'success',
+        title: 'Warranty deleted',
+        message: 'The warranty has been removed.'
+      });
+
       // Remove from selected if it was selected
       setSelectedIds(prev => {
         const newSet = new Set(prev);
@@ -132,7 +144,11 @@ function Warranties({ warranties, limit = warranties.length }: WarrantiesProps) 
       window.location.reload();
     } catch (error) {
       console.error('Failed to delete warranty:', error);
-      alert('Failed to delete warranty. Please try again.');
+      showToast({
+        variant: 'error',
+        title: 'Delete failed',
+        message: 'Failed to delete warranty. Please try again.'
+      });
       setWarrantyToDelete(null);
     } finally {
       setDeletingId(null);

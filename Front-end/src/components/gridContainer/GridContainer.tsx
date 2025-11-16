@@ -55,7 +55,6 @@ function GridContainer({
 }: GridContainerProps) {
   const { user } = useAuth();
   const [showImportModal, setShowImportModal] = useState(false);
-  const [toast, setToast] = useState<{ title: string; message: string; variant: 'success' | 'error' } | null>(null);
   const [lastCheckInfo, setLastCheckInfo] = useState<RelativeTime>(DEFAULT_RELATIVE_TIME);
   const managedDisplay = isLoadingCounts ? '—' : managedCount.toString();
   const expiringDisplay = isLoadingCounts ? '—' : expiringSoonCount.toString();
@@ -85,27 +84,9 @@ function GridContainer({
     };
   }, [fetchLastScan]);
 
-  useEffect(() => {
-    if (!toast) return;
-    const hideId = window.setTimeout(() => setToast(null), 3500);
-    const refreshId = toast.variant === 'success'
-      ? window.setTimeout(() => window.location.reload(), 4000)
-      : undefined;
-    return () => {
-      window.clearTimeout(hideId);
-      if (refreshId) {
-        window.clearTimeout(refreshId);
-      }
-    };
-  }, [toast]);
-
   const handleUploadSuccess = () => {
     setShowImportModal(false);
-    setToast({
-      title: 'Upload complete',
-      message: 'File uploaded successfully!',
-      variant: 'success'
-    });
+    window.setTimeout(() => window.location.reload(), 4000);
   };
 
   return (
@@ -153,14 +134,6 @@ function GridContainer({
         onClose={() => setShowImportModal(false)}
         onUploadSuccess={handleUploadSuccess}
       />
-      {toast && (
-        <div className="grid-toast-container">
-          <div className={`grid-toast grid-toast-${toast.variant}`}>
-            <div className="grid-toast-title">{toast.title}</div>
-            <p>{toast.message}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

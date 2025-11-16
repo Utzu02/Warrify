@@ -7,67 +7,6 @@
     gap: 2rem;
 }
 
-.gmail-success-toast {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    border-radius: 18px;
-    background: linear-gradient(135deg, #0f172a, #0b5ed7);
-    color: #fff;
-    box-shadow: 0 20px 35px rgba(15, 23, 42, 0.3);
-    animation: toastIn 0.35s ease-out;
-}
-
-.toast-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-}
-
-.toast-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.toast-copy strong {
-    font-size: 1rem;
-}
-
-.toast-copy span {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.85);
-}
-
-@keyframes toastIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@media (max-width: 640px) {
-    .gmail-success-toast {
-        left: 1rem;
-        right: 1rem;
-        bottom: 1rem;
-    }
-}
-
 .card {
     background: #fff;
     border-radius: 28px;

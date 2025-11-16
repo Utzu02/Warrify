@@ -5,10 +5,12 @@ import LoadingSpinner from '../loadingSpinner/LoadingSpinner';
 import Button from '../button';
 import './LoginForm.css';
 import gsap from 'gsap';
+import { useToast } from '../../contexts/ToastContext';
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { showToast } = useToast();
   const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -64,7 +66,11 @@ const LoginForm = () => {
       navigate('/profile', { state: { fromLogin: true } });
     } catch (error) {
       console.error('Error during login:', error);
-      alert('An error occurred. Please try again.');
+      showToast({
+        variant: 'error',
+        title: 'Login failed',
+        message: error instanceof Error ? error.message : 'An unexpected error occurred.'
+      });
     } finally {
       setIsLoading(false);
     }
