@@ -2,6 +2,7 @@ import './Warranties.css';
 import { useMemo, useState } from 'react';
 import { useToast } from '../../contexts/ToastContext';
 import ModalWarranty from '../modalWarranty/ModalWarranty';
+import BaseModal from '../modal/BaseModal';
 import type { Warranty } from '../../types/dashboard';
 import { BASE_URL } from '../../config';
 import * as XLSX from 'xlsx';
@@ -278,8 +279,10 @@ function Warranties({ warranties, limit = warranties.length, onRefresh }: Warran
       </div>
       
       {selectedWarranty && (
-        <ModalWarranty onClose={() => setSelectedWarranty(null)}>
-          <h2>{selectedWarranty.productName || selectedWarranty.filename}</h2>
+        <ModalWarranty
+          onClose={() => setSelectedWarranty(null)}
+          title={selectedWarranty.productName || selectedWarranty.filename}
+        >
           <div className="modal-details">
             <p><strong>Purchase Date:</strong> {formatDate(selectedWarranty.purchaseDate)}</p>
             <p><strong>Expiration Date:</strong> {formatDate(selectedWarranty.expirationDate)}</p>
@@ -305,35 +308,29 @@ function Warranties({ warranties, limit = warranties.length, onRefresh }: Warran
 
       {/* Delete Confirmation Modal */}
       {warrantyToDelete && (
-        <div className="delete-modal-overlay" onClick={() => setWarrantyToDelete(null)}>
-          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="delete-modal-header">
-              <div className="delete-modal-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="8" x2="12" y2="12"></line>
-                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-              </div>
-              <h3>Delete Warranty</h3>
-            </div>
-            <div className="delete-modal-body">
-              <p>Are you sure you want to delete this warranty?</p>
-              <div className="delete-warranty-info">
-                <strong>{warrantyToDelete.filename || warrantyToDelete.productName}</strong>
-                <span>{warrantyToDelete.provider || 'Unknown Provider'}</span>
-              </div>
-              <p className="delete-warning">This action cannot be undone.</p>
-            </div>
+        <BaseModal
+          isOpen
+          onClose={() => setWarrantyToDelete(null)}
+          title="Delete Warranty"
+          variant="danger"
+          size="sm"
+          icon={
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          }
+          footerContent={
             <div className="delete-modal-actions">
-              <button 
+              <button
                 className="delete-modal-btn delete-modal-btn-cancel"
                 onClick={() => setWarrantyToDelete(null)}
                 disabled={deletingId === warrantyToDelete.id}
               >
                 Cancel
               </button>
-              <button 
+              <button
                 className="delete-modal-btn delete-modal-btn-delete"
                 onClick={() => handleDeleteWarranty(warrantyToDelete.id)}
                 disabled={deletingId === warrantyToDelete.id}
@@ -357,8 +354,18 @@ function Warranties({ warranties, limit = warranties.length, onRefresh }: Warran
                 )}
               </button>
             </div>
+          }
+          contentClassName="delete-modal-card"
+        >
+          <div className="delete-modal-body">
+            <p>Are you sure you want to delete this warranty?</p>
+            <div className="delete-warranty-info">
+              <strong>{warrantyToDelete.filename || warrantyToDelete.productName}</strong>
+              <span>{warrantyToDelete.provider || 'Unknown Provider'}</span>
+            </div>
+            <p className="delete-warning">This action cannot be undone.</p>
           </div>
-        </div>
+        </BaseModal>
       )}
     </div>
   );

@@ -5,6 +5,7 @@ import { getGmailSettings } from '../../api/gmailSettings';
 import { saveGmailOptions } from '../../api/gmail';
 import { BASE_URL } from '../../config';
 import Button from '../button';
+import BaseModal from '../modal/BaseModal';
 import './GmailConfigModal.css';
 
 interface GmailConfigModalProps {
@@ -112,27 +113,17 @@ const GmailConfigModal = ({ isOpen, onClose }: GmailConfigModalProps) => {
     }
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
-  if (!isOpen) return null;
-
   return (
-    <div className="gmail-modal-backdrop" onClick={handleBackdropClick}>
-      <div className="gmail-modal-content">
-        <button className="gmail-modal-close" onClick={onClose} aria-label="Close modal">
-          ×
-        </button>
-        
-        <h2>Import warranties from Gmail</h2>
-        <p className="gmail-modal-description">
-          Configure how many documents you want to scan and the date range.
-        </p>
-
-        <form onSubmit={handleSubmit} className="gmail-modal-form">
+    <BaseModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Import warranties from Gmail"
+      description={<p className="gmail-modal-description">Configure how many documents you want to scan and the date range.</p>}
+      backdropClassName="gmail-modal-backdrop"
+      contentClassName="gmail-modal-content"
+      bodyClassName="gmail-modal-body"
+    >
+      <form onSubmit={handleSubmit} className="gmail-modal-form">
           <div className="form-group">
             <label htmlFor="max-results">
               Number of documents to scan
@@ -203,9 +194,8 @@ const GmailConfigModal = ({ isOpen, onClose }: GmailConfigModalProps) => {
               </Button>
             </div>
           </div>
-        </form>
-      </div>
-    </div>
+      </form>
+    </BaseModal>
   );
 };
 

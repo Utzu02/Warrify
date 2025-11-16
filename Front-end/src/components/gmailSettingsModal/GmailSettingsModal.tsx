@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { GmailSettings, updateGmailSettings } from '../../api/gmailSettings';
 import Button from '../button';
+import BaseModal from '../modal/BaseModal';
 import '../gmailConfigModal/GmailConfigModal.css';
 
 interface GmailSettingsModalProps {
@@ -50,32 +51,21 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
     }
   };
 
-  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await handleSave();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="gmail-modal-backdrop" onClick={handleBackdropClick}>
-      <div className="gmail-modal-content">
-        <button className="gmail-modal-close" onClick={onClose} aria-label="Close modal">
-          ×
-        </button>
-
-        <h2>Gmail scan preferences</h2>
-        <p className="gmail-modal-description">
-          Configure your default settings for scanning Gmail for warranty documents.
-        </p>
-
-        <form className="gmail-modal-form" onSubmit={handleSubmit}>
+    <BaseModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Gmail scan preferences"
+      description={<p className="gmail-modal-description">Configure your default settings for scanning Gmail for warranty documents.</p>}
+      backdropClassName="gmail-modal-backdrop"
+      contentClassName="gmail-modal-content"
+    >
+      <form className="gmail-modal-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="modal-max-results">
               Number of documents
@@ -151,9 +141,8 @@ const GmailSettingsModal = ({ isOpen, onClose, initialSettings, onSave }: GmailS
               </Button>
             </div>
           </div>
-        </form>
-      </div>
-    </div>
+      </form>
+    </BaseModal>
   );
 };
 
