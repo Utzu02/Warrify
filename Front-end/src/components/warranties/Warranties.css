@@ -27,7 +27,6 @@
   justify-content: space-between;
   align-items: center;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border-color-light);
   padding-top: 0;
   background: #ffffff;
 }
@@ -94,6 +93,20 @@
 .export-btn svg {
   width: 16px;
   height: 16px;
+}
+
+/* Pagination inserted in header */
+.warranties-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 1.5rem;
+}
+
+.warranties-pagination .pagination-summary {
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 /* Checkbox Styling */

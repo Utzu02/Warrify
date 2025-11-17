@@ -9,10 +9,25 @@ import * as XLSX from 'xlsx';
 import { apiFetch } from '../../api/client';
 import Button from '../button';
 
+interface PaginationProps {
+  currentPage: number;
+  pageSize: number;
+  setPageSize: (n: number) => void;
+  totalPages: number;
+  pageNumbers: Array<number | string>;
+  handlePrev: () => void;
+  handleNext: () => void;
+  handleGoTo: (page: number) => void;
+  startIndex: number;
+  endIndex: number;
+  totalItems: number;
+}
+
 interface WarrantiesProps {
   warranties: Warranty[];
   limit?: number;
   onRefresh?: () => void;
+  pagination?: PaginationProps;
 }
 
 const formatDate = (value: string | null) => {
@@ -40,7 +55,7 @@ const useDownloadUrl = (warrantyId?: string) => {
   }, [warrantyId]);
 };
 
-function Warranties({ warranties, limit = warranties.length, onRefresh }: WarrantiesProps) {
+function Warranties({ warranties, limit = warranties.length, onRefresh, pagination }: WarrantiesProps) {
   const [selectedWarranty, setSelectedWarranty] = useState<Warranty | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -177,6 +192,58 @@ function Warranties({ warranties, limit = warranties.length, onRefresh }: Warran
         </button>
       </div>
       
+
+        {pagination && (
+          <div className="warranties-pagination">
+            <div className="pagination-summary">
+              {pagination.totalItems === 0 ? (
+                <span>Showing 0 of 0 warranties</span>
+              ) : (
+                <span>Showing {pagination.startIndex + 1}–{pagination.endIndex} of {pagination.totalItems} warranties</span>
+              )}
+            </div>
+            <div className="pagination-controls">
+              <button className="pagination-btn" onClick={pagination.handlePrev} disabled={pagination.currentPage === 1} aria-label="Previous page">Prev</button>
+
+              <select
+                className="page-size-select"
+                value={pagination.pageSize}
+                onChange={(e) => pagination.setPageSize(Number(e.target.value))}
+                aria-label="Items per page"
+              >
+                <option value={10}>10 / page</option>
+                <option value={20}>20 / page</option>
+                <option value={50}>50 / page</option>
+              </select>
+
+              <div className="page-numbers">
+                {pagination.pageNumbers.map((p, idx) => {
+                  if (typeof p === 'string') {
+                    return (
+                      <span key={`ell-${idx}`} className="pagination-ellipsis" aria-hidden>
+                        {p}
+                      </span>
+                    );
+                  }
+
+                  const num = p as number;
+                  return (
+                    <button
+                      key={`pg-${num}`}
+                      className={`pagination-page ${num === pagination.currentPage ? 'active' : ''}`}
+                      onClick={() => pagination.handleGoTo(num)}
+                      aria-current={num === pagination.currentPage}
+                    >
+                      {num}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button className="pagination-btn" onClick={pagination.handleNext} disabled={pagination.currentPage === pagination.totalPages || pagination.totalItems === 0} aria-label="Next page">Next</button>
+            </div>
+          </div>
+        )}
       <div className="warr-table-wrapper">
         <table className="warr-table">
           <thead>

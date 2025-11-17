@@ -76,57 +76,23 @@ const DashboardTable = ({ warranties, isLoading = false, onRefresh }: DashboardT
         </div>
       ) : (
         <>
-          <Warranties warranties={paginated} onRefresh={onRefresh} />
-
-          <div className="table-footer pagination-footer">
-            <div className="pagination-summary">
-              {warranties.length === 0 ? (
-                <span>Showing 0 of 0 warranties</span>
-              ) : (
-                <span>Showing {startIndex + 1}–{endIndex} of {warranties.length} warranties</span>
-              )}
-            </div>
-            <div className="pagination-controls">
-              <button className="pagination-btn" onClick={handlePrev} disabled={currentPage === 1} aria-label="Previous page">Prev</button>
-
-              <select
-                className="page-size-select"
-                value={pageSize}
-                onChange={(e) => setPageSize(Number(e.target.value))}
-                aria-label="Items per page"
-              >
-                <option value={10}>10 / page</option>
-                <option value={20}>20 / page</option>
-                <option value={50}>50 / page</option>
-              </select>
-
-              <div className="page-numbers">
-                {pageNumbers.map((p, idx) => {
-                  if (typeof p === 'string') {
-                    return (
-                      <span key={`ell-${idx}`} className="pagination-ellipsis" aria-hidden>
-                        {p}
-                      </span>
-                    );
-                  }
-
-                  const num = p as number;
-                  return (
-                    <button
-                      key={`pg-${num}`}
-                      className={`pagination-page ${num === currentPage ? 'active' : ''}`}
-                      onClick={() => handleGoTo(num)}
-                      aria-current={num === currentPage}
-                    >
-                      {num}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <button className="pagination-btn" onClick={handleNext} disabled={currentPage === totalPages || warranties.length === 0} aria-label="Next page">Next</button>
-            </div>
-          </div>
+          <Warranties
+            warranties={paginated}
+            onRefresh={onRefresh}
+            pagination={{
+              currentPage,
+              pageSize,
+              setPageSize,
+              totalPages,
+              pageNumbers,
+              handlePrev,
+              handleNext,
+              handleGoTo,
+              startIndex,
+              endIndex,
+              totalItems: warranties.length
+            }}
+          />
         </>
       )}
     </section>
