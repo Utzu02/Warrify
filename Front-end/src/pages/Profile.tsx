@@ -143,7 +143,6 @@ const Profile = () => {
     [stats]
   );
 
-  const avatarInitial = userData?.username?.charAt(0)?.toUpperCase() || 'A';
   const friendlyName = formatFullName(userData?.username);
   const memberSince = formatDate(userData?.account_created_at || userData?.createdAt);
   const subscriptionType = userData?.terms ? 'Premium' : 'Free';
@@ -151,12 +150,7 @@ const Profile = () => {
   const heroName = friendlyName === '—' ? userData?.username || 'there' : friendlyName;
   const isGmailConnected = Boolean(gmailSettings?.isConnected);
   const gmailConnectedDate = gmailSettings?.connectedAt ? formatDate(gmailSettings.connectedAt) : null;
-  const heroAlertVariant = error ? 'error' : isGmailConnected ? 'success' : 'info';
-  const heroAlertMessage = error
-    ? error
-    : isGmailConnected
-      ? `Gmail connected${gmailConnectedDate ? ` on ${gmailConnectedDate}` : ''}.`
-      : 'Connect Gmail to import warranties automatically.';
+  
 
   const handleDisconnect = async () => {
     try {
@@ -192,6 +186,8 @@ const Profile = () => {
               Manage your workspace details, automations, and subscription from one calm, structured view.
             </p>
           </div>
+
+          {error && <div className="profile-error" role="alert">{error}</div>}
 
           <section className="profile-stats-grid">
             {quickStats.map((stat, index) => (

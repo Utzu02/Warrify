@@ -79,6 +79,100 @@
   border-color: var(--primary-color);
 }
 
+/* Pagination styles */
+.pagination-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.pagination-summary {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-btn,
+.pagination-page {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-light);
+  background: white;
+  color: var(--text-primary);
+  cursor: pointer;
+  min-width: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.pagination-btn:hover,
+.pagination-page:hover {
+  background: #f8fafc;
+  border-color: var(--primary-color);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: transparent;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pagination-page.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* Mobile: hide numbered pages to save space; keep Prev/Next and summary */
+@media (max-width: 640px) {
+  .page-numbers {
+    display: none;
+  }
+  .pagination-summary {
+    font-size: 0.9rem;
+  }
+}
+
+/* Page size selector and ellipsis */
+.page-size-select {
+  padding: 0.4rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-light);
+  background: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pagination-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.6rem;
+  color: var(--text-secondary);
+  min-width: 28px;
+}
+
+@media (max-width: 640px) {
+  .page-size-select {
+    display: none;
+  }
+}
+
+
 @media (max-width: 768px) {
   .table-card {
     padding: var(--spacing-md);
