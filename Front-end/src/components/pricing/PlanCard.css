@@ -21,6 +21,20 @@
   box-shadow: var(--pricing-shadow-hover, 0 20px 35px rgba(37, 99, 235, 0.15));
 }
 
+.plan-card-choice-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--pricing-primary-blue, #2563EB);
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  border-radius: var(--pricing-radius-full, 999px);
+  padding: 0.25rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 .plan-card-popular {
   border-color: var(--pricing-primary-blue, #2563EB);
   border-width: 3px;
@@ -71,6 +85,12 @@
   font-weight: var(--pricing-font-bold, 700);
   line-height: 1.2;
   margin-bottom: var(--pricing-space-1, 4px);
+}
+
+.plan-card-limit {
+  margin-top: 0.6rem;
+  color: var(--pricing-gray-600, #6B7280);
+  font-size: 0.9rem;
 }
 
 .plan-card-price-period {

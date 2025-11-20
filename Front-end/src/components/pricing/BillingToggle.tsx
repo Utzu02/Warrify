@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import './BillingToggle.css';
-
-export type BillingPeriod = 'monthly' | 'yearly';
+import type { BillingPeriod } from '../../types/billing';
 
 interface BillingToggleProps {
   billingPeriod: BillingPeriod;

@@ -158,15 +158,26 @@ const FileImport: React.FC<FileImportProps> = ({ onUploadSuccess, setImportHandl
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (error) {
       console.error('Error uploading file:', error);
-      setUploadError({
-        description: 'Upload failed. Please try again.',
-        reason: error instanceof Error ? error.message : undefined
-      });
-      showToast({
-        variant: 'error',
-        title: 'Upload failed',
-        message: error instanceof Error ? error.message : 'Unexpected error during upload.'
-      });
+      const message = error instanceof Error ? error.message : String(error);
+      if (message === 'PLAN_LIMIT_REACHED') {
+        // Specific user-friendly handling when server refuses due to plan limit
+        setUploadError({ description: 'You reached your plan warranty limit.', reason: 'PLAN_LIMIT_REACHED' });
+        showToast({
+          variant: 'error',
+          title: 'Plan limit reached',
+          message: 'You have reached the number of warranties allowed by your plan. Visit the Pricing page to upgrade.',
+        });
+      } else {
+        setUploadError({
+          description: 'Upload failed. Please try again.',
+          reason: message
+        });
+        showToast({
+          variant: 'error',
+          title: 'Upload failed',
+          message: message || 'Unexpected error during upload.'
+        });
+      }
     } finally {
       setIsUploading(false);
     }

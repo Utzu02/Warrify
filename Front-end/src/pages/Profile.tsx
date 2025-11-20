@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import './Profile.css';
-import { Link, useSearchParams } from 'react-router-dom';
-import { fetchUserProfile, fetchUserWarranties } from '../api/users';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { fetchUserProfile, fetchUserWarranties, type UserProfile } from '../api/users';
 import { getGmailSettings, connectGmail, disconnectGmail, GmailSettings } from '../api/gmailSettings';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
@@ -9,15 +9,8 @@ import LoadingSpinner from '../components/loadingSpinner/LoadingSpinner';
 import GmailSettingsModal from '../components/gmailSettingsModal/GmailSettingsModal';
 import Footer from '../components/footer/Footer';
 import Button from '../components/button';
-
-type ApiUser = {
-  _id: string;
-  username: string;
-  email: string;
-  terms?: boolean;
-  createdAt?: string;
-  account_created_at?: string;
-};
+import { createBillingPortalSession } from '../api/billing';
+import type { SubscriptionStatus } from '../types/billing';
 
 type WarrantySummary = {
   expirationDate?: string | null;
@@ -30,9 +23,9 @@ type ProfileStats = {
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
-const formatDate = (value?: string) => {
+const formatDate = (value?: string | Date | null) => {
   if (!value) return '—';
-  const parsed = new Date(value);
+  const parsed = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(parsed.getTime())) return '—';
   return parsed.toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
@@ -47,15 +40,75 @@ const formatFullName = (username?: string) => {
     .join(' ');
 };
 
+const SUBSCRIPTION_STATUS_LABELS: Record<SubscriptionStatus, string> = {
+  free: 'Free',
+  trialing: 'Trialing',
+  active: 'Active',
+  past_due: 'Past due',
+  canceled: 'Canceled',
+  incomplete: 'Pending'
+};
+
+const getStatusPillModifier = (status: SubscriptionStatus) => {
+  switch (status) {
+    case 'active':
+    case 'trialing':
+      return 'profile-status-pill--success';
+    case 'past_due':
+      return 'profile-status-pill--warning';
+    case 'canceled':
+    case 'incomplete':
+      return 'profile-status-pill--danger';
+    default:
+      return 'profile-status-pill--neutral';
+  }
+};
+
+const getIntervalCopy = (interval?: string) => {
+  if (interval === 'monthly') return 'Billed monthly';
+  if (interval === 'yearly') return 'Billed yearly';
+  return 'Free forever';
+};
+
+const getRenewalCopy = (billing?: UserProfile['billing']) => {
+  if (!billing || billing.planKey === 'free') {
+    return 'Free forever—no renewal needed.';
+  }
+
+  if (billing.currentPeriodEnd) {
+    const prefix = billing.cancelAtPeriodEnd ? 'Cancels' : 'Renews';
+    return `${prefix} on ${formatDate(billing.currentPeriodEnd)}`;
+  }
+
+  return 'Next renewal will appear once Stripe confirms payment.';
+};
+
+const canManageBilling = (billing?: UserProfile['billing'], status?: SubscriptionStatus) => {
+  if (!billing || billing.planKey === 'free') return false;
+  if (!status || status === 'free' || status === 'canceled') return false;
+  return true;
+};
+
+const clearQueryParam = (param: string) => {
+  if (typeof window === 'undefined') return;
+  const params = new URLSearchParams(window.location.search);
+  params.delete(param);
+  const nextQuery = params.toString();
+  const nextUrl = nextQuery ? `${window.location.pathname}?${nextQuery}` : window.location.pathname;
+  window.history.replaceState({}, document.title, nextUrl);
+};
+
 const Profile = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [userData, setUserData] = useState<ApiUser | null>(null);
+  const [userData, setUserData] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats>({ total: 0, expiringSoon: 0 });
   const [gmailSettings, setGmailSettings] = useState<GmailSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
   const { showToast } = useToast();
 
   // Check if redirected from Gmail OAuth
@@ -66,8 +119,31 @@ const Profile = () => {
         title: 'You are connected',
         message: 'Gmail is linked successfully. You can sync warranties anytime.'
       });
-      window.history.replaceState({}, document.title, window.location.pathname);
+      clearQueryParam('gmail');
     }
+  }, [searchParams, showToast]);
+
+  useEffect(() => {
+    const checkoutState = searchParams.get('checkout');
+    if (!checkoutState) {
+      return;
+    }
+
+    if (checkoutState === 'success') {
+      showToast({
+        variant: 'success',
+        title: 'Subscription updated',
+        message: 'Stripe confirmed your plan is active.'
+      });
+    } else if (checkoutState === 'cancel') {
+      showToast({
+        variant: 'info',
+        title: 'Checkout canceled',
+        message: 'Resume from Pricing whenever you are ready.'
+      });
+    }
+
+    clearQueryParam('checkout');
   }, [searchParams, showToast]);
 
   useEffect(() => {
@@ -91,7 +167,7 @@ const Profile = () => {
           getGmailSettings()
         ]);
 
-        setUserData(userPayload as ApiUser);
+        setUserData(userPayload);
         setGmailSettings(gmailPayload);
 
         const items: WarrantySummary[] = (warrantiesPayload.items as WarrantySummary[]) || [];
@@ -145,12 +221,51 @@ const Profile = () => {
 
   const friendlyName = formatFullName(userData?.username);
   const memberSince = formatDate(userData?.account_created_at || userData?.createdAt);
-  const subscriptionType = userData?.terms ? 'Premium' : 'Free';
-  const subscriptionStatus = userData?.terms ? 'Active' : 'Trial';
+  const billing = userData?.billing;
+  const subscriptionStatusValue: SubscriptionStatus = billing?.status ?? 'free';
+  const subscriptionStatusLabel = SUBSCRIPTION_STATUS_LABELS[subscriptionStatusValue] ?? 'Free';
+  const statusPillClass = getStatusPillModifier(subscriptionStatusValue);
+  const subscriptionPlanName = billing?.planName || 'Free';
+  const subscriptionInterval = getIntervalCopy(billing?.interval);
+  const renewalCopy = getRenewalCopy(billing);
+  const nextCycleStartRaw = billing?.upcomingPeriodStart || billing?.currentPeriodEnd;
+  const upcomingPeriodStart = nextCycleStartRaw ? formatDate(nextCycleStartRaw) : null;
+  const currentPeriodStart = billing?.currentPeriodStart ? formatDate(billing.currentPeriodStart) : null;
+  const currentPeriodEnd = billing?.currentPeriodEnd ? formatDate(billing.currentPeriodEnd) : null;
+  const planStartedAt = billing?.planStartedAt ? formatDate(billing.planStartedAt) : null;
   const heroName = friendlyName === '—' ? userData?.username || 'there' : friendlyName;
   const isGmailConnected = Boolean(gmailSettings?.isConnected);
   const gmailConnectedDate = gmailSettings?.connectedAt ? formatDate(gmailSettings.connectedAt) : null;
-  
+  const manageBillingAvailable = canManageBilling(billing, subscriptionStatusValue);
+
+  const handleManagePlan = async () => {
+    if (!manageBillingAvailable) {
+      navigate('/pricing');
+      return;
+    }
+
+    try {
+      setPortalLoading(true);
+      const { url } = await createBillingPortalSession();
+      showToast({
+        variant: 'info',
+        title: 'Opening billing portal',
+        message: 'Managing your subscription securely via Stripe.'
+      });
+      window.location.href = url;
+    } catch (portalError) {
+      showToast({
+        variant: 'error',
+        title: 'Unable to open billing portal',
+        message:
+          portalError instanceof Error
+            ? portalError.message
+            : 'Please try again or refresh the page.'
+      });
+    } finally {
+      setPortalLoading(false);
+    }
+  };
 
   const handleDisconnect = async () => {
     try {
@@ -276,18 +391,36 @@ const Profile = () => {
                   <p className="profile-eyebrow">Billing</p>
                   <h2>Subscription</h2>
                 </div>
-                <Button to="/pricing" variant="primary" size="small">
-                  Manage plan
+                <Button
+                  variant="primary"
+                  size="small"
+                  onClick={handleManagePlan}
+                  loading={portalLoading}
+                >
+                  {manageBillingAvailable ? 'Manage billing' : 'Choose plan'}
                 </Button>
               </header>
               <div className="profile-subscription-highlight">
-                <span
-                  className={`profile-status-pill ${subscriptionStatus === 'Active' ? 'profile-status-pill--success' : 'profile-status-pill--trial'}`}
-                >
-                  {subscriptionStatus}
-                </span>
-                <h3>{subscriptionType} plan</h3>
-                <p>Member since: {memberSince}</p>
+                <div className="profile-subscription-status">
+                  <span className={`profile-status-pill ${statusPillClass}`}>
+                    {subscriptionStatusLabel}
+                  </span>
+                  <p className="profile-subscription-interval">{subscriptionInterval}</p>
+                </div>
+                <h3>{subscriptionPlanName} plan</h3>
+                <p className="profile-subscription-renewal">{renewalCopy}</p>
+                {currentPeriodStart && currentPeriodEnd && (
+                  <p className="profile-subscription-cycle">
+                    Current cycle: {currentPeriodStart} → {currentPeriodEnd}
+                  </p>
+                )}
+                {planStartedAt && (
+                  <p className="profile-subscription-start">Plan started: {planStartedAt}</p>
+                )}
+                {upcomingPeriodStart && (
+                  <p className="profile-subscription-upcoming">Next cycle starts: {upcomingPeriodStart}</p>
+                )}
+                <p className="profile-subscription-meta">Member since: {memberSince}</p>
               </div>
               <p className="profile-card__subtitle">What's included</p>
               <ul className="profile-feature-list">

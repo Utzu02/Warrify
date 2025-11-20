@@ -13,6 +13,9 @@ import dotenv from 'dotenv';
 import googleRoutes from './routes/googleRoutes.js'
 import warrantyDocumentRoutes from './routes/warrantyDocumentRoutes.js';
 import session from "express-session";
+import billingRoutes from './routes/billingRoutes.js';
+import notificationsRoutes from './routes/notificationsRoutes.js';
+import { handleStripeWebhook } from './crud/billingCrud.js';
 dotenv.config();
 
 const app = express();
@@ -91,6 +94,8 @@ app.use(session({
     // Don't set domain - let browser handle it automatically
   }
 }));
+
+app.post('/stripe/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook);
 app.use(bodyParser.json());
 
 // Middleware to ensure MongoDB connection
@@ -118,6 +123,8 @@ app.use('/',googleRoutes);
 app.use('/api', warrantyDocumentRoutes);
 app.use('/api', warrantiesRoutes);
 app.use('/api', pdfValidationRoutes);
+app.use('/api', billingRoutes);
+app.use('/api', notificationsRoutes);
 
 // Connect to MongoDB on startup
 connectDB();

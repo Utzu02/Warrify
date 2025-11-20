@@ -10,9 +10,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface FreeTierSectionProps {
     onCtaClick?: () => void;
+    isCurrent?: boolean;
+    disabled?: boolean;
 }
 
-const FreeTierSection = ({ onCtaClick }: FreeTierSectionProps) => {
+const FreeTierSection = ({ onCtaClick, isCurrent = false, disabled = false }: FreeTierSectionProps) => {
     const sectionRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -48,13 +50,15 @@ const FreeTierSection = ({ onCtaClick }: FreeTierSectionProps) => {
                     <div className="free-tier-price">
                         <div className="free-tier-price-amount">{freeTierPlan.price} RON</div>
                     </div>
+                    {isCurrent && <span className="free-tier-choice-badge">Your choice</span>}
                     <div className="free-tier-cta">
                         <Button
                             variant={freeTierPlan.ctaVariant}
                             size="large"
                             onClick={onCtaClick}
+                            disabled={disabled}
                         >
-                            {freeTierPlan.ctaText}
+                            {isCurrent ? 'Current plan' : freeTierPlan.ctaText}
                         </Button>
                     </div>
                 </div>

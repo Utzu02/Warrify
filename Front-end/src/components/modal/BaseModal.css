@@ -100,8 +100,13 @@
   margin-top: 2rem;
   display: flex;
   gap: 0.75rem;
-  justify-content: flex-end;
+  justify-content: stretch;
   flex-wrap: wrap;
+}
+
+.base-modal-footer .btn {
+  flex: 1;
+  min-width: calc(50% - 0.375rem);
 }
 
 .base-modal-content.base-modal-warning .base-modal-icon {

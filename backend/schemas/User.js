@@ -20,6 +20,34 @@ const userSchema = new mongoose.Schema({
   isAdmin: { type: Boolean, default: false },
   lastScanAt: { type: Date },
   account_created_at: { type: Date, default: Date.now },
+  billing: {
+    planKey: {
+      type: String,
+      enum: ['free', 'enterprise', 'pro', 'premium'],
+      default: 'free'
+    },
+    planName: { type: String, default: 'Free' },
+    interval: {
+      type: String,
+      enum: ['monthly', 'yearly', 'none'],
+      default: 'none'
+    },
+    status: {
+      type: String,
+      enum: ['free','trialing','active','past_due','canceled','incomplete'],
+      default: 'free'
+    },
+    stripeCustomerId: { type: String },
+    subscriptionId: { type: String },
+    priceId: { type: String },
+    planStartedAt: { type: Date },
+    currentPeriodStart: { type: Date },
+    currentPeriodEnd: { type: Date },
+    upcomingPeriodStart: { type: Date },
+    cancelAtPeriodEnd: { type: Boolean, default: false },
+    checkoutSessionId: { type: String },
+    lastStripeEventId: { type: String }
+  },
   
   // Gmail integration settings
   gmail: {
@@ -31,7 +59,7 @@ const userSchema = new mongoose.Schema({
       expiryDate: { type: Date }
     },
     defaultSettings: {
-      maxResults: { type: Number, default: 10, min: 1, max: 100 },
+      maxResults: { type: Number, default: 10, min: 1, max: 250 },
       startDate: { type: String, default: null }, // ISO date string or null
       endDate: { type: String, default: null }    // ISO date string or null
     }

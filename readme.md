@@ -60,11 +60,21 @@ Warrify
 | `SESSION_SECRET` | Yes | `super-long-random-string` |
 | `DEEPSEEK_API_KEY` | Yes | `sk-xxxx` |
 | `DEEPSEEK_API_URL` | Optional | `https://api.deepseek.com/v1/chat/completions` |
+| `STRIPE_SECRET_KEY` | Yes | `sk_test_51Kxxx` |
+| `STRIPE_WEBHOOK_SECRET` | Yes | `whsec_xxx` |
+| `STRIPE_PRICE_ENTERPRISE_MONTHLY` | Yes | `price_enterprise_monthly` |
+| `STRIPE_PRICE_ENTERPRISE_YEARLY` | Yes | `price_enterprise_yearly` |
+| `STRIPE_PRICE_PRO_MONTHLY` | Yes | `price_pro_monthly` |
+| `STRIPE_PRICE_PRO_YEARLY` | Yes | `price_pro_yearly` |
+| `STRIPE_PRICE_PREMIUM_MONTHLY` | Yes | `price_premium_monthly` |
+| `STRIPE_PRICE_PREMIUM_YEARLY` | Yes | `price_premium_yearly` |
+| `STRIPE_BILLING_PORTAL_RETURN_URL` | Optional | `http://localhost:5173/profile` |
 
 ### Frontend (`Front-end/.env`)
 | Variable | Required | Example |
 | --- | --- | --- |
 | `VITE_BASE_URL` | Yes | `http://localhost:8080` |
+| `VITE_STRIPE_PUBLISHABLE_KEY` | Yes | `pk_test_51Kxxx` |
 
 ## Getting Started
 1. **Start the backend**
@@ -89,6 +99,9 @@ Warrify
 - Generate an API key and store it as `DEEPSEEK_API_KEY`.
 - By default `gmailCrud.js` uses the `deepseek-chat` model. Adjust the model or URL to match your plan if necessary.
 - DeepSeek is used only to answer “Does this PDF look like a warranty?”; if you want richer extraction you can extend `persistWarrantyDocument`.
+
+## Stripe Billing
+- Paid plans run through Stripe Checkout + the Billing Portal. Populate the Stripe env vars above, then follow [`docs/Stripe.md`](docs/Stripe.md) to create test prices, run `stripe listen --forward-to localhost:8080/stripe/webhook`, and learn the `/profile?checkout=success` + `/pricing?checkout=cancel` redirect behavior.
 
 ## API Surface (selected endpoints)
 | Method & Path | Description | Handler |

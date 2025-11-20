@@ -1,4 +1,5 @@
 import User from '../schemas/User.js';
+import { createNotificationIfNotExists } from './notificationCrud.js';
 
 export const createUser = async (req, res) => {
   try {
@@ -27,7 +28,7 @@ export const listUsers = async (_req, res) => {
 
 export const getUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id).select('-password -gmail.tokens');
     if (!user) {
       return res.status(404).send();
     }
@@ -200,6 +201,22 @@ export const getGmailSettings = async (req, res) => {
     }
 
     const connected = hasUsableGmailTokens(user.gmail);
+
+    // If not connected, create a single deduped GMAIL_DISCONNECTED notification for the user
+    try {
+      if (!connected) {
+        await createNotificationIfNotExists({
+          userId,
+          type: 'GMAIL_DISCONNECTED',
+          title: 'Gmail not connected',
+          message: 'Connect your Gmail account to enable automatic scanning',
+          meta: {}
+        });
+      }
+    } catch (err) {
+      // ignore failures to create notification
+      console.error('Notification trigger (gmail) error:', err);
+    }
 
     res.json({
       isConnected: connected,

@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import pozalogo from '../../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import NotificationsBell from './NotificationsBell';
 import Button from '../button';
 
 interface HeaderProps {
@@ -125,6 +126,9 @@ const Header = ({ isLoggedIn }: HeaderProps) => {
           </li>
           {isLoggedIn ? (
             <>
+              <li>
+                <NotificationsBell />
+              </li>
               <li>
                 <Button variant="secondary" onClick={logOut}>
                   Logout

@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { fetchScanInfo } from '../../api/users';
 import ImportOptionsModal from '../importOptionsModal/ImportOptionsModal';
 import Button from '../button';
+import useSubscriptionLimits from '../../hooks/useSubscriptionLimits';
 
 type GridContainerProps = {
   managedCount?: number;
@@ -59,9 +60,10 @@ function GridContainer({
   const { user } = useAuth();
   const [showImportModal, setShowImportModal] = useState(false);
   const [lastCheckInfo, setLastCheckInfo] = useState<RelativeTime>(DEFAULT_RELATIVE_TIME);
-  const managedDisplay = isLoadingCounts ? '—' : managedCount.toString();
+  const { maxWarranties, currentWarranties, remaining, loading: limitsLoading, overLimit, exceedsBy } = useSubscriptionLimits();
+  const managedDisplay = limitsLoading ? (isLoadingCounts ? '—' : managedCount.toString()) : String(currentWarranties ?? managedCount);
   const expiringDisplay = isLoadingCounts ? '—' : expiringSoonCount.toString();
-  const remainingDisplay = isLoadingCounts ? '—' : Math.max(remainingCount, 0).toString();
+  const remainingDisplay = limitsLoading ? '—' : (remaining !== null ? String(remaining) : Math.max(remainingCount, 0).toString());
 
   const fetchLastScan = useCallback(async () => {
     if (!user) {
@@ -101,16 +103,28 @@ function GridContainer({
       </div>
       <div className="grid-item grid-item-1 flex">
         <div className="item-1">
-          <div className="big-number">{managedDisplay}</div>
-          <div className="item-1-text">Managed warranties</div>
-          <Button variant="primary" size="medium" className="grid-button" onClick={() => setShowImportModal(true)}>
-            Import
-          </Button>
+          <div className="big-number">{managedDisplay}{maxWarranties ? ` / ${maxWarranties}` : ''}</div>
+          <div className="item-1-text">Warranties tracked</div>
+          <div style={{ marginTop: 8 }}>
+            <Button
+              variant="primary"
+              size="medium"
+              className="grid-button"
+              onClick={() => setShowImportModal(true)}
+              disabled={typeof maxWarranties === 'number' && Number(currentWarranties) >= maxWarranties}
+            >
+              Import
+            </Button>
+          </div>
         </div>
       </div>
       <div className="grid-item grid-item-1 flex">
         <div className="item-1">
-          <div className="big-number">{remainingDisplay}</div>
+          <div className="big-number">{(typeof remaining === 'number' && Number(remaining) <= 0) || overLimit ? (
+            <span style={{ color: '#b91c1c' }}>{overLimit ? `${exceedsBy} over` : remainingDisplay}</span>
+          ) : (
+            remainingDisplay
+          )}</div>
           <div className="item-1-text">Remaining warranties</div>
         </div>
       </div>

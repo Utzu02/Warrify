@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import PlanCard from './PlanCard';
 import './PricingGrid.css';
+import type { PaidPlanKey } from '../../types/billing';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,6 +13,7 @@ interface Feature {
 }
 
 interface Plan {
+  planKey: PaidPlanKey;
   title: string;
   description: string;
   price: string | number;
@@ -21,6 +23,9 @@ interface Plan {
   ctaVariant?: 'primary' | 'secondary';
   isPopular?: boolean;
   onCtaClick?: () => void;
+  ctaLoading?: boolean;
+  isCurrent?: boolean;
+  disabled?: boolean;
 }
 
 interface PricingGridProps {
@@ -62,7 +67,7 @@ const PricingGrid = ({ plans, title }: PricingGridProps) => {
       <div className="pricing-grid">
         {plans.map((plan, index) => (
           <PlanCard 
-            key={plan.title}
+            key={plan.planKey}
             {...plan}
             index={index}
           />

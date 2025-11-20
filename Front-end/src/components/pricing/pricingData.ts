@@ -2,6 +2,7 @@
    PRICING DATA
    Centralized pricing plans configuration
    ============================================ */
+import type { PaidPlanKey } from '../../types/billing';
 
 export interface Feature {
   text: string;
@@ -9,6 +10,7 @@ export interface Feature {
 }
 
 export interface PricingPlan {
+  planKey: PaidPlanKey;
   title: string;
   description: string;
   monthlyPrice: number;
@@ -22,12 +24,13 @@ export interface PricingPlan {
 // Standard Plans (shown in main grid)
 export const standardPlans: PricingPlan[] = [
   {
+    planKey: 'enterprise',
     title: 'Enterprise',
     description: 'For individuals who need robust tracking.',
     monthlyPrice: 20,
     yearlyPrice: 200, // 20% discount
     features: [
-      { text: 'Management offers 120 yearly guarantees', included: true },
+      { text: 'Management offers 120 warranties', included: true },
       { text: 'Grouping guarantees into categories', included: true },
       { text: 'Guarantees collected from mail periodically', included: true },
       { text: 'Basic warranty reports', included: true },
@@ -38,12 +41,13 @@ export const standardPlans: PricingPlan[] = [
     isPopular: false
   },
   {
+    planKey: 'pro',
     title: 'Pro',
     description: 'Ideal for small to medium enterprises.',
     monthlyPrice: 30,
     yearlyPrice: 300, // 20% discount
     features: [
-      { text: 'Management offers 250 yearly guarantees', included: true },
+      { text: 'Management offers 250 warranties', included: true },
       { text: 'Extra push notifications for expiry', included: true },
       { text: 'Basic report on warranties', included: true },
       { text: 'Priority email support', included: true },
@@ -54,16 +58,17 @@ export const standardPlans: PricingPlan[] = [
     isPopular: true
   },
   {
+    planKey: 'premium',
     title: 'Premium',
     description: 'Built for larger enterprises.',
     monthlyPrice: 50,
     yearlyPrice: 500, // 20% discount
     features: [
-      { text: 'Management offers 500+ yearly guarantees', included: true },
+      { text: 'Management offers 500+ warranties', included: true },
       { text: 'Advanced warranty reports & analytics', included: true },
       { text: '24/7 priority support', included: true },
       { text: 'Dedicated account manager', included: true },
-      { text: 'Custom integrations available', included: true }
+      { text: 'Custom integrations available (coming soon)', included: true }
     ],
     ctaText: 'Go Premium',
     ctaVariant: 'primary',

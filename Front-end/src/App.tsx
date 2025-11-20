@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/header/Header'
 import Home from './pages/Home'
@@ -72,7 +73,9 @@ function App() {
     <Router>
       <AuthProvider>
         <ToastProvider>
-          <AppContent />
+          <NotificationProvider>
+            <AppContent />
+          </NotificationProvider>
         </ToastProvider>
       </AuthProvider>
     </Router>

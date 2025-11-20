@@ -18,3 +18,9 @@
         width: 100vw;
     }
 }
+
+.pricing-downgrade-warning {
+    margin-top: 0.75rem;
+    color: var(--pricing-gray-600, #6B7280);
+    font-size: 0.9rem;
+}

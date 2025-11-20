@@ -1,6 +1,7 @@
 import './Warranties.css';
 import { useMemo, useState } from 'react';
 import { useToast } from '../../contexts/ToastContext';
+import useSubscriptionLimits from '../../hooks/useSubscriptionLimits';
 import ModalWarranty from '../modalWarranty/ModalWarranty';
 import BaseModal from '../modal/BaseModal';
 import type { Warranty } from '../../types/dashboard';
@@ -63,6 +64,7 @@ function Warranties({ warranties, limit = warranties.length, onRefresh, paginati
   const itemsToRender = warranties.slice(0, limit);
   const { downloadUrl, previewUrl } = useDownloadUrl(selectedWarranty?.id);
   const { showToast } = useToast();
+  const { maxWarranties, currentWarranties, remaining, overLimit, exceedsBy, loading: limitsLoading } = useSubscriptionLimits();
 
   // Select/Deselect all
   const handleSelectAll = (checked: boolean) => {
@@ -172,6 +174,17 @@ function Warranties({ warranties, limit = warranties.length, onRefresh, paginati
           <h2 className="warranties-title">
             Recent Warranties
             <span className="active-pill">{warranties.length} active</span>
+            {/* show plan limits if available */}
+            {!limitsLoading && typeof maxWarranties === 'number' && (
+              <span style={{ marginLeft: 12, fontSize: '0.9rem', color: (typeof remaining === 'number' && remaining <= 0) ? '#b91c1c' : '#374151' }}>
+                {currentWarranties} / {maxWarranties} warranties
+                  {typeof (maxWarranties) === 'number' && (
+                    <span style={{ marginLeft: 8, color: (overLimit ? '#b91c1c' : '#6b7280') }}>
+                      • {overLimit ? `${exceedsBy} over` : (typeof remaining === 'number' ? remaining : Math.max(0, maxWarranties - currentWarranties))} left
+                  </span>
+                )}
+              </span>
+            )}
           </h2>
           <p className="warranties-subtitle">
             {someSelected ? `${selectedIds.size} warranty${selectedIds.size !== 1 ? 's' : ''} selected` : 'No warranties selected'}

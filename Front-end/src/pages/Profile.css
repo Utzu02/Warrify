@@ -305,6 +305,39 @@ h1 {
   margin-bottom: var(--pricing-space-5);
 }
 
+.profile-subscription-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pricing-space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--pricing-space-3);
+}
+
+.profile-subscription-interval {
+  margin: 0;
+  color: var(--pricing-gray-500);
+  font-size: var(--pricing-text-sm);
+}
+
+.profile-subscription-renewal {
+  margin: var(--pricing-space-2) 0 0;
+  color: var(--pricing-gray-700);
+  font-size: var(--pricing-text-sm);
+}
+.profile-subscription-cycle,
+.profile-subscription-start {
+  margin: var(--pricing-space-1) 0 0;
+  color: var(--pricing-gray-600);
+  font-size: var(--pricing-text-sm);
+}
+
+.profile-subscription-meta {
+  margin: var(--pricing-space-2) 0 0;
+  color: var(--pricing-gray-500);
+  font-size: var(--pricing-text-xs);
+}
+
 .profile-status-pill {
   display: inline-flex;
   align-items: center;
@@ -319,9 +352,19 @@ h1 {
   color: #047857;
 }
 
-.profile-status-pill--trial {
-  background: rgba(244, 114, 182, 0.15);
-  color: #be185d;
+.profile-status-pill--warning {
+  background: rgba(251, 191, 36, 0.2);
+  color: #92400e;
+}
+
+.profile-status-pill--danger {
+  background: rgba(248, 113, 113, 0.2);
+  color: #b91c1c;
+}
+
+.profile-status-pill--neutral {
+  background: rgba(148, 163, 184, 0.3);
+  color: #475569;
 }
 
 .profile-card__subtitle {
